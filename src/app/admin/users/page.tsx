@@ -200,9 +200,13 @@ export default function UsersPage() {
                   <p className="text-xs text-muted-foreground">Pilih menu yang bisa diakses user ini</p>
                   <div className="space-y-1.5">
                     {PERMISSION_KEYS.map((key) => (
-                      <label
+                      <div
                         key={key}
-                        className={`flex items-center gap-3 rounded-xl px-3 py-2.5 cursor-pointer transition-all ${
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => togglePermission(key)}
+                        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePermission(key); } }}
+                        className={`flex items-center gap-3 rounded-xl px-3 py-2.5 cursor-pointer transition-all select-none ${
                           newPermissions.includes(key)
                             ? "bg-primary/10 border border-primary/30"
                             : "bg-card border border-border/30 hover:border-border/60"
@@ -222,7 +226,7 @@ export default function UsersPage() {
                         }`}>
                           {PERMISSION_LABELS[key]}
                         </span>
-                      </label>
+                      </div>
                     ))}
                   </div>
                   <div className="flex gap-2 mt-2">
