@@ -43,8 +43,8 @@ export const metadata: Metadata = {
     "laptop murah",
     "laptop second",
   ],
-  authors: [{ name: "Saka Creative Digital" }],
-  creator: "Saka Creative Digital",
+  authors: [{ name: "Nauka Creative Digital" }],
+  creator: "Nauka Creative Digital",
   publisher: "Saka Laptop",
   robots: {
     index: true,

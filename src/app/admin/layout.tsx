@@ -56,7 +56,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
         <footer className="border-t border-border/50 bg-card/50">
           <div className="page-container py-4">
             <p className="text-xs text-muted-foreground text-center">
-              &copy; 2026 Saka Creative Digital. All rights reserved.
+              &copy; 2026 Nauka Creative Digital. All rights reserved.
             </p>
           </div>
         </footer>

@@ -715,7 +715,7 @@ export default function FinderPage() {
       <footer className="border-t border-border/50 bg-card/50">
         <div className="page-container py-6">
           <p className="text-xs text-muted-foreground text-center">
-            &copy; {new Date().getFullYear()} Saka Creative Digital. All rights reserved.
+            &copy; {new Date().getFullYear()} Nauka Creative Digital. All rights reserved.
           </p>
         </div>
       </footer>

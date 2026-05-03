@@ -488,7 +488,7 @@ export default function HomePage() {
               <Link href="/#lokasi" className="hover:text-foreground transition-colors">Lokasi</Link>
             </div>
             <p className="text-xs text-muted-foreground">
-              &copy; {new Date().getFullYear()} Saka Creative Digital. All rights reserved.
+              &copy; {new Date().getFullYear()} Nauka Creative Digital. All rights reserved.
             </p>
           </div>
         </div>
