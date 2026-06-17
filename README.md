@@ -2,14 +2,66 @@
 
 Next.js 16 + Prisma + TypeScript. Modular CMS architecture (RBAC + CMS + business modules).
 
-## 🚀 Quick Start (Local Dev)
+## 🚀 Production Deployment (Vercel)
+
+### 1. Push repo to GitHub
+Repo: https://github.com/abuauf4/Saka-laptop
+
+### 2. Set Environment Variables in Vercel
+Buka dashboard Vercel → Settings → Environment Variables:
+
+| Variable | Value | Required |
+|---|---|---|
+| `DATABASE_URL` | `postgresql://...` (dari Supabase/Neon/Railway) | ✅ YES |
+| `JWT_SECRET` | random string 32+ chars (e.g. `openssl rand -base64 32`) | ✅ YES |
+| `SETUP_KEY` | random string (e.g. `saka-setup-2026-secret-key`) | ✅ YES (for setup) |
+| `ADMIN_INITIAL_PASSWORD` | `Saka2026!` (or custom) | Optional |
+| `NEXT_PUBLIC_SITE_URL` | `https://jakartalaptops.com` | Optional |
+
+### 3. Deploy di Vercel
+Connect repo → Deploy. Tunggu build selesai.
+
+### 4. Run Setup (one-time, via browser)
+Buka URL ini di browser (ganti domain & SETUP_KEY):
+```
+https://jakartalaptops.com/api/setup/init?key=SAMA_DENGAN_SETUP_KEY_YG_DI_SET_DI_LANGKAH_2
+```
+
+Akan muncul JSON response:
+```json
+{
+  "success": true,
+  "message": "Setup complete! You can now login at /admin/login",
+  "credentials": {
+    "email": "admin@saka-laptop.id",
+    "password": "Saka2026!"
+  }
+}
+```
+
+### 5. Login & Ganti Password
+- Buka `https://jakartalaptops.com/admin/login`
+- Login: `admin@saka-laptop.id` / `Saka2026!`
+- Buka `/admin/users` → edit Saka Admin → **Change Password** (WAJIB!)
+
+### 6. (Optional) Cleanup Setup Key
+Untuk security, hapus `SETUP_KEY` env var dari Vercel setelah setup selesai.
+
+---
+
+## 💻 Local Development
 
 ```bash
-# Install dependencies
+# Install
 bun install
 
-# Setup database (SQLite for local)
-cp .env.example .env
+# Switch schema ke SQLite untuk local dev
+# (schema.prisma default = PostgreSQL untuk production)
+cp prisma/schema.sqlite.prisma prisma/schema.prisma
+bun run db:generate
+
+# Setup DB lokal
+cp .env.example .env  # edit DATABASE_URL ke "file:./db/saka.db"
 bun run db:push
 bun run db:seed-rbac
 bun run db:seed-lokasi
@@ -25,57 +77,7 @@ Open http://localhost:3000
 - Email: `admin@saka-laptop.id`
 - Password: `Saka2026!`
 
-⚠️ **CHANGE PASSWORD IMMEDIATELY after first login** via `/admin/users`
-
-## 🗄️ Database
-
-Two schema files maintained:
-
-| File | Provider | Use Case |
-|---|---|---|
-| `prisma/schema.prisma` | SQLite (default) | Local dev & sandbox preview |
-| `prisma/schema.production.prisma` | PostgreSQL | Production (Vercel/Supabase/Neon) |
-| `prisma/schema.sqlite.prisma` | SQLite (backup) | Restore SQLite after using PG |
-
-### Switch schema:
-
-```bash
-# Switch to PostgreSQL (for production testing)
-bun run db:use-postgres
-
-# Switch back to SQLite (for local dev)
-bun run db:use-sqlite
-```
-
-## 🌐 Production Deployment (Vercel)
-
-### 1. Set environment variables in Vercel dashboard:
-- `DATABASE_URL` — PostgreSQL connection string (e.g. from Supabase/Neon)
-- `JWT_SECRET` — strong random string (use `openssl rand -base64 32`)
-- `NEXT_PUBLIC_SITE_URL` — your domain (e.g. `https://jakartalaptops.com`)
-
-### 2. Switch schema to PostgreSQL BEFORE deploying:
-```bash
-bun run db:use-postgres
-git add prisma/schema.prisma
-git commit -m "chore: switch to PostgreSQL for production"
-git push
-```
-
-### 3. After deploy, run migrations & seeds against production DB:
-```bash
-# Set DATABASE_URL to production PostgreSQL locally, then:
-bun run db:push
-bun run db:seed-rbac
-bun run db:seed-lokasi
-bun run db:activate-cms
-```
-
-### 4. (Optional) Switch schema back to SQLite for continued local dev:
-```bash
-bun run db:use-sqlite
-git checkout prisma/schema.prisma  # discard local change
-```
+---
 
 ## 📦 Modules
 
@@ -91,20 +93,25 @@ git checkout prisma/schema.prisma  # discard local change
 - **Articles** — blog/articles CRUD with categories
 
 ### Saka Business Modules (always active)
-- **Submissions** — pengajuan laptop bekas (workflow: RECEIVED → QC_PROCESS → OFFER_SENT → ACCEPTED/REJECTED → INVENTORY → SOLD)
+- **Submissions** — pengajuan laptop bekas
+  - Workflow: RECEIVED → QC_PROCESS → OFFER_SENT → ACCEPTED/REJECTED → INVENTORY → SOLD
 - **QC** — 12-item inspection checklist
 - **Penawaran** — offer management
 - **Inventory** — laptop inventory internal
-- **Laporan** — sales report
+- **Laporan** — sales report with charts
+
+---
 
 ## 🎨 Color Palette
 
-Black + White + Blue accent (per PM brief v3)
+Black + White + Blue accent
 - Primary: `#000000`
 - Background: `#FAFAFA`
 - Accent: `#2563EB` (blue, for tech highlights)
 - Text: `#111827` / soft `#6B7280`
 - Border: `#E5E7EB`
+
+---
 
 ## 📁 Project Structure
 
@@ -114,6 +121,8 @@ src/
 │   ├── admin/              # Admin panel (15+ pages)
 │   ├── ajukan/             # Customer form (laptop submission)
 │   ├── api/                # API routes
+│   │   ├── setup/init/     # One-time setup endpoint (production seed)
+│   │   └── ...
 │   ├── page.tsx            # Homepage (7 sections)
 │   └── layout.tsx          # Root layout
 ├── core/                   # Nauka Core (RBAC + CMS foundation)
@@ -122,24 +131,42 @@ src/
 │   ├── lib/                # auth, db, module-registry
 │   └── types/              # module contracts
 ├── lib/                    # Saka stores & utils
-│   ├── auth-store.tsx      # Auth context (useAuth + useAuthStore shim)
-│   ├── submission-store.tsx
-│   └── ...
 ├── modules/                # Module contracts (CMS, Inventory stubs)
 └── components/             # shadcn/ui + Saka components
 
 prisma/
-├── schema.prisma           # SQLite (default for dev)
-├── schema.production.prisma # PostgreSQL (for production)
-├── schema.sqlite.prisma    # SQLite backup
-└── seed.ts                 # Legacy seed (Testimoni, StoreLogo)
+├── schema.prisma           # PostgreSQL (default, for production)
+├── schema.sqlite.prisma    # SQLite (for local dev)
+├── schema.production.prisma # PostgreSQL backup
+└── seed.ts                 # Legacy seed
 
 scripts/
 ├── seed-rbac.ts            # RBAC + super admin + branding + settings + SEO
 ├── seed-lokasi.ts          # Legacy Lokasi (WhatsApp number)
 ├── register-cms.ts         # Activate CMS module
-└── seed-sold-items.ts      # Dummy SOLD items (for dashboard verification)
+└── seed-sold-items.ts      # Dummy SOLD items
 ```
+
+---
+
+## 🆘 Troubleshooting
+
+### Login 500 error di production
+- Cek `DATABASE_URL` valid PostgreSQL connection string
+- Cek `JWT_SECRET` sudah di-set
+- Pastikan setup endpoint udah dipanggil: `/api/setup/init?key=SETUP_KEY`
+
+### `/api/lokasi` 500
+- DB belum di-seed. Run `/api/setup/init?key=SETUP_KEY` untuk seed Lokasi.
+
+### Prisma client error
+- Hapus `.next/` folder & redeploy
+- Atau tambahkan `prisma generate` ke build command di Vercel
+
+### Mau ganti password admin
+- Login → `/admin/users` → edit user → change password
+
+---
 
 ## 📝 License
 

@@ -1,9 +1,14 @@
+// ─── Saka Laptop — PostgreSQL Schema (for Vercel/Supabase production) ───
+// Identical to schema.prisma (SQLite) but with:
+// - provider = "postgresql"
+// - Json native type for CoreModule.config (SQLite uses String)
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -180,7 +185,7 @@ model CoreModule {
   version     String   @default("1.0.0")
   description String?
   status      String   @default("inactive") // active | inactive
-  config      String?  // JSON string (SQLite gak support Json native)
+  config      Json?    // Native JSON for PostgreSQL
   installedAt DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
