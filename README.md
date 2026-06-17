@@ -12,11 +12,23 @@ Buka dashboard Vercel → Settings → Environment Variables:
 
 | Variable | Value | Required |
 |---|---|---|
-| `DATABASE_URL` | `postgresql://...` (dari Supabase/Neon/Railway) | ✅ YES |
+| `DATABASE_URL` | `postgresql://...?pgBouncer=true&connection_limit=1` (Supabase/Neon, WAJIB pakai pgBouncer+connection_limit=1) | ✅ YES |
 | `JWT_SECRET` | random string 32+ chars (e.g. `openssl rand -base64 32`) | ✅ YES |
 | `SETUP_KEY` | random string (e.g. `saka-setup-2026-secret-key`) | ✅ YES (for setup) |
 | `ADMIN_INITIAL_PASSWORD` | `Saka2026!` (or custom) | Optional |
 | `NEXT_PUBLIC_SITE_URL` | `https://jakartalaptops.com` | Optional |
+
+⚠️ **CRITICAL untuk DATABASE_URL**: Vercel serverless + Supabase/Neon connection pool limit 15. Tanpa `pgBouncer=true&connection_limit=1`, API bakal 500 "max clients reached" saat traffic naik.
+
+**Contoh DATABASE_URL yang benar:**
+```
+postgresql://postgres.xxxx:password@aws-0-region.pooler.supabase.com:6543/postgres?pgBouncer=true&connection_limit=1
+```
+
+Catatan:
+- Pakai **pooler hostname** (cth: `aws-0-region.pooler.supabase.com`), BUKAN direct hostname (`db.xxxx.supabase.co`)
+- Pakai **port 6543** (pgBouncer), BUKAN 5432 (direct)
+- Tambah `?pgBouncer=true&connection_limit=1` di akhir URL
 
 ### 3. Deploy di Vercel
 Connect repo → Deploy. Tunggu build selesai.

@@ -1,11 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined
-}
+// ─── Prisma Client Singleton (Saka legacy path) ───
+// Re-export dari core/lib/db untuk konsistensi.
+// Sekarang kedua path (@/lib/prisma dan @/core/lib/db) share instance yang sama.
 
-export const db =
-  globalForPrisma.prisma ??
-  new PrismaClient()
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db
+export { db } from '@/core/lib/db'
