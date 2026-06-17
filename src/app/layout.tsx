@@ -2,9 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import { ProductProvider } from "@/lib/product-store";
-import { TransactionProvider } from "@/lib/transaction-store";
-import { TestimoniProvider } from "@/lib/testimoni-store";
 import { ThemeProvider } from "@/lib/theme-store";
 import { LokasiProvider } from "@/lib/lokasi-store";
 import { SubmissionProvider } from "@/lib/submission-store";
@@ -21,7 +18,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://saka-laptop.vercel.app";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://jakartalaptops.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -71,7 +68,7 @@ export const metadata: Metadata = {
         url: "/store-front.png",
         width: 1200,
         height: 630,
-        alt: "Saka Laptop — Toko Laptop Terpercaya",
+        alt: "Saka Laptop — Pusat Inspeksi & Trade-in Laptop Bekas",
       },
     ],
   },
@@ -99,17 +96,11 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <LokasiProvider>
-            <ProductProvider>
-              <TransactionProvider>
-                <TestimoniProvider>
-                  <SubmissionProvider>
-                    <SchemaOrg />
-                    {children}
-                    <ThemeAwareToaster />
-                  </SubmissionProvider>
-                </TestimoniProvider>
-              </TransactionProvider>
-            </ProductProvider>
+            <SubmissionProvider>
+              <SchemaOrg />
+              {children}
+              <ThemeAwareToaster />
+            </SubmissionProvider>
           </LokasiProvider>
         </ThemeProvider>
       </body>
