@@ -3,16 +3,51 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
 }
 
+/// InventoryItem = laptop yang sudah diterima dari customer (sudah deal) dan masuk inventory internal.
+/// Bisa dijual ke channel lain (B2B) atau dipindah ke "SOLD" saat sudah disalurkan.
+/// Status workflow: INVENTORY → SOLD
+model InventoryItem {
+  id              String   @id @default(cuid())
+  // Data laptop
+  nama            String
+  brand           String   @default("")
+  kategori        String   @default("Ultrabook")
+  ram             String   @default("")
+  storage         String   @default("")
+  gpu             String   @default("")
+  processor       String   @default("")
+  tahun           Int      @default(0)
+  kondisi         String   @default("Bagus")
+  kelengkapan     String   @default("Lengkap")
+  foto            String   @default("")
+  // Hasil QC checklist (JSON string: { layar: "ok", keyboard: "ok", ... })
+  qcChecklist     String   @default("{}")
+  qcNotes         String   @default("")
+  // Modal & harga jual internal
+  hargaBeli       Int      @default(0)
+  hargaJual       Int      @default(0)
+  channel         String   @default("internal") // internal, b2b, retail
+  status          String   @default("INVENTORY") // INVENTORY, SOLD
+  // Link ke Purchase asalnya
+  purchaseId      String?  @unique
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+/// Legacy model — dipertahankan untuk kompatibilitas dengan kode lama (kasir, transaksi).
+/// Tidak digunakan lagi di flow baru.
 model Product {
   id             String   @id @default(cuid())
   nama           String
   harga          Int
-  kategori       String   // Gaming, Editing, Kerja, Sekolah, Ultrabook
+  kategori       String
   ram            String
   storage        String
   gpu            String
@@ -20,6 +55,12 @@ model Product {
   portableScore  Int      @default(5)
   batteryScore   Int      @default(5)
   image          String   @default("")
+  kondisi        String   @default("Bekas")
+  kelengkapan    String   @default("Lengkap")
+  tahun          Int      @default(0)
+  hargaBeli      Int      @default(0)
+  sumber         String   @default("stock")
+  status         String   @default("available")
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   items          TransactionItem[]
@@ -28,8 +69,8 @@ model Product {
 model Transaction {
   id             String   @id @default(cuid())
   total          Int
-  paymentMethod  String   @default("Cash") // Cash, Transfer
-  status         String   @default("completed") // completed, refunded, cancelled
+  paymentMethod  String   @default("Cash")
+  status         String   @default("completed")
   customerName   String   @default("")
   customerPhone  String   @default("")
   customerAddress String  @default("")
@@ -61,7 +102,7 @@ model Testimoni {
 model Lokasi {
   id          String @id @default("default")
   namaToko    String @default("Saka Laptop")
-  tagline     String @default("Toko Laptop Terpercaya")
+  tagline     String @default("Pusat Inspeksi & Trade-in Laptop")
   foto        String @default("/store-front.png")
   alamat      String @default("")
   telepon     String @default("")
@@ -78,7 +119,7 @@ model User {
   username    String   @unique
   password    String
   role        String   @default("admin") // developer, admin
-  permissions String   @default("[]") // JSON string of PermissionKey[]
+  permissions String   @default("[]")
   createdAt   DateTime @default(now())
 }
 
@@ -91,15 +132,74 @@ model Article {
   id          String   @id @default(cuid())
   slug        String   @unique
   judul       String
-  konten      String   // Markdown content
-  excerpt     String   @default("")  // Short description for listing
-  gambar      String   @default("")  // Cover image URL
-  kategori    String   @default("Tips & Review")  // Tips & Review, Berita, Rekomendasi
+  konten      String
+  excerpt     String   @default("")
+  gambar      String   @default("")
+  kategori    String   @default("Tips & Review")
   published   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
 
-  @@index([slug])
-  @@index([published])
+/// ── MODEL UTAMA: Submission (pengajuan laptop bekas dari customer) ──
+///
+/// Workflow:
+///   RECEIVED     → Data laptop diterima dari customer (via form /ajukan)
+///   QC_PROCESS   → Tim sedang inspeksi fisik laptop
+///   OFFER_SENT   → Penawaran harga sudah dikirim ke customer
+///   ACCEPTED     → Customer setuju, masuk inventory
+///   REJECTED     → Customer menolak penawaran / laptop ditolak setelah QC
+///   INVENTORY    → Laptop sudah masuk inventory internal (linked ke InventoryItem)
+///   SOLD         → Laptop sudah disalurkan (via B2B / internal)
+model Submission {
+  id            String   @id @default(cuid())
+
+  // ── Data laptop dari customer ──
+  namaLaptop    String
+  brand         String   @default("")
+  kategori      String   @default("Ultrabook")
+  ram           String   @default("")
+  storage       String   @default("")
+  gpu           String   @default("")
+  processor     String   @default("")
+  tahun         Int      @default(0)
+  kondisi       String   @default("Bagus") // Baru, Bagus, Cacat, Rusak
+  kelengkapan   String   @default("Lengkap")
+  catatan       String   @default("")
+  foto          String   @default("")
+
+  // ── Data customer ──
+  customerName  String
+  customerPhone String
+  customerAddress String @default("")
+
+  // ── Hasil AI estimasi awal ──
+  estimasiAI    Int      @default(0)
+  estimasiNotes String   @default("")
+
+  // ── Hasil QC checklist (JSON: { layar: "ok"|"issue"|"fail", ... }) ──
+  qcChecklist   String   @default("{}")
+  qcNotes       String   @default("")
+
+  // ── Penawaran harga dari tim ──
+  hargaPenawaran Int     @default(0)
+  penawaranNotes String  @default("")
+  penawaranSentAt DateTime?
+
+  // ── Response customer ──
+  customerResponse String @default("") // "accepted" | "rejected" | ""
+  customerResponseAt DateTime?
+
+  // ── Workflow status ──
+  status        String   @default("RECEIVED")
+  // RECEIVED, QC_PROCESS, OFFER_SENT, ACCEPTED, REJECTED, INVENTORY, SOLD
+
+  // ── Link ke InventoryItem (jika status INVENTORY/SOLD) ──
+  inventoryItemId String? @unique
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([status])
   @@index([createdAt])
 }

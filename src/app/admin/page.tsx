@@ -1,283 +1,305 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import {
-  Package,
+  PackageOpen,
+  ClipboardCheck,
+  Tag,
+  Warehouse,
   DollarSign,
-  ShoppingCart,
-  Laptop,
+  TrendingUp,
+  ArrowRight,
+  AlertCircle,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { StatsCard } from "@/components/stats-card";
-import { formatPrice, formatDateTime } from "@/lib/format";
-import { useProducts } from "@/lib/product-store";
-import { useTransactions } from "@/lib/transaction-store";
-import { SkeletonStats, SkeletonTransaction } from "@/components/ui/skeleton";
+import { formatPrice } from "@/lib/format";
 import { useLokasi } from "@/lib/lokasi-store";
+import { useSubmissions, STATUS_LABELS } from "@/lib/submission-store";
 
-const statusColors: Record<string, string> = {
-  completed: "bg-green-500/20 text-green-400 border-green-500/30",
-  refunded: "bg-orange-500/20 text-orange-400 border-orange-500/30",
-  cancelled: "bg-red-500/20 text-red-400 border-red-500/30",
-};
-
-const statusLabels: Record<string, string> = {
-  completed: "Selesai",
-  refunded: "Refund",
-  cancelled: "Dibatalkan",
-};
+interface LaporanData {
+  counts: {
+    total: number;
+    RECEIVED: number;
+    QC_PROCESS: number;
+    OFFER_SENT: number;
+    ACCEPTED: number;
+    REJECTED: number;
+    INVENTORY: number;
+    SOLD: number;
+  };
+  inventory: {
+    totalItems: number;
+    inStock: number;
+    sold: number;
+    totalModal: number;
+    totalDisalurkan: number;
+    potensiProfit: number;
+  };
+  conversionRate: number;
+}
 
 export default function AdminDashboard() {
-  const { products, isLoaded: productsLoaded } = useProducts();
-  const { transactions, isLoaded: txLoaded } = useTransactions();
   const { lokasi } = useLokasi();
+  const { submissions, refresh } = useSubmissions();
+  const [laporan, setLaporan] = useState<LaporanData | null>(null);
 
-  const isLoaded = productsLoaded && txLoaded;
+  useEffect(() => {
+    refresh();
+    fetch("/api/laporan")
+      .then((r) => r.json())
+      .then(setLaporan)
+      .catch(console.error);
+  }, [refresh]);
 
-  // Compute stats from global state
-  const stats = useMemo(() => {
-    const totalProducts = products.length;
-    const completedTransactions = transactions.filter(
-      (tx) => tx.status === "completed"
-    );
-    const totalTransactions = transactions.length;
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const todayRevenue = completedTransactions
-      .filter((tx) => new Date(tx.createdAt) >= today)
-      .reduce((sum, tx) => sum + tx.total, 0);
-
-    const last7Days = Array.from({ length: 7 }, (_, i) => {
-      const date = new Date();
-      date.setDate(date.getDate() - (6 - i));
-      date.setHours(0, 0, 0, 0);
-      const nextDate = new Date(date);
-      nextDate.setDate(nextDate.getDate() + 1);
-
-      const dayRevenue = completedTransactions
-        .filter((tx) => {
-          const txDate = new Date(tx.createdAt);
-          return txDate >= date && txDate < nextDate;
-        })
-        .reduce((sum, tx) => sum + tx.total, 0);
-
-      return {
-        date: date.toLocaleDateString("id-ID", { day: "2-digit", month: "short" }),
-        revenue: dayRevenue,
-      };
-    });
-
-    return {
-      totalProducts,
-      totalTransactions,
-      todayRevenue,
-      last7Days,
-    };
-  }, [products, transactions]);
-
-  const recentTransactions = transactions.slice(0, 10);
+  const recentSubmissions = submissions.slice(0, 5);
+  const needsAttention = submissions.filter(
+    (s) => s.status === "RECEIVED" || s.status === "QC_PROCESS" || s.status === "OFFER_SENT"
+  );
 
   return (
-    <div className="page-animate p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-7 page-container max-w-6xl">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        <h1 className="text-xl lg:text-2xl font-bold">Dashboard</h1>
-        <p className="text-sm text-muted-foreground mt-1">Ringkasan toko {lokasi.namaToko}</p>
-      </motion.div>
-
-      {/* Stats */}
-      {!isLoaded ? (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <SkeletonStats key={i} />
-          ))}
+    <div className="min-h-full bg-background">
+      <div className="border-b border-border/40 bg-card/30">
+        <div className="page-container py-6">
+          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Ringkasan operasional inspeksi & trade-in
+          </p>
         </div>
-      ) : (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-5"
-        >
-          <StatsCard
-            title="Total Produk"
-            value={stats.totalProducts.toString()}
-            icon={Package}
-            description="Produk terdaftar"
-          />
-          <StatsCard
-            title="Pendapatan Hari Ini"
-            value={formatPrice(stats.todayRevenue)}
-            icon={DollarSign}
-            description="Transaksi selesai"
-          />
-          <StatsCard
-            title="Total Transaksi"
-            value={stats.totalTransactions.toString()}
-            icon={ShoppingCart}
-            description="Semua waktu"
-          />
-          <StatsCard
-            title="Produk Tersedia"
-            value={stats.totalProducts.toString()}
-            icon={Laptop}
-            description="Dalam inventaris"
-          />
-        </motion.div>
-      )}
+      </div>
 
-      {/* Revenue Chart */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.3 }}
-      >
-        <Card className="border-border/50 shadow-soft-sm hover:shadow-soft-md transition-shadow duration-300">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">Pendapatan 7 Hari Terakhir</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-end gap-2 h-48">
-              {stats.last7Days.map((day) => {
-                const maxRevenue = Math.max(
-                  ...stats.last7Days.map((d) => d.revenue),
-                  1
-                );
-                const height = Math.max(4, (day.revenue / maxRevenue) * 100);
-                return (
-                  <div
-                    key={day.date}
-                    className="flex-1 flex flex-col items-center gap-1"
-                  >
-                    <span className="text-xs text-muted-foreground">
-                      {day.revenue > 0 ? `${(day.revenue / 1_000_000).toFixed(1)}jt` : "-"}
-                    </span>
-                    <div
-                      className="w-full rounded-t-xl bg-primary/60 hover:bg-primary/90 transition-all duration-300 min-h-[4px] hover:shadow-soft-md hover:shadow-primary/10 cursor-default"
-                      style={{ height: `${height}%` }}
-                    />
-                    <span className="text-xs text-muted-foreground">
-                      {day.date}
-                    </span>
-                  </div>
-                );
-              })}
+      <div className="page-container py-6 space-y-6">
+        {/* Top stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <StatCard
+            label="Pengajuan Baru"
+            value={laporan?.counts.RECEIVED ?? 0}
+            color="text-sky-500"
+            icon={PackageOpen}
+            href="/admin/laptop-masuk"
+          />
+          <StatCard
+            label="Sedang QC"
+            value={laporan?.counts.QC_PROCESS ?? 0}
+            color="text-amber-500"
+            icon={ClipboardCheck}
+            href="/admin/qc"
+          />
+          <StatCard
+            label="Menunggu Response"
+            value={laporan?.counts.OFFER_SENT ?? 0}
+            color="text-violet-500"
+            icon={Tag}
+            href="/admin/penawaran"
+          />
+          <StatCard
+            label="Inventory"
+            value={laporan?.inventory.inStock ?? 0}
+            color="text-emerald-500"
+            icon={Warehouse}
+            href="/admin/inventory"
+          />
+        </div>
+
+        {/* Needs attention */}
+        {needsAttention.length > 0 && (
+          <Card className="border-amber-500/30 bg-amber-500/5">
+            <CardContent className="p-4">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-amber-500">
+                    {needsAttention.length} pengajuan butuh tindakan
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Cek halaman Laptop Masuk untuk proses lanjut
+                  </p>
+                </div>
+                <Link href="/admin/laptop-masuk">
+                  <Badge variant="outline" className="bg-amber-500/10 text-amber-500 border-amber-500/30 cursor-pointer">
+                    Lihat <ArrowRight className="h-3 w-3 ml-1" />
+                  </Badge>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        <div className="grid lg:grid-cols-3 gap-6">
+          {/* Left: Recent submissions */}
+          <div className="lg:col-span-2 space-y-3">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-semibold">Pengajuan Terbaru</h2>
+              <Link
+                href="/admin/laptop-masuk"
+                className="text-xs text-primary hover:underline"
+              >
+                Lihat semua
+              </Link>
             </div>
-          </CardContent>
-        </Card>
-      </motion.div>
+            {recentSubmissions.length === 0 ? (
+              <Card className="border-dashed">
+                <CardContent className="py-8 text-center">
+                  <PackageOpen className="h-8 w-8 mx-auto text-muted-foreground/40 mb-2" />
+                  <p className="text-xs text-muted-foreground">
+                    Belum ada pengajuan
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              recentSubmissions.map((s, i) => (
+                <motion.div
+                  key={s.id}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                >
+                  <Link href="/admin/laptop-masuk">
+                    <Card className="border-border/50 hover:border-primary/30 hover:shadow-soft-sm transition-all cursor-pointer">
+                      <CardContent className="p-3">
+                        <div className="flex items-center gap-3">
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold truncate">
+                              {s.namaLaptop}
+                            </p>
+                            <p className="text-xs text-muted-foreground truncate">
+                              {s.customerName} · {s.brand} · {s.ram}
+                            </p>
+                          </div>
+                          <Badge
+                            variant="outline"
+                            className={`text-[10px] shrink-0 ${
+                              s.status === "RECEIVED"
+                                ? "bg-sky-500/10 text-sky-500 border-sky-500/30"
+                                : s.status === "QC_PROCESS"
+                                  ? "bg-amber-500/10 text-amber-500 border-amber-500/30"
+                                  : s.status === "OFFER_SENT"
+                                    ? "bg-violet-500/10 text-violet-500 border-violet-500/30"
+                                    : "bg-muted text-muted-foreground"
+                            }`}
+                          >
+                            {STATUS_LABELS[s.status as keyof typeof STATUS_LABELS] || s.status}
+                          </Badge>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                </motion.div>
+              ))
+            )}
+          </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5 lg:gap-6">
-        {/* Recent Transactions */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.3 }}
-        >
-          <Card className="border-border/50 shadow-soft-sm hover:shadow-soft-md transition-shadow duration-300">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base">Transaksi Terbaru</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {!txLoaded ? (
-                <div className="space-y-3">
-                  {Array.from({ length: 3 }).map((_, i) => (
-                    <SkeletonTransaction key={i} />
-                  ))}
-                </div>
-              ) : recentTransactions.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-8">
-                  Belum ada transaksi
-                </p>
-              ) : (
-                <div className="space-y-1 max-h-80 lg:max-h-[calc(100vh-420px)] overflow-y-auto">
-                  {recentTransactions.map((tx) => (
-                    <div
-                      key={tx.id}
-                      className="flex items-center justify-between py-2.5 px-3 rounded-xl hover:bg-muted/30 transition-colors duration-200"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium truncate">
-                          {tx.items.map((i) => i.productName).join(", ")}
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-0.5">
-                          {formatDateTime(tx.createdAt)} · {tx.paymentMethod}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2 ml-3 flex-shrink-0">
-                        <Badge
-                          variant="outline"
-                          className={`text-xs px-1.5 py-0.5 ${statusColors[tx.status] || ""}`}
-                        >
-                          {statusLabels[tx.status] || tx.status}
-                        </Badge>
-                        <span className="text-sm font-semibold">
-                          {formatPrice(tx.total)}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </motion.div>
+          {/* Right: Summary */}
+          <div className="space-y-3">
+            <h2 className="text-sm font-semibold">Ringkasan</h2>
+            <Card className="border-border/50">
+              <CardContent className="p-4 space-y-3">
+                <SummaryRow
+                  icon={PackageOpen}
+                  label="Total Pengajuan"
+                  value={String(laporan?.counts.total ?? 0)}
+                  color="text-primary"
+                />
+                <SummaryRow
+                  icon={TrendingUp}
+                  label="Conversion Rate"
+                  value={`${laporan?.conversionRate ?? 0}%`}
+                  color="text-emerald-500"
+                />
+                <SummaryRow
+                  icon={DollarSign}
+                  label="Total Modal"
+                  value={formatPrice(laporan?.inventory.totalModal ?? 0).replace("Rp", "").trim()}
+                  color="text-amber-500"
+                />
+                <SummaryRow
+                  icon={TrendingUp}
+                  label="Potensi Profit"
+                  value={formatPrice(laporan?.inventory.potensiProfit ?? 0).replace("Rp", "").trim()}
+                  color="text-emerald-500"
+                />
+              </CardContent>
+            </Card>
 
-        {/* Recent Products */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.3 }}
-        >
-          <Card className="border-border/50 shadow-soft-sm hover:shadow-soft-md transition-shadow duration-300">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Laptop className="h-4 w-4 text-primary" />
-                Produk Tersedia
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {!productsLoaded ? (
-                <div className="space-y-3">
-                  {Array.from({ length: 3 }).map((_, i) => (
-                    <SkeletonTransaction key={i} />
-                  ))}
-                </div>
-              ) : products.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-8">
-                  Belum ada produk
+            <Card className="border-border/50">
+              <CardContent className="p-4">
+                <p className="text-xs text-muted-foreground mb-3">
+                  Quick Actions
                 </p>
-              ) : (
-                <div className="space-y-1 max-h-80 lg:max-h-[calc(100vh-420px)] overflow-y-auto">
-                  {products.slice(0, 10).map((p) => (
-                    <div
-                      key={p.id}
-                      className="flex items-center justify-between py-2.5 px-3 rounded-xl hover:bg-muted/30 transition-colors duration-200"
-                    >
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium truncate">{p.nama}</p>
-                      </div>
-                      <Badge
-                        variant="outline"
-                        className="text-xs flex-shrink-0 ml-2 px-1.5 py-0.5 bg-primary/10 text-primary border-primary/20"
-                      >
-                        {formatPrice(p.harga)}
-                      </Badge>
-                    </div>
-                  ))}
+                <div className="space-y-1.5">
+                  <QuickLink href="/admin/laptop-masuk" label="Laptop Masuk" />
+                  <QuickLink href="/admin/qc" label="QC Inspeksi" />
+                  <QuickLink href="/admin/penawaran" label="Penawaran" />
+                  <QuickLink href="/admin/inventory" label="Inventory" />
+                  <QuickLink href="/admin/laporan" label="Laporan" />
                 </div>
-              )}
-            </CardContent>
-          </Card>
-        </motion.div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
     </div>
+  );
+}
+
+function StatCard({
+  label,
+  value,
+  color,
+  icon: Icon,
+  href,
+}: {
+  label: string;
+  value: number;
+  color: string;
+  icon: React.ComponentType<{ className?: string }>;
+  href: string;
+}) {
+  return (
+    <Link href={href}>
+      <Card className="border-border/50 hover:border-primary/30 hover:shadow-soft-sm transition-all cursor-pointer">
+        <CardContent className="p-4">
+          <div className="flex items-center gap-1.5 mb-2">
+            <Icon className={`h-4 w-4 ${color}`} />
+            <span className="text-xs text-muted-foreground">{label}</span>
+          </div>
+          <p className={`text-2xl font-bold ${color}`}>{value}</p>
+        </CardContent>
+      </Card>
+    </Link>
+  );
+}
+
+function SummaryRow({
+  icon: Icon,
+  label,
+  value,
+  color,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  value: string;
+  color: string;
+}) {
+  return (
+    <div className="flex items-center gap-2">
+      <Icon className={`h-3.5 w-3.5 ${color}`} />
+      <span className="text-xs text-muted-foreground flex-1">{label}</span>
+      <span className={`text-sm font-bold ${color}`}>{value}</span>
+    </div>
+  );
+}
+
+function QuickLink({ href, label }: { href: string; label: string }) {
+  return (
+    <Link
+      href={href}
+      className="flex items-center justify-between rounded-lg px-3 py-2 text-sm hover:bg-muted/60 transition-colors"
+    >
+      <span>{label}</span>
+      <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
+    </Link>
   );
 }

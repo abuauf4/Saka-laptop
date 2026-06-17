@@ -5,18 +5,18 @@ import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
-  Laptop,
-  ShoppingCart,
-  Receipt,
+  PackageOpen,
+  ClipboardCheck,
+  Tag,
+  Warehouse,
+  BarChart3,
   Store,
   Menu,
-  MessageSquareHeart,
-  Users,
   LogOut,
   Shield,
   KeyRound,
   StoreIcon,
-  FileText,
+  Users,
 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
@@ -36,11 +36,11 @@ import {
 /* Nav items — permission key maps to each item */
 const adminNavItems: { href: string; label: string; icon: typeof LayoutDashboard; permission: PermissionKey }[] = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, permission: "dashboard" },
-  { href: "/admin/produk", label: "Produk", icon: Laptop, permission: "produk" },
-  { href: "/admin/artikel", label: "Artikel", icon: FileText, permission: "produk" },
-  { href: "/admin/testimoni", label: "Testimoni", icon: MessageSquareHeart, permission: "testimoni" },
-  { href: "/admin/kasir", label: "Kasir", icon: ShoppingCart, permission: "kasir" },
-  { href: "/admin/transaksi", label: "Transaksi", icon: Receipt, permission: "transaksi" },
+  { href: "/admin/laptop-masuk", label: "Laptop Masuk", icon: PackageOpen, permission: "laptop_masuk" },
+  { href: "/admin/qc", label: "QC", icon: ClipboardCheck, permission: "qc" },
+  { href: "/admin/penawaran", label: "Penawaran", icon: Tag, permission: "penawaran" },
+  { href: "/admin/inventory", label: "Inventory", icon: Warehouse, permission: "inventory" },
+  { href: "/admin/laporan", label: "Laporan", icon: BarChart3, permission: "laporan" },
   { href: "/admin/profil", label: "Profil Toko", icon: StoreIcon, permission: "profil" },
 ];
 

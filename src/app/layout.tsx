@@ -7,6 +7,7 @@ import { TransactionProvider } from "@/lib/transaction-store";
 import { TestimoniProvider } from "@/lib/testimoni-store";
 import { ThemeProvider } from "@/lib/theme-store";
 import { LokasiProvider } from "@/lib/lokasi-store";
+import { SubmissionProvider } from "@/lib/submission-store";
 import { ThemeAwareToaster } from "@/components/theme-aware-toaster";
 import { SchemaOrg } from "@/components/schema-org";
 
@@ -25,23 +26,23 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://saka-laptop.vercel.
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Saka Laptop — Toko Laptop Terpercaya",
+    default: "Saka Laptop — Pusat Inspeksi & Trade-in Laptop Bekas",
     template: "%s — Saka Laptop",
   },
   description:
-    "Saka Laptop adalah toko laptop terpercaya di Jakarta Selatan yang menyediakan laptop gaming, ultrabook, laptop kerja, dan laptop sekolah berkualitas dengan harga terbaik. Dilengkapi AI Finder untuk rekomendasi laptop yang tepat.",
+    "Kirim data laptop bekas kamu. Tim kami akan melakukan pengecekan, QC, dan memberikan penawaran harga yang transparan. Pusat inspeksi & trade-in laptop terpercaya.",
   keywords: [
-    "toko laptop",
-    "laptop bekas berkualitas",
-    "laptop gaming",
-    "ultrabook",
-    "laptop kerja",
-    "laptop sekolah",
-    "rekomendasi laptop",
-    "laptop Jakarta Selatan",
+    "terima laptop bekas",
+    "trade in laptop",
+    "inspeksi laptop",
+    "QC laptop bekas",
+    "jual laptop bekas",
+    "tukar tambah laptop",
+    "pusat trade-in laptop",
+    "penawaran laptop bekas",
+    "laptop bekas Jakarta",
     "Saka Laptop",
-    "laptop murah",
-    "laptop second",
+    "pengecekan laptop",
   ],
   authors: [{ name: "Nauka Creative Digital" }],
   creator: "Nauka Creative Digital",
@@ -62,9 +63,9 @@ export const metadata: Metadata = {
     locale: "id_ID",
     url: siteUrl,
     siteName: "Saka Laptop",
-    title: "Saka Laptop — Toko Laptop Terpercaya",
+    title: "Saka Laptop — Pusat Inspeksi & Trade-in Laptop Bekas",
     description:
-      "Toko laptop terpercaya di Jakarta Selatan. Laptop gaming, ultrabook, kerja & sekolah berkualitas dengan AI Finder.",
+      "Kirim data laptop bekas kamu. Tim kami melakukan QC & memberikan penawaran transparan.",
     images: [
       {
         url: "/store-front.png",
@@ -76,9 +77,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Saka Laptop — Toko Laptop Terpercaya",
+    title: "Saka Laptop — Pusat Inspeksi & Trade-in Laptop Bekas",
     description:
-      "Toko laptop terpercaya di Jakarta Selatan. Laptop gaming, ultrabook, kerja & sekolah berkualitas.",
+      "Kirim data laptop bekas. QC transparan, penawaran jelas, proses cepat.",
     images: ["/store-front.png"],
   },
   alternates: {
@@ -101,9 +102,11 @@ export default function RootLayout({
             <ProductProvider>
               <TransactionProvider>
                 <TestimoniProvider>
-                  <SchemaOrg />
-                  {children}
-                  <ThemeAwareToaster />
+                  <SubmissionProvider>
+                    <SchemaOrg />
+                    {children}
+                    <ThemeAwareToaster />
+                  </SubmissionProvider>
                 </TestimoniProvider>
               </TransactionProvider>
             </ProductProvider>

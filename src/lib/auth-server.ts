@@ -11,11 +11,17 @@ export type UserRole = "developer" | "admin";
 
 export const PERMISSION_KEYS = [
   "dashboard",
+  "laptop_masuk",
+  "qc",
+  "penawaran",
+  "inventory",
+  "laporan",
+  "profil",
+  // Legacy (untuk kompatibilitas menu lama yang masih ada)
   "produk",
   "testimoni",
   "kasir",
   "transaksi",
-  "profil",
 ] as const;
 
 export type PermissionKey = (typeof PERMISSION_KEYS)[number];
