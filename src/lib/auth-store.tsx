@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, useMemo, type ReactNode } from "react";
 
 /* ── TYPES ── */
 // Compatible dengan Saka lama (currentUser.username, role, permissions)
@@ -143,18 +143,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Saka compat: isDeveloper = isSuperAdmin
   const isDeveloper = currentUser?.isSuperAdmin ?? false;
 
+  // Memoize context value to prevent infinite re-renders in consumers
+  const value = useMemo(
+    () => ({
+      currentUser,
+      isLoaded,
+      login,
+      logout,
+      checkAuth,
+      hasPermission,
+      isDeveloper,
+    }),
+    [currentUser, isLoaded, login, logout, checkAuth, hasPermission, isDeveloper]
+  );
+
   return (
-    <AuthContext.Provider
-      value={{
-        currentUser,
-        isLoaded,
-        login,
-        logout,
-        checkAuth,
-        hasPermission,
-        isDeveloper,
-      }}
-    >
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
@@ -177,10 +181,10 @@ export type UserRole = string;
  * We provide a shim that wraps useAuth (Context) to expose the same interface.
  * This avoids rewriting all Nauka admin pages.
  */
-import { useMemo } from "react";
-
 export function useAuthStore() {
   const auth = useAuth();
+  // Memoize berdasarkan field2 individual yang stabil (bukan object `auth` whole)
+  // kalau gak, akan invalidate setiap render → infinite loop di Nauka pages
   return useMemo(
     () => ({
       currentUser: auth.currentUser
@@ -205,6 +209,13 @@ export function useAuthStore() {
       checkAuth: auth.checkAuth,
       hasPermission: auth.hasPermission,
     }),
-    [auth]
+    [
+      auth.currentUser,
+      auth.isLoaded,
+      auth.login,
+      auth.logout,
+      auth.checkAuth,
+      auth.hasPermission,
+    ]
   );
 }
