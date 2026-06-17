@@ -194,8 +194,14 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     console.error("Error fetching laporan:", error);
+    // Return detailed error untuk debugging (jangan hide)
+    const msg = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: "Failed to fetch laporan" },
+      {
+        error: "Failed to fetch laporan",
+        detail: msg,
+        hint: "If error mentions 'max clients reached' or 'pool_size', check DATABASE_URL has ?pgBouncer=true&connection_limit=1",
+      },
       { status: 500 }
     );
   }
