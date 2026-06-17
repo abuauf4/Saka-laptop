@@ -206,9 +206,9 @@ export default function AjukanPage() {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", damping: 12, delay: 0.2 }}
-                  className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/15 mb-5"
+                  className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-foreground/10 mb-5"
                 >
-                  <CheckCircle2 className="h-9 w-9 text-emerald-500" />
+                  <CheckCircle2 className="h-9 w-9 text-foreground" />
                 </motion.div>
                 <h1 className="text-2xl font-bold mb-2">
                   Pengajuan Diterima
@@ -599,7 +599,7 @@ export default function AjukanPage() {
                             </Badge>
                           </div>
                           <div className="flex items-center justify-center gap-1 mt-2">
-                            <TrendingUp className="h-3 w-3 text-emerald-500" />
+                            <TrendingUp className="h-3 w-3 text-foreground" />
                             <span className="text-[10px] text-muted-foreground">
                               Confidence {estimasi.confidence}%
                             </span>

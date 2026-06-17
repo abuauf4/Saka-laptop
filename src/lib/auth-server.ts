@@ -1,38 +1,61 @@
-import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
-import { cookies } from "next/headers";
-import { db } from "./prisma";
+/**
+ * Shim: re-exports dari @/core/lib/auth untuk backward compatibility.
+ * Semua kode Saka lama yang import dari "@/lib/auth-server" akan tetap jalan.
+ *
+ * Note: PERMISSION_KEYS lama (Saka format: "dashboard", "laptop_masuk", etc)
+ * sudah gak relevant di RBAC baru. Gunakan PERMISSION_KEY_STRINGS dari
+ * @/core/config/core-permissions untuk semua permission keys.
+ *
+ * Note: auth-server lama pake "developer" role, sistem baru pake "super_admin".
+ * requireDeveloper() sekarang alias untuk requireSuperAdmin().
+ */
 
-const JWT_SECRET = process.env.JWT_SECRET || "saka_laptop_secret_2026";
-const COOKIE_NAME = "saka_auth_token";
+export {
+  hashPassword,
+  verifyPassword,
+  signToken,
+  verifyToken,
+  getAuthFromRequest,
+  requireAuth,
+  requireSuperAdmin,
+  requireRole,
+  requirePermission,
+  getUserWithPermissions,
+  logActivity,
+  COOKIE_NAME,
+  type JwtPayload,
+} from "@/core/lib/auth";
 
-/* ── Types ── */
-export type UserRole = "developer" | "admin";
+import { requireSuperAdmin } from "@/core/lib/auth";
 
-export const PERMISSION_KEYS = [
-  "dashboard",
-  "laptop_masuk",
-  "qc",
-  "penawaran",
-  "inventory",
-  "laporan",
-  "profil",
-  // Legacy (untuk kompatibilitas menu lama yang masih ada)
-  "produk",
-  "testimoni",
-  "kasir",
-  "transaksi",
-] as const;
-
-export type PermissionKey = (typeof PERMISSION_KEYS)[number];
-
-export interface JwtPayload {
-  userId: string;
-  username: string;
-  role: UserRole;
-  permissions: PermissionKey[];
+/** Saka compat: requireDeveloper = requireSuperAdmin di sistem baru */
+export async function requireDeveloper() {
+  return requireSuperAdmin();
 }
 
+/** Saka compat: setAuthCookie (tidak dipakai lagi — cookie di-set di API login) */
+export async function setAuthCookie(_token: string) {
+  // no-op — cookie di-handle di /api/auth/login
+  console.warn("setAuthCookie is deprecated, cookie set by /api/auth/login");
+}
+
+/** Saka compat: clearAuthCookie (tidak dipakai lagi) */
+export async function clearAuthCookie() {
+  // no-op
+  console.warn("clearAuthCookie is deprecated, cookie cleared by /api/auth/logout");
+}
+
+/** Saka compat: PERMISSION_KEYS (string array) */
+import { PERMISSION_KEY_STRINGS } from "@/core/config/core-permissions";
+export const PERMISSION_KEYS = PERMISSION_KEY_STRINGS;
+
+/** Saka compat: PermissionKey type */
+export type PermissionKey = string;
+
+/** Saka compat: UserRole type */
+export type UserRole = string;
+
+/** Saka compat: AuthResult type */
 export interface AuthResult {
   success: boolean;
   user?: {
@@ -43,104 +66,4 @@ export interface AuthResult {
     createdAt: string;
   };
   error?: string;
-}
-
-/* ── Password hashing ── */
-export async function hashPassword(password: string): Promise<string> {
-  return bcrypt.hash(password, 10);
-}
-
-export async function verifyPassword(password: string, hash: string): Promise<boolean> {
-  return bcrypt.compare(password, hash);
-}
-
-/* ── JWT ── */
-export function signToken(payload: JwtPayload): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
-}
-
-export function verifyToken(token: string): JwtPayload | null {
-  try {
-    return jwt.verify(token, JWT_SECRET) as JwtPayload;
-  } catch {
-    return null;
-  }
-}
-
-/* ── Cookie helpers ── */
-export async function setAuthCookie(token: string) {
-  const cookieStore = await cookies();
-  cookieStore.set(COOKIE_NAME, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 7, // 7 days
-    path: "/",
-  });
-}
-
-export async function clearAuthCookie() {
-  const cookieStore = await cookies();
-  cookieStore.delete(COOKIE_NAME);
-}
-
-export async function getAuthFromRequest(): Promise<AuthResult> {
-  try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get(COOKIE_NAME)?.value;
-
-    if (!token) {
-      return { success: false, error: "No token" };
-    }
-
-    const payload = verifyToken(token);
-    if (!payload) {
-      return { success: false, error: "Invalid token" };
-    }
-
-    // Verify user still exists in DB
-    const user = await db.user.findUnique({ where: { id: payload.userId } });
-    if (!user) {
-      return { success: false, error: "User not found" };
-    }
-
-    const permissions = JSON.parse(user.permissions) as PermissionKey[];
-
-    return {
-      success: true,
-      user: {
-        id: user.id,
-        username: user.username,
-        role: user.role as UserRole,
-        permissions: user.role === "developer" ? [...PERMISSION_KEYS] : permissions,
-        createdAt: user.createdAt.toISOString(),
-      },
-    };
-  } catch {
-    return { success: false, error: "Auth error" };
-  }
-}
-
-/* ── Permission check ── */
-export function hasPermission(user: { role: UserRole; permissions: PermissionKey[] }, key: PermissionKey): boolean {
-  if (user.role === "developer") return true;
-  return user.permissions.includes(key);
-}
-
-/* ── Require auth helper (throws if not authenticated) ── */
-export async function requireAuth(): Promise<NonNullable<AuthResult["user"]>> {
-  const result = await getAuthFromRequest();
-  if (!result.success || !result.user) {
-    throw new Error("Unauthorized");
-  }
-  return result.user;
-}
-
-/* ── Require developer role ── */
-export async function requireDeveloper(): Promise<NonNullable<AuthResult["user"]>> {
-  const user = await requireAuth();
-  if (user.role !== "developer") {
-    throw new Error("Forbidden: developer only");
-  }
-  return user;
 }

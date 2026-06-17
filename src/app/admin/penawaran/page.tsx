@@ -292,7 +292,7 @@ export default function PenawaranPage() {
                               variant="outline"
                               className={`text-[10px] ${
                                 v === "ok"
-                                  ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/30"
+                                  ? "bg-foreground/10 text-foreground border-foreground/30"
                                   : v === "issue"
                                     ? "bg-amber-500/10 text-amber-500 border-amber-500/30"
                                     : "bg-red-500/10 text-red-500 border-red-500/30"
@@ -356,7 +356,7 @@ export default function PenawaranPage() {
                               variant="outline"
                               className={`text-[10px] ${
                                 parseInt(harga) >= selected.estimasiAI
-                                  ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/30"
+                                  ? "bg-foreground/10 text-foreground border-foreground/30"
                                   : "bg-amber-500/10 text-amber-500 border-amber-500/30"
                               }`}
                             >
@@ -417,7 +417,7 @@ export default function PenawaranPage() {
                         <Button
                           onClick={markAccepted}
                           disabled={saving}
-                          className="bg-emerald-600 hover:bg-emerald-700"
+                          className="bg-foreground hover:bg-foreground/90"
                         >
                           <CheckCircle2 className="h-4 w-4 mr-1.5" /> Customer Deal
                         </Button>

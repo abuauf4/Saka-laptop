@@ -261,7 +261,7 @@ export default function QCPage() {
                     label="OK"
                     value={qcSummary.ok}
                     icon={CheckCircle2}
-                    color="text-emerald-500"
+                    color="text-foreground"
                   />
                   <SummaryPill
                     label="Issue"
@@ -312,7 +312,7 @@ export default function QCPage() {
                                   className={`rounded-md py-1.5 text-[10px] font-semibold border transition-all ${
                                     value === opt.value
                                       ? opt.value === "ok"
-                                        ? "border-emerald-500 bg-emerald-500/15 text-emerald-500"
+                                        ? "border-foreground bg-foreground/10 text-foreground"
                                         : opt.value === "issue"
                                           ? "border-amber-500 bg-amber-500/15 text-amber-500"
                                           : "border-red-500 bg-red-500/15 text-red-500"

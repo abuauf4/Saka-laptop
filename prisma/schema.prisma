@@ -7,6 +7,229 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ═══════════════════════════════════════
+// NAUKA CORE MODELS (RBAC + CMS)
+// ═══════════════════════════════════════
+
+/// ─── Users (RBAC, ganti simple User lama) ───
+model User {
+  id         String   @id @default(cuid())
+  fullName   String
+  email      String   @unique
+  password   String
+  avatar     String?
+  status     String   @default("active") // active | inactive
+  lastLogin  DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  userRoles  UserRole[]
+  activities Activity[]
+
+  @@map("core_users")
+}
+
+/// ─── Roles ───
+model Role {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userRoles       UserRole[]
+  rolePermissions RolePermission[]
+
+  @@map("core_roles")
+}
+
+/// ─── Permissions ───
+model Permission {
+  id       String @id @default(cuid())
+  name     String @unique // e.g. "users.view", "articles.create"
+  category String      // e.g. "users", "articles", "branding"
+  action   String      // view | create | update | delete
+  label    String      // Human-readable label
+
+  rolePermissions RolePermission[]
+
+  @@map("core_permissions")
+}
+
+/// ─── User-Role Pivot ───
+model UserRole {
+  id     String @id @default(cuid())
+  userId String
+  roleId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId])
+  @@map("core_user_roles")
+}
+
+/// ─── Role-Permission Pivot ───
+model RolePermission {
+  id           String @id @default(cuid())
+  roleId       String
+  permissionId String
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+  @@map("core_role_permissions")
+}
+
+/// ─── Branding (singleton) ───
+model Branding {
+  id              String   @id @default("default")
+  siteName        String   @default("Saka Laptop")
+  tagline         String   @default("Pusat Inspeksi & Trade-in Laptop Bekas")
+  siteDescription String?
+  logo            String?
+  favicon         String?
+  copyrightText   String   @default("© 2026 Saka Laptop. All rights reserved.")
+  instagram       String?
+  facebook        String?
+  tiktok          String?
+  youtube         String?
+  linkedin        String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("core_branding")
+}
+
+/// ─── SEO (singleton) ───
+model Seo {
+  id              String   @id @default("default")
+  siteTitle       String?
+  metaDescription String?
+  keywords        String?
+  homepageTitle   String?
+  homepageDesc    String?
+  ogTitle         String?
+  ogDescription   String?
+  ogImage         String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("core_seo")
+}
+
+/// ─── Media ───
+model Media {
+  id        String   @id @default(cuid())
+  fileName  String
+  fileType  String   // jpg | png | webp | svg | pdf
+  fileSize  Int      // bytes
+  filePath  String
+  folder    String   @default("General")
+  altText   String?
+  width     Int?
+  height    Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("core_media")
+}
+
+/// ─── Settings (singleton) ───
+model Settings {
+  id                String   @id @default("default")
+  phone             String?
+  whatsapp          String?
+  email             String?
+  address           String?
+  googleMapsUrl     String?
+  googleAnalyticsId String?
+  metaPixelId       String?
+  smtpHost          String?
+  smtpPort          String?
+  smtpUsername      String?
+  smtpPassword      String?
+  maintenanceMode   Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("core_settings")
+}
+
+/// ─── Activity Log ───
+model Activity {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String // e.g. "login", "create_article", "update_branding"
+  details   String? // JSON details
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("core_activity_logs")
+}
+
+/// ─── Core Module Registry ───
+model CoreModule {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  version     String   @default("1.0.0")
+  description String?
+  status      String   @default("inactive") // active | inactive
+  config      String?  // JSON string (SQLite gak support Json native, pakai String)
+  installedAt DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("core_modules")
+}
+
+// ═══════════════════════════════════════
+// CMS MODULE (Articles + Categories)
+// ═══════════════════════════════════════
+
+/// ─── Articles ───
+model Article {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  excerpt     String?
+  content     String? // Markdown or HTML content
+  coverImage  String?
+  status      String   @default("draft") // draft | published | archived
+  metaTitle   String?
+  metaDesc    String?
+  ogImage     String?
+  authorId    String?
+  categoryId  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  category ArticleCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@map("cms_articles")
+}
+
+/// ─── Article Categories ───
+model ArticleCategory {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  articles Article[]
+
+  @@map("cms_categories")
+}
+
+// ═══════════════════════════════════════
+// SAKA LAPTOP BUSINESS MODELS
+// ═══════════════════════════════════════
+
 /// InventoryItem = laptop yang sudah diterima dari customer (sudah deal) dan masuk inventory internal.
 /// Bisa dijual ke channel lain (B2B) atau dipindah ke "SOLD" saat sudah disalurkan.
 /// Status workflow: INVENTORY → SOLD
@@ -32,7 +255,7 @@ model InventoryItem {
   hargaJual       Int      @default(0)
   channel         String   @default("internal") // internal, b2b, retail
   status          String   @default("INVENTORY") // INVENTORY, SOLD
-  // Link ke Purchase asalnya
+  // Link ke Submission asalnya
   purchaseId      String?  @unique
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -99,10 +322,14 @@ model Testimoni {
   avatar   String @default("")
 }
 
+/// ─── Legacy Lokasi (Profil Toko lama) ───
+/// Dipertahankan untuk backward compatibility dengan homepage (WhatsApp number)
+/// dan komponen store-name/store-logo/schema-org. Akan di-deprecate di masa depan
+/// setelah migrasi penuh ke Branding + Settings.
 model Lokasi {
   id          String @id @default("default")
   namaToko    String @default("Saka Laptop")
-  tagline     String @default("Pusat Inspeksi & Trade-in Laptop")
+  tagline     String @default("Pusat Inspeksi & Trade-in Laptop Bekas")
   foto        String @default("/store-front.png")
   alamat      String @default("")
   telepon     String @default("")
@@ -114,31 +341,10 @@ model Lokasi {
   mapsLink    String @default("")
 }
 
-model User {
-  id          String   @id @default(cuid())
-  username    String   @unique
-  password    String
-  role        String   @default("admin") // developer, admin
-  permissions String   @default("[]")
-  createdAt   DateTime @default(now())
-}
-
+/// ─── Legacy StoreLogo ───
 model StoreLogo {
   id       String @id @default("default")
   logoData String @default("")
-}
-
-model Article {
-  id          String   @id @default(cuid())
-  slug        String   @unique
-  judul       String
-  konten      String
-  excerpt     String   @default("")
-  gambar      String   @default("")
-  kategori    String   @default("Tips & Review")
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 }
 
 /// ── MODEL UTAMA: Submission (pengajuan laptop bekas dari customer) ──

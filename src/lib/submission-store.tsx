@@ -37,7 +37,7 @@ export const STATUS_COLORS: Record<SubmissionStatus, string> = {
   RECEIVED: "bg-sky-500/15 text-sky-500 border-sky-500/30",
   QC_PROCESS: "bg-amber-500/15 text-amber-500 border-amber-500/30",
   OFFER_SENT: "bg-violet-500/15 text-violet-500 border-violet-500/30",
-  ACCEPTED: "bg-emerald-500/15 text-emerald-500 border-emerald-500/30",
+  ACCEPTED: "bg-foreground/10 text-foreground border-foreground/30",
   REJECTED: "bg-red-500/15 text-red-500 border-red-500/30",
   INVENTORY: "bg-primary/15 text-primary border-primary/30",
   SOLD: "bg-zinc-500/15 text-zinc-400 border-zinc-500/30",
@@ -235,7 +235,7 @@ export const QC_ITEMS = [
 ] as const;
 
 export const QC_STATUS_OPTIONS = [
-  { value: "ok", label: "OK", color: "text-emerald-500" },
+  { value: "ok", label: "OK", color: "text-foreground" },
   { value: "issue", label: "Issue", color: "text-amber-500" },
   { value: "fail", label: "Gagal", color: "text-red-500" },
 ] as const;

@@ -377,7 +377,7 @@ export default function LaptopMasukPage() {
                         variant="default"
                         disabled={actionLoading}
                         onClick={() => handleAction(selected, "INVENTORY")}
-                        className="bg-emerald-600 hover:bg-emerald-700"
+                        className="bg-foreground hover:bg-foreground/90"
                       >
                         Deal (Inventory)
                       </Button>

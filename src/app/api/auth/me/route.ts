@@ -1,16 +1,27 @@
-import { getAuthFromRequest } from "@/lib/auth-server";
-import { NextResponse } from "next/server";
+// ─── Nauka CMS — Current User API Route ───
 
-// GET /api/auth/me
+import { NextResponse } from "next/server";
+import { getAuthFromRequest, getUserWithPermissions } from "@/core/lib/auth";
+
 export async function GET() {
   try {
-    const result = await getAuthFromRequest();
-    if (!result.success || !result.user) {
-      return NextResponse.json({ user: null }, { status: 401 });
+    const payload = await getAuthFromRequest();
+    if (!payload) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
-    return NextResponse.json({ user: result.user });
+
+    const user = await getUserWithPermissions(payload.userId);
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    if (user.status === "inactive") {
+      return NextResponse.json({ error: "Account deactivated" }, { status: 403 });
+    }
+
+    return NextResponse.json({ user });
   } catch (error) {
-    console.error("Get me error:", error);
-    return NextResponse.json({ user: null }, { status: 401 });
+    console.error("Me error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

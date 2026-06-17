@@ -126,7 +126,7 @@ function applyThemeToDOM(name: ThemeName, animate: boolean = false) {
 
 /* ── Provider ── */
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<ThemeName>("dark");
+  const [theme, setThemeState] = useState<ThemeName>("light");
   const [mounted, setMounted] = useState(false);
   const initialized = useRef(false);
 
@@ -142,10 +142,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         setThemeState(saved);
         applyThemeToDOM(saved);
       } else {
-        applyThemeToDOM("dark");
+        applyThemeToDOM("light");
       }
     } catch {
-      applyThemeToDOM("dark");
+      applyThemeToDOM("light");
     }
     setMounted(true);
   }, []);
@@ -167,7 +167,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   if (!mounted) {
     return (
       <ThemeContext.Provider
-        value={{ theme: "dark", setTheme, themeInfo: themes[0], isLight: false }}
+        value={{ theme: "light", setTheme, themeInfo: themes.find(t => t.name === "light") || themes[0], isLight: true }}
       >
         {children}
       </ThemeContext.Provider>

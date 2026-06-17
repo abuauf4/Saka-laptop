@@ -90,41 +90,48 @@
 }
 
 /* ══════════════════════════════════════
-   THEME 1: DARK DEFAULT
+   DEFAULT THEME: PREMIUM LIGHT (Black + Blue)
+   Brand: Saka Laptop — Pusat Inspeksi & Trade-in
+   Palette per user request:
+     Primary  #000000 (black, premium/confident)
+     Accent   #2563EB (blue-600, technology)
+     Bg       #FAFAFA
+     Text     #111827 / soft #6B7280
+     Border   #E5E7EB
    ══════════════════════════════════════ */
 :root {
   --radius: 0.75rem;
-  --background: oklch(0.07 0 0);
-  --foreground: oklch(0.95 0 0);
-  --card: oklch(0.13 0 0);
-  --card-foreground: oklch(0.95 0 0);
-  --popover: oklch(0.14 0 0);
-  --popover-foreground: oklch(0.95 0 0);
-  --primary: oklch(0.696 0.17 162.48);
-  --primary-foreground: oklch(0.07 0 0);
-  --secondary: oklch(0.19 0 0);
-  --secondary-foreground: oklch(0.95 0 0);
-  --muted: oklch(0.17 0 0);
-  --muted-foreground: oklch(0.6 0 0);
-  --accent: oklch(0.19 0 0);
-  --accent-foreground: oklch(0.95 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 8%);
-  --input: oklch(1 0 0 / 12%);
-  --ring: oklch(0.696 0.17 162.48);
-  --chart-1: oklch(0.696 0.17 162.48);
-  --chart-2: oklch(0.488 0.243 264.376);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.1 0 0);
-  --sidebar-foreground: oklch(0.95 0 0);
-  --sidebar-primary: oklch(0.696 0.17 162.48);
-  --sidebar-primary-foreground: oklch(0.07 0 0);
-  --sidebar-accent: oklch(0.18 0 0);
-  --sidebar-accent-foreground: oklch(0.95 0 0);
-  --sidebar-border: oklch(1 0 0 / 8%);
-  --sidebar-ring: oklch(0.696 0.17 162.48);
+  --background: #FAFAFA;
+  --foreground: #111827;
+  --card: #FFFFFF;
+  --card-foreground: #111827;
+  --popover: #FFFFFF;
+  --popover-foreground: #111827;
+  --primary: #000000;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F3F4F6;
+  --secondary-foreground: #111827;
+  --muted: #F3F4F6;
+  --muted-foreground: #6B7280;
+  --accent: #2563EB;
+  --accent-foreground: #FFFFFF;
+  --destructive: #DC2626;
+  --border: #E5E7EB;
+  --input: #E5E7EB;
+  --ring: #000000;
+  --chart-1: #000000;
+  --chart-2: #2563EB;
+  --chart-3: #6B7280;
+  --chart-4: #E5E7EB;
+  --chart-5: #111827;
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #111827;
+  --sidebar-primary: #000000;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F3F4F6;
+  --sidebar-accent-foreground: #111827;
+  --sidebar-border: #E5E7EB;
+  --sidebar-ring: #000000;
 }
 
 .dark {
@@ -314,42 +321,43 @@
 }
 
 /* ══════════════════════════════════════
-   THEME 6: LIGHT CLEAN
+   THEME 6: LIGHT CLEAN (Black + Blue)
    Bright white theme for daylight use
+   Override agar konsisten dengan :root (black primary)
    ══════════════════════════════════════ */
 .theme-light {
   --radius: 0.75rem;
-  --background: oklch(0.985 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.55 0.15 162.48);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.96 0.005 162.48);
-  --secondary-foreground: oklch(0.25 0.01 162.48);
-  --muted: oklch(0.96 0.005 162.48);
-  --muted-foreground: oklch(0.5 0.02 162.48);
-  --accent: oklch(0.96 0.005 162.48);
-  --accent-foreground: oklch(0.25 0.01 162.48);
-  --destructive: oklch(0.65 0.2 25);
-  --border: oklch(0.88 0.01 162.48);
-  --input: oklch(0.88 0.01 162.48);
-  --ring: oklch(0.55 0.15 162.48);
-  --chart-1: oklch(0.55 0.15 162.48);
-  --chart-2: oklch(0.5 0.2 264);
-  --chart-3: oklch(0.65 0.15 70);
-  --chart-4: oklch(0.55 0.22 304);
-  --chart-5: oklch(0.6 0.2 16);
-  --sidebar: oklch(0.97 0.005 162.48);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.55 0.15 162.48);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.94 0.01 162.48);
-  --sidebar-accent-foreground: oklch(0.25 0.01 162.48);
-  --sidebar-border: oklch(0.88 0.01 162.48);
-  --sidebar-ring: oklch(0.55 0.15 162.48);
+  --background: #FAFAFA;
+  --foreground: #111827;
+  --card: #FFFFFF;
+  --card-foreground: #111827;
+  --popover: #FFFFFF;
+  --popover-foreground: #111827;
+  --primary: #000000;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F3F4F6;
+  --secondary-foreground: #111827;
+  --muted: #F3F4F6;
+  --muted-foreground: #6B7280;
+  --accent: #2563EB;
+  --accent-foreground: #FFFFFF;
+  --destructive: #DC2626;
+  --border: #E5E7EB;
+  --input: #E5E7EB;
+  --ring: #000000;
+  --chart-1: #000000;
+  --chart-2: #2563EB;
+  --chart-3: #6B7280;
+  --chart-4: #E5E7EB;
+  --chart-5: #111827;
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #111827;
+  --sidebar-primary: #000000;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F3F4F6;
+  --sidebar-accent-foreground: #111827;
+  --sidebar-border: #E5E7EB;
+  --sidebar-ring: #000000;
 }
 
 /* ── Base layer ── */

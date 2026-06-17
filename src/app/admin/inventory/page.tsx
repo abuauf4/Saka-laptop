@@ -204,7 +204,7 @@ export default function InventoryPage() {
           <StatCard
             label="In Stock"
             value={String(stats.inStock)}
-            color="text-emerald-500"
+            color="text-foreground"
             icon={CheckCircle2}
           />
           <StatCard
@@ -222,7 +222,7 @@ export default function InventoryPage() {
           <StatCard
             label="Potensi Profit"
             value={formatPrice(stats.potensiProfit).replace("Rp", "").trim()}
-            color="text-emerald-500"
+            color="text-foreground"
             icon={TrendingUp}
           />
         </div>
@@ -290,7 +290,7 @@ export default function InventoryPage() {
                             variant="outline"
                             className={`text-[10px] ${
                               item.status === "INVENTORY"
-                                ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/30"
+                                ? "bg-foreground/10 text-foreground border-foreground/30"
                                 : "bg-zinc-500/10 text-zinc-400 border-zinc-500/30"
                             }`}
                           >
@@ -313,7 +313,7 @@ export default function InventoryPage() {
                           </span>
                           <span className="text-muted-foreground">
                             Jual:{" "}
-                            <strong className="text-emerald-500">
+                            <strong className="text-foreground">
                               {formatPrice(item.hargaJual)}
                             </strong>
                           </span>
@@ -388,11 +388,11 @@ export default function InventoryPage() {
                       {formatPrice(selected.hargaBeli)}
                     </p>
                   </div>
-                  <div className="rounded-lg bg-emerald-500/5 border border-emerald-500/20 p-3">
+                  <div className="rounded-lg bg-foreground/5 border border-foreground/20 p-3">
                     <p className="text-[10px] text-muted-foreground uppercase">
                       Harga Jual
                     </p>
-                    <p className="text-lg font-bold text-emerald-500">
+                    <p className="text-lg font-bold text-foreground">
                       {formatPrice(selected.hargaJual)}
                     </p>
                   </div>

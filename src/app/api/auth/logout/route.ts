@@ -1,13 +1,21 @@
-import { clearAuthCookie } from "@/lib/auth-server";
-import { NextResponse } from "next/server";
+// ─── Nauka CMS — Logout API Route ───
 
-// POST /api/auth/logout
+import { NextResponse } from "next/server";
+import { COOKIE_NAME } from "@/core/lib/auth";
+
 export async function POST() {
   try {
-    await clearAuthCookie();
-    return NextResponse.json({ success: true });
+    const response = NextResponse.json({ message: "Logged out successfully" });
+    response.cookies.set(COOKIE_NAME, "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 0,
+    });
+    return response;
   } catch (error) {
     console.error("Logout error:", error);
-    return NextResponse.json({ error: "Logout gagal" }, { status: 500 });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   BarChart3,
@@ -12,6 +12,8 @@ import {
   DollarSign,
   TrendingUp,
   Percent,
+  ShoppingBag,
+  Award,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -35,6 +37,17 @@ interface LaporanData {
     totalModal: number;
     totalDisalurkan: number;
     potensiProfit: number;
+  };
+  sales: {
+    totalSold: number;
+    totalRevenue: number;
+    totalModalSold: number;
+    totalProfit: number;
+    avgDealValue: number;
+    last7Days: { date: string; label: string; count: number; revenue: number }[];
+    last30Days: { date: string; label: string; count: number; revenue: number }[];
+    topCategories: { name: string; count: number; revenue: number }[];
+    topBrands: { name: string; count: number; revenue: number }[];
   };
   conversionRate: number;
 }
@@ -64,9 +77,7 @@ export default function LaporanPage() {
       <Card className="border-dashed">
         <CardContent className="py-12 text-center">
           <BarChart3 className="h-10 w-10 mx-auto text-muted-foreground/40 mb-3" />
-          <p className="text-sm text-muted-foreground">
-            Gagal memuat laporan
-          </p>
+          <p className="text-sm text-muted-foreground">Gagal memuat laporan</p>
         </CardContent>
       </Card>
     );
@@ -76,12 +87,17 @@ export default function LaporanPage() {
     { label: "Data Diterima", count: data.counts.RECEIVED, color: "bg-sky-500", icon: PackageOpen },
     { label: "QC Berjalan", count: data.counts.QC_PROCESS, color: "bg-amber-500", icon: ClipboardCheck },
     { label: "Penawaran Dikirim", count: data.counts.OFFER_SENT, color: "bg-violet-500", icon: Tag },
-    { label: "Deal", count: data.counts.ACCEPTED + data.counts.INVENTORY, color: "bg-emerald-500", icon: TrendingUp },
+    { label: "Deal (Inventory)", count: data.counts.INVENTORY, color: "bg-foreground", icon: TrendingUp },
     { label: "Tidak Deal", count: data.counts.REJECTED, color: "bg-red-500", icon: Tag },
     { label: "Disalurkan", count: data.counts.SOLD, color: "bg-zinc-500", icon: DollarSign },
   ];
 
   const maxCount = Math.max(...stages.map((s) => s.count), 1);
+
+  // Max revenue for 30-day chart
+  const maxRevenue30 = data.sales?.last30Days?.length
+    ? Math.max(...data.sales.last30Days.map((d) => d.revenue), 1)
+    : 1;
 
   return (
     <div className="min-h-full bg-background">
@@ -92,13 +108,13 @@ export default function LaporanPage() {
             Laporan
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Ringkasan operasional & performa inspeksi
+            Ringkasan operasional & laporan penjualan
           </p>
         </div>
       </div>
 
       <div className="page-container py-6 space-y-6">
-        {/* Top stats */}
+        {/* ─── TOP STATS ─── */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <BigStat
             label="Total Pengajuan"
@@ -110,25 +126,204 @@ export default function LaporanPage() {
             label="Conversion Rate"
             value={`${data.conversionRate}%`}
             icon={Percent}
-            color="text-emerald-500"
+            color="text-foreground"
           />
           <BigStat
-            label="Total Modal"
-            value={formatPrice(data.inventory.totalModal).replace("Rp", "").trim()}
+            label="Total Modal (In Stock)"
+            value={formatPrice(
+              data.inventory.totalModal - (data.sales?.totalModalSold ?? 0)
+            ).replace("Rp", "").trim()}
             icon={DollarSign}
             color="text-amber-500"
           />
           <BigStat
-            label="Total Disalurkan"
-            value={formatPrice(data.inventory.totalDisalurkan).replace("Rp", "").trim()}
+            label="Total Revenue"
+            value={formatPrice(data.sales?.totalRevenue ?? 0).replace("Rp", "").trim()}
             icon={TrendingUp}
-            color="text-emerald-500"
+            color="text-foreground"
           />
         </div>
 
-        {/* Pipeline chart */}
+        {/* ─── LAPORAN PENJUALAN (NEW SECTION) ─── */}
+        <Card className="border-primary/30 bg-primary/5">
+          <CardContent className="p-5">
+            <div className="flex items-center gap-2 mb-4">
+              <ShoppingBag className="h-5 w-5 text-primary" />
+              <div>
+                <h2 className="text-base font-semibold">Laporan Penjualan</h2>
+                <p className="text-xs text-muted-foreground">
+                  Laptop yang sudah disalurkan & revenue generated
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+              <SalesBig
+                label="Unit Disalurkan"
+                value={String(data.sales?.totalSold ?? 0)}
+                sub="total unit SOLD"
+                color="text-zinc-500"
+              />
+              <SalesBig
+                label="Total Revenue"
+                value={formatPrice(data.sales?.totalRevenue ?? 0).replace("Rp", "").trim()}
+                sub="sum harga jual"
+                color="text-primary"
+              />
+              <SalesBig
+                label="Total Profit"
+                value={formatPrice(data.sales?.totalProfit ?? 0).replace("Rp", "").trim()}
+                sub="revenue - modal"
+                color="text-foreground"
+              />
+              <SalesBig
+                label="Avg Deal Value"
+                value={formatPrice(data.sales?.avgDealValue ?? 0).replace("Rp", "").trim()}
+                sub="per unit"
+                color="text-violet-500"
+              />
+            </div>
+
+            {/* 30-day trend */}
+            <div className="border-t border-border/40 pt-4">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  Revenue 30 Hari Terakhir
+                </p>
+                <span className="text-xs text-muted-foreground">
+                  Total: {formatPrice(
+                    (data.sales?.last30Days ?? []).reduce((s, d) => s + d.revenue, 0)
+                  ).replace("Rp", "").trim()}
+                </span>
+              </div>
+              <div className="flex items-end gap-0.5 h-32">
+                {(data.sales?.last30Days ?? Array(30).fill({ label: "", revenue: 0, count: 0, date: "" })).map(
+                  (d, i) => {
+                    const heightPct = maxRevenue30 > 0 ? (d.revenue / maxRevenue30) * 100 : 0;
+                    return (
+                      <div
+                        key={i}
+                        className="flex-1 group relative"
+                        title={`${d.label}: ${formatPrice(d.revenue)}`}
+                      >
+                        <div
+                          className={`w-full rounded-t transition-all ${
+                            d.revenue > 0
+                              ? "bg-primary/60 group-hover:bg-primary"
+                              : "bg-muted/60"
+                          }`}
+                          style={{ height: `${Math.max(heightPct, 2)}%`, minHeight: "2px" }}
+                        />
+                      </div>
+                    );
+                  }
+                )}
+              </div>
+              <div className="flex justify-between mt-1.5 text-[9px] text-muted-foreground">
+                <span>30 hari lalu</span>
+                <span>Hari ini</span>
+              </div>
+            </div>
+
+            {/* Top Categories + Brands */}
+            <div className="grid md:grid-cols-2 gap-4 mt-5 border-t border-border/40 pt-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+                  Top Kategori (berdasarkan unit terjual)
+                </p>
+                {data.sales?.topCategories?.length ? (
+                  <div className="space-y-2">
+                    {data.sales.topCategories.map((cat, i) => {
+                      const maxCat = data.sales.topCategories[0]?.count || 1;
+                      return (
+                        <div key={cat.name} className="flex items-center gap-2">
+                          <span className="text-xs text-muted-foreground w-20 truncate">
+                            {cat.name}
+                          </span>
+                          <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
+                            <div
+                              className="h-full bg-primary rounded-full"
+                              style={{ width: `${(cat.count / maxCat) * 100}%` }}
+                            />
+                          </div>
+                          <span className="text-xs font-semibold w-12 text-right">
+                            {cat.count}u
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="text-xs text-muted-foreground italic">
+                    Belum ada data penjualan
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+                  Top Brand (berdasarkan unit terjual)
+                </p>
+                {data.sales?.topBrands?.length ? (
+                  <div className="space-y-2">
+                    {data.sales.topBrands.map((b) => {
+                      const maxBrand = data.sales.topBrands[0]?.count || 1;
+                      return (
+                        <div key={b.name} className="flex items-center gap-2">
+                          <span className="text-xs text-muted-foreground w-20 truncate">
+                            {b.name}
+                          </span>
+                          <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
+                            <div
+                              className="h-full bg-violet-500 rounded-full"
+                              style={{ width: `${(b.count / maxBrand) * 100}%` }}
+                            />
+                          </div>
+                          <span className="text-xs font-semibold w-12 text-right">
+                            {b.count}u
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="text-xs text-muted-foreground italic">
+                    Belum ada data penjualan
+                  </p>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* ─── INVENTORY SUMMARY ─── */}
         <Card className="border-border/50">
-          <CardContent className="p-6">
+          <CardContent className="p-5">
+            <div className="flex items-center gap-2 mb-4">
+              <Warehouse className="h-5 w-5 text-primary" />
+              <div>
+                <h2 className="text-base font-semibold">Inventory Summary</h2>
+                <p className="text-xs text-muted-foreground">
+                  Stok & modal laptop bekas
+                </p>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <InvStat label="Total Item" value={String(data.inventory.totalItems)} />
+              <InvStat label="In Stock" value={String(data.inventory.inStock)} highlight />
+              <InvStat label="Disalurkan" value={String(data.inventory.sold)} />
+              <InvStat
+                label="Potensi Profit"
+                value={formatPrice(data.inventory.potensiProfit).replace("Rp", "").trim()}
+                highlight
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* ─── PIPELINE PENGAJUAN ─── */}
+        <Card className="border-border/50">
+          <CardContent className="p-5">
             <p className="text-sm font-semibold mb-5">Pipeline Pengajuan</p>
             <div className="space-y-3">
               {stages.map((stage, i) => (
@@ -163,44 +358,37 @@ export default function LaporanPage() {
           </CardContent>
         </Card>
 
-        {/* Inventory stats */}
-        <Card className="border-border/50">
-          <CardContent className="p-6">
-            <p className="text-sm font-semibold mb-5 flex items-center gap-2">
-              <Warehouse className="h-4 w-4 text-primary" />
-              Inventory Summary
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <InvStat label="Total Item" value={String(data.inventory.totalItems)} />
-              <InvStat label="In Stock" value={String(data.inventory.inStock)} />
-              <InvStat label="Disalurkan" value={String(data.inventory.sold)} />
-              <InvStat
-                label="Potensi Profit"
-                value={formatPrice(data.inventory.potensiProfit).replace("Rp", "").trim()}
-                highlight
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Funnel summary */}
+        {/* ─── CATATAN ─── */}
         <Card className="border-border/50 bg-muted/30">
-          <CardContent className="p-6">
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
-              Catatan
+          <CardContent className="p-4">
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+              Metodologi
             </p>
-            <p className="text-sm leading-relaxed">
-              Conversion rate dihitung dari total deal (ACCEPTED + INVENTORY +
-              SOLD) dibagi total keputusan (deal + rejected). Potensi profit
-              dihitung dari selisih harga jual - modal untuk item yang masih
-              in stock.
-            </p>
+            <ul className="text-xs leading-relaxed text-muted-foreground space-y-1">
+              <li>
+                • <strong>Conversion Rate</strong> = deal (INVENTORY + SOLD) / total keputusan (deal + rejected).
+              </li>
+              <li>
+                • <strong>Revenue</strong> = total harga jual InventoryItem berstatus SOLD.
+              </li>
+              <li>
+                • <strong>Profit</strong> = Revenue − Modal SOLD (harga beli dari customer).
+              </li>
+              <li>
+                • <strong>Potensi Profit</strong> = harga jual − modal untuk item yang masih IN STOCK.
+              </li>
+              <li>
+                • <strong>Avg Deal Value</strong> = Revenue / jumlah unit SOLD.
+              </li>
+            </ul>
           </CardContent>
         </Card>
       </div>
     </div>
   );
 }
+
+/* ─── HELPERS ─── */
 
 function BigStat({
   label,
@@ -226,6 +414,26 @@ function BigStat({
   );
 }
 
+function SalesBig({
+  label,
+  value,
+  sub,
+  color,
+}: {
+  label: string;
+  value: string;
+  sub: string;
+  color: string;
+}) {
+  return (
+    <div className="rounded-lg border border-border/40 bg-background/60 p-3">
+      <p className="text-[10px] text-muted-foreground">{label}</p>
+      <p className={`text-lg font-bold ${color} mt-1`}>{value}</p>
+      <p className="text-[9px] text-muted-foreground mt-0.5">{sub}</p>
+    </div>
+  );
+}
+
 function InvStat({
   label,
   value,
@@ -239,14 +447,14 @@ function InvStat({
     <div
       className={`rounded-lg border p-3 ${
         highlight
-          ? "border-emerald-500/30 bg-emerald-500/5"
+          ? "border-foreground/30 bg-foreground/5"
           : "border-border/50 bg-background/60"
       }`}
     >
       <p className="text-xs text-muted-foreground">{label}</p>
       <p
         className={`text-lg font-bold mt-1 ${
-          highlight ? "text-emerald-500" : "text-foreground"
+          highlight ? "text-foreground" : "text-foreground"
         }`}
       >
         {value}

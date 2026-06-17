@@ -12,6 +12,10 @@ import {
   TrendingUp,
   ArrowRight,
   AlertCircle,
+  ShoppingBag,
+  Award,
+  Package,
+  BarChart3,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -38,6 +42,17 @@ interface LaporanData {
     totalDisalurkan: number;
     potensiProfit: number;
   };
+  sales: {
+    totalSold: number;
+    totalRevenue: number;
+    totalModalSold: number;
+    totalProfit: number;
+    avgDealValue: number;
+    last7Days: { date: string; label: string; count: number; revenue: number }[];
+    last30Days: { date: string; label: string; count: number; revenue: number }[];
+    topCategories: { name: string; count: number; revenue: number }[];
+    topBrands: { name: string; count: number; revenue: number }[];
+  };
   conversionRate: number;
 }
 
@@ -59,6 +74,11 @@ export default function AdminDashboard() {
     (s) => s.status === "RECEIVED" || s.status === "QC_PROCESS" || s.status === "OFFER_SENT"
   );
 
+  // Max revenue for bar chart scaling
+  const maxRevenue = laporan?.sales?.last7Days?.length
+    ? Math.max(...laporan.sales.last7Days.map((d) => d.revenue), 1)
+    : 1;
+
   return (
     <div className="min-h-full bg-background">
       <div className="border-b border-border/40 bg-card/30">
@@ -71,8 +91,8 @@ export default function AdminDashboard() {
       </div>
 
       <div className="page-container py-6 space-y-6">
-        {/* Top stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {/* ─── TOP STAT BAR (6 cards) ─── */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
           <StatCard
             label="Pengajuan Baru"
             value={laporan?.counts.RECEIVED ?? 0}
@@ -95,15 +115,33 @@ export default function AdminDashboard() {
             href="/admin/penawaran"
           />
           <StatCard
-            label="Inventory"
+            label="In Stock"
             value={laporan?.inventory.inStock ?? 0}
-            color="text-emerald-500"
+            color="text-foreground"
             icon={Warehouse}
             href="/admin/inventory"
           />
+          <StatCard
+            label="Disalurkan"
+            value={laporan?.inventory.sold ?? 0}
+            color="text-zinc-500"
+            icon={ShoppingBag}
+            href="/admin/inventory"
+          />
+          <StatCard
+            label="Revenue"
+            value={
+              laporan?.sales?.totalRevenue
+                ? formatPrice(laporan.sales.totalRevenue).replace("Rp", "").trim()
+                : "0"
+            }
+            color="text-primary"
+            icon={DollarSign}
+            href="/admin/laporan"
+          />
         </div>
 
-        {/* Needs attention */}
+        {/* ─── NEEDS ATTENTION ─── */}
         {needsAttention.length > 0 && (
           <Card className="border-amber-500/30 bg-amber-500/5">
             <CardContent className="p-4">
@@ -127,6 +165,166 @@ export default function AdminDashboard() {
           </Card>
         )}
 
+        {/* ─── INVENTORY + LAPORAN PENJUALAN (2-col) ─── */}
+        <div className="grid lg:grid-cols-2 gap-6">
+          {/* ── INVENTORY WIDGET ── */}
+          <Card className="border-border/50">
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-foreground/10">
+                    <Warehouse className="h-4 w-4 text-foreground" />
+                  </div>
+                  <div>
+                    <h2 className="text-sm font-semibold">Inventory</h2>
+                    <p className="text-[10px] text-muted-foreground">
+                      Stok laptop bekas yang siap disalurkan
+                    </p>
+                  </div>
+                </div>
+                <Link
+                  href="/admin/inventory"
+                  className="text-xs text-primary hover:underline"
+                >
+                  Lihat semua
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3 mb-4">
+                <InvStat
+                  label="In Stock"
+                  value={String(laporan?.inventory.inStock ?? 0)}
+                  color="text-foreground"
+                />
+                <InvStat
+                  label="Disalurkan"
+                  value={String(laporan?.inventory.sold ?? 0)}
+                  color="text-zinc-500"
+                />
+                <InvStat
+                  label="Total Item"
+                  value={String(laporan?.inventory.totalItems ?? 0)}
+                  color="text-foreground"
+                />
+              </div>
+
+              <div className="space-y-2 border-t border-border/40 pt-3">
+                <InvRow
+                  label="Modal Terikat (In Stock)"
+                  value={formatPrice(
+                    (laporan?.inventory.totalModal ?? 0) -
+                      (laporan?.sales?.totalModalSold ?? 0)
+                  ).replace("Rp", "").trim()}
+                  color="text-amber-500"
+                />
+                <InvRow
+                  label="Potensi Profit (In Stock)"
+                  value={formatPrice(laporan?.inventory.potensiProfit ?? 0).replace("Rp", "").trim()}
+                  color="text-foreground"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* ── LAPORAN PENJUALAN WIDGET ── */}
+          <Card className="border-border/50">
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15">
+                    <BarChart3 className="h-4 w-4 text-primary" />
+                  </div>
+                  <div>
+                    <h2 className="text-sm font-semibold">Laporan Penjualan</h2>
+                    <p className="text-[10px] text-muted-foreground">
+                      Laptop disalurkan & revenue 7 hari terakhir
+                    </p>
+                  </div>
+                </div>
+                <Link
+                  href="/admin/laporan"
+                  className="text-xs text-primary hover:underline"
+                >
+                  Detail
+                </Link>
+              </div>
+
+              {/* Sales stats grid */}
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <SalesStat
+                  label="Total Revenue"
+                  value={formatPrice(laporan?.sales?.totalRevenue ?? 0).replace("Rp", "").trim()}
+                  color="text-primary"
+                />
+                <SalesStat
+                  label="Total Profit"
+                  value={formatPrice(laporan?.sales?.totalProfit ?? 0).replace("Rp", "").trim()}
+                  color="text-foreground"
+                />
+                <SalesStat
+                  label="Unit Disalurkan"
+                  value={String(laporan?.sales?.totalSold ?? 0)}
+                  color="text-foreground"
+                />
+                <SalesStat
+                  label="Avg Deal Value"
+                  value={formatPrice(laporan?.sales?.avgDealValue ?? 0).replace("Rp", "").trim()}
+                  color="text-violet-500"
+                />
+              </div>
+
+              {/* Mini bar chart - 7 days trend */}
+              <div className="border-t border-border/40 pt-3">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">
+                    Revenue 7 Hari Terakhir
+                  </p>
+                  <span className="text-[10px] text-muted-foreground">
+                    {(laporan?.sales?.last7Days ?? [])
+                      .reduce((s, d) => s + d.revenue, 0) > 0
+                      ? formatPrice(
+                          (laporan?.sales?.last7Days ?? []).reduce(
+                            (s, d) => s + d.revenue,
+                            0
+                          )
+                        ).replace("Rp", "").trim()
+                      : "Belum ada penjualan"}
+                  </span>
+                </div>
+                <div className="flex items-end gap-1 h-20">
+                  {(laporan?.sales?.last7Days ?? Array(7).fill({ label: "", revenue: 0, count: 0, date: "" })).map(
+                    (d, i) => {
+                      const heightPct = maxRevenue > 0 ? (d.revenue / maxRevenue) * 100 : 0;
+                      return (
+                        <div
+                          key={i}
+                          className="flex-1 flex flex-col items-center gap-1 group relative"
+                        >
+                          <div className="w-full flex-1 flex items-end">
+                            <div
+                              className={`w-full rounded-t transition-all duration-300 ${
+                                d.revenue > 0
+                                  ? "bg-primary/70 group-hover:bg-primary"
+                                  : "bg-muted"
+                              }`}
+                              style={{ height: `${Math.max(heightPct, 3)}%` }}
+                              title={`${d.label}: ${formatPrice(d.revenue)}`}
+                            />
+                          </div>
+                          <span className="text-[9px] text-muted-foreground">
+                            {d.label}
+                          </span>
+                        </div>
+                      );
+                    }
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* ─── RECENT SUBMISSIONS + SUMMARY (3-col) ─── */}
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Left: Recent submissions */}
           <div className="lg:col-span-2 space-y-3">
@@ -191,9 +389,9 @@ export default function AdminDashboard() {
             )}
           </div>
 
-          {/* Right: Summary */}
+          {/* Right: Summary + Quick actions */}
           <div className="space-y-3">
-            <h2 className="text-sm font-semibold">Ringkasan</h2>
+            <h2 className="text-sm font-semibold">Ringkasan Operasional</h2>
             <Card className="border-border/50">
               <CardContent className="p-4 space-y-3">
                 <SummaryRow
@@ -206,19 +404,25 @@ export default function AdminDashboard() {
                   icon={TrendingUp}
                   label="Conversion Rate"
                   value={`${laporan?.conversionRate ?? 0}%`}
-                  color="text-emerald-500"
+                  color="text-foreground"
+                />
+                <SummaryRow
+                  icon={Award}
+                  label="Total Disalurkan"
+                  value={String(laporan?.inventory.sold ?? 0)}
+                  color="text-zinc-500"
                 />
                 <SummaryRow
                   icon={DollarSign}
-                  label="Total Modal"
-                  value={formatPrice(laporan?.inventory.totalModal ?? 0).replace("Rp", "").trim()}
-                  color="text-amber-500"
+                  label="Total Revenue"
+                  value={formatPrice(laporan?.sales?.totalRevenue ?? 0).replace("Rp", "").trim()}
+                  color="text-primary"
                 />
                 <SummaryRow
                   icon={TrendingUp}
-                  label="Potensi Profit"
-                  value={formatPrice(laporan?.inventory.potensiProfit ?? 0).replace("Rp", "").trim()}
-                  color="text-emerald-500"
+                  label="Total Profit"
+                  value={formatPrice(laporan?.sales?.totalProfit ?? 0).replace("Rp", "").trim()}
+                  color="text-foreground"
                 />
               </CardContent>
             </Card>
@@ -244,6 +448,8 @@ export default function AdminDashboard() {
   );
 }
 
+/* ─── HELPERS ─── */
+
 function StatCard({
   label,
   value,
@@ -252,7 +458,7 @@ function StatCard({
   href,
 }: {
   label: string;
-  value: number;
+  value: number | string;
   color: string;
   icon: React.ComponentType<{ className?: string }>;
   href: string;
@@ -265,10 +471,61 @@ function StatCard({
             <Icon className={`h-4 w-4 ${color}`} />
             <span className="text-xs text-muted-foreground">{label}</span>
           </div>
-          <p className={`text-2xl font-bold ${color}`}>{value}</p>
+          <p className={`text-xl font-bold ${color}`}>{value}</p>
         </CardContent>
       </Card>
     </Link>
+  );
+}
+
+function InvStat({
+  label,
+  value,
+  color,
+}: {
+  label: string;
+  value: string;
+  color: string;
+}) {
+  return (
+    <div className="rounded-lg border border-border/40 bg-card/60 p-2.5 text-center">
+      <p className={`text-lg font-bold ${color}`}>{value}</p>
+      <p className="text-[10px] text-muted-foreground">{label}</p>
+    </div>
+  );
+}
+
+function InvRow({
+  label,
+  value,
+  color,
+}: {
+  label: string;
+  value: string;
+  color: string;
+}) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className="text-xs text-muted-foreground">{label}</span>
+      <span className={`text-sm font-bold ${color}`}>{value}</span>
+    </div>
+  );
+}
+
+function SalesStat({
+  label,
+  value,
+  color,
+}: {
+  label: string;
+  value: string;
+  color: string;
+}) {
+  return (
+    <div className="rounded-lg border border-border/40 bg-card/60 p-3">
+      <p className="text-[10px] text-muted-foreground mb-1">{label}</p>
+      <p className={`text-base font-bold ${color}`}>{value}</p>
+    </div>
   );
 }
 
