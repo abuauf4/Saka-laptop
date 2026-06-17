@@ -15,7 +15,7 @@ export interface ModuleInfo {
   updatedAt: Date;
 }
 
-/** Serialize/deserialize config (SQLite stores as String) */
+/** Serialize/deserialize config (SQLite stores as String, PostgreSQL as Json) */
 function parseConfig(raw: unknown): Record<string, unknown> | null {
   if (!raw) return null;
   if (typeof raw === "string") {
@@ -24,9 +24,10 @@ function parseConfig(raw: unknown): Record<string, unknown> | null {
   return raw as Record<string, unknown>;
 }
 
-function serializeConfig(config: Record<string, unknown> | null | undefined): string | null {
+/** Serialize config to native object (Prisma will handle Json or String automatically) */
+function serializeConfig(config: Record<string, unknown> | null | undefined): Record<string, unknown> | string | null {
   if (!config) return null;
-  return JSON.stringify(config);
+  return config; // Prisma handles conversion based on schema type
 }
 
 /**
@@ -92,7 +93,7 @@ export async function registerModule(data: {
       version: data.version,
       description: data.description,
       status: "inactive",
-      config: data.config ? JSON.stringify(data.config) : null,
+      config: serializeConfig(data.config),
     },
   }) as Promise<ModuleInfo>;
 }
