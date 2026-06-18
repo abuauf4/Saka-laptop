@@ -13,6 +13,8 @@ import {
   Eye,
   Clock,
   MessageCircle,
+  Phone,
+  MapPin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
@@ -98,6 +100,26 @@ const faqs = [
     a: "Ya, kami tetap nerima. Hasil QC yang menentukan harga — kalau banyak komponen yang gagal, penawaran menyesuaikan. Tapi selama masih ada nilai (komponen masih bisa dipakai atau dijual parts), kami tetap kasih penawaran jujur.",
   },
   {
+    q: "Laptop mati total diterima?",
+    a: "Ya, diterima. Laptop mati total biasanya masih ada nilai dari komponen yang masih berfungsi (RAM, SSD, layar, keyboard, charger). Tim teknisi akan cek komponen per komponen, kasih penawaran berdasarkan apa yang masih bisa diselamatkan. Jangan dibuang dulu — chat kami.",
+  },
+  {
+    q: "LCD shadow / ghosting diterima?",
+    a: "Diterima, tapi penawaran menyesuaikan. LCD shadow (bayangan bekas gambar) atau ghosting biasanya berarti panel layar udah wear. Kami tetap beli, tapi harga jual ulang juga bakal turun, jadi penawaran ke kamu juga menyesuaikan. Selama layar masih bisa dipakai normal, masih ada nilai.",
+  },
+  {
+    q: "Baterai soak / health rendah diterima?",
+    a: "Ya, diterima. Baterai soak (cepat habis) atau health rendah itu masalah umum di laptop bekas. Kami cek health baterai di QC, dan penawaran menyesuaikan. Kalau baterai masih 70%+ masih lumayan. Kalau udah di bawah 50%, harga turun dikit — tapi gak drastis, karena baterai bisa diganti.",
+  },
+  {
+    q: "Keyboard rusak / ada tombol mati diterima?",
+    a: "Diterima. Keyboard rusak (tombol mati, sticky, atau rapuh) bisa diganti, jadi masih ada nilai. Di QC kami tes semua tombol satu-satu. Penawaran menyesuaikan berapa banyak tombol yang bermasalah — kalau cuma 1-2 tombol, gak terlalu ngaruh. Kalau banyak, harga turun dikit.",
+  },
+  {
+    q: "Data pribadi di laptop lama gimana?",
+    a: "Sangat aman. Sebelum laptop masuk inventory, tim kami lakukan secure wipe (DoD 3-pass wipe — standard militer) supaya data gak bisa direcovery. Tapi kami sarankan kamu backup data penting & sign out dari akun (iCloud, Google, Microsoft) sebelum dibawa ke toko. Kalau lupa, kami bantu wipe di depan kamu kalau mau.",
+  },
+  {
     q: "Harus datang langsung?",
     a: "Pengajuan awal bisa online via WhatsApp. Tapi untuk inspeksi fisik & finalisasi harga, laptop harus dibawa ke toko. Kalau kamu di luar kota, hubungi kami dulu — mungkin bisa diatur via kurir.",
   },
@@ -117,24 +139,24 @@ const faqs = [
 
 const tokoPhotos = [
   {
+    src: "https://images.unsplash.com/photo-1604754742629-3e0498a8a4bd?w=800&q=80",
+    alt: "Teknisi membongkar laptop untuk inspeksi",
+    label: "Pembongkaran",
+  },
+  {
     src: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=800&q=80",
-    alt: "Teknisi inspeksi laptop",
-    label: "Inspeksi Fisik",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=800&q=80",
-    alt: "Meja inspeksi dengan tools",
-    label: "Meja Kerja",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&q=80",
-    alt: "Pengecekan komponen perangkat",
+    alt: "Pengecekan komponen dengan multimeter",
     label: "QC Detail",
   },
   {
-    src: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=800&q=80",
-    alt: "Rak penyimpanan laptop",
-    label: "Inventory",
+    src: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&q=80",
+    alt: "Tes layar dan keyboard",
+    label: "Tes Fungsi",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=800&q=80",
+    alt: "Meja kerja teknisi dengan tools lengkap",
+    label: "Meja Kerja",
   },
 ];
 
@@ -242,8 +264,8 @@ export default function HomePage() {
           {/* Full-bleed background image */}
           <div className="absolute inset-0 z-0">
             <Image
-              src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=1920&q=90"
-              alt="MacBook di meja kayu — laptop bekas siap diperiksa"
+              src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=1920&q=90"
+              alt="Teknisi Saka Laptop sedang inspeksi laptop bekas dengan multimeter"
               fill
               className="object-cover object-center"
               priority
@@ -332,6 +354,52 @@ export default function HomePage() {
             </motion.div>
           </div>
 
+        </section>
+
+        {/* ─────────────────────────────────────
+            SECTION 1.5 — TRUST STATS (real numbers only)
+            ───────────────────────────────────── */}
+        <section className="border-b border-border bg-background">
+          <div className="page-container py-12 md:py-16">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4">
+              {[
+                {
+                  stat: "12",
+                  label: "Titik QC",
+                  desc: "Setiap laptop diperiksa di 12 titik: layar, keyboard, touchpad, baterai, charger, storage, RAM, kamera, speaker, port, WiFi, fisik.",
+                },
+                {
+                  stat: "1–2",
+                  label: "Hari Proses",
+                  desc: "Dari pengajuan via WhatsApp sampai penawaran final. Review awal 1×24 jam, inspeksi fisik 30–60 menit di toko.",
+                },
+                {
+                  stat: "100%",
+                  label: "Penawaran Transparan",
+                  desc: "Harga berdasarkan hasil QC aktual, bukan tebakan. Kamu lihat sendiri apa yang diperiksa dan kenapa harganya segitu.",
+                },
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.12, duration: 0.5 }}
+                  className="text-center md:text-left"
+                >
+                  <p className="text-5xl md:text-6xl font-bold tracking-tight text-foreground">
+                    {item.stat}
+                  </p>
+                  <p className="text-sm font-semibold uppercase tracking-[0.15em] text-primary mt-2 mb-3">
+                    {item.label}
+                  </p>
+                  <p className="text-sm text-muted-foreground leading-relaxed max-w-xs mx-auto md:mx-0">
+                    {item.desc}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
         </section>
 
         {/* ─────────────────────────────────────
@@ -683,20 +751,128 @@ export default function HomePage() {
       </main>
 
       {/* ── FOOTER ── */}
-      <footer className="border-t border-border bg-background">
-        <div className="page-container py-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <StoreLogo className="h-7 w-7 rounded-lg object-cover" />
-              <span className="text-sm font-semibold"><StoreNamePlain /></span>
+      <footer className="border-t border-border bg-card/30">
+        <div className="page-container py-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            {/* Brand */}
+            <div className="md:col-span-1">
+              <div className="flex items-center gap-2 mb-3">
+                <StoreLogo className="h-8 w-8 rounded-lg object-cover" />
+                <span className="font-semibold"><StoreNamePlain /></span>
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Pusat Inspeksi & Trade-in Laptop Bekas. Kirim data laptop kamu,
+                tim kami lakukan QC & beri penawaran transparan.
+              </p>
             </div>
-            <p className="text-xs text-muted-foreground text-center">
+
+            {/* Kontak */}
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+                Kontak
+              </p>
+              <div className="space-y-2 text-sm">
+                {lokasi.telepon && (
+                  <p className="flex items-center gap-2 text-muted-foreground">
+                    <Phone className="h-3.5 w-3.5 shrink-0" />
+                    <span>{lokasi.telepon}</span>
+                  </p>
+                )}
+                {lokasi.whatsapp && (
+                  <a
+                    href={waLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <MessageCircle className="h-3.5 w-3.5 shrink-0" />
+                    <span>WhatsApp: {lokasi.whatsapp}</span>
+                  </a>
+                )}
+              </div>
+            </div>
+
+            {/* Lokasi & Jam */}
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+                Lokasi & Jam
+              </p>
+              <div className="space-y-2 text-sm">
+                {lokasi.alamat && (
+                  <p className="flex items-start gap-2 text-muted-foreground">
+                    <MapPin className="h-3.5 w-3.5 shrink-0 mt-0.5" />
+                    <span>{lokasi.alamat}</span>
+                  </p>
+                )}
+                {lokasi.jamWeekday && (
+                  <p className="flex items-center gap-2 text-muted-foreground">
+                    <Clock className="h-3.5 w-3.5 shrink-0" />
+                    <span>Weekday: {lokasi.jamWeekday}</span>
+                  </p>
+                )}
+                {lokasi.jamWeekend && (
+                  <p className="flex items-center gap-2 text-muted-foreground">
+                    <Clock className="h-3.5 w-3.5 shrink-0" />
+                    <span>Weekend: {lokasi.jamWeekend}</span>
+                  </p>
+                )}
+                {lokasi.mapsLink && (
+                  <a
+                    href={lokasi.mapsLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline mt-1"
+                  >
+                    <MapPin className="h-3 w-3" />
+                    Lihat di Google Maps
+                  </a>
+                )}
+              </div>
+            </div>
+
+            {/* CTA */}
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+                Mulai Sekarang
+              </p>
+              <a
+                href={waLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-lg bg-primary text-primary-foreground px-4 py-2.5 text-sm font-medium hover:bg-primary/90 transition-colors mb-4"
+              >
+                <MessageCircle className="h-4 w-4" />
+                Ajukan via WhatsApp
+              </a>
+              <div className="flex items-center gap-4 mt-4 text-xs text-muted-foreground">
+                <Link href="/#proses" className="hover:text-foreground transition-colors">
+                  Proses
+                </Link>
+                <Link href="/#toko" className="hover:text-foreground transition-colors">
+                  Toko
+                </Link>
+                <Link href="/#faq" className="hover:text-foreground transition-colors">
+                  FAQ
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom bar */}
+          <div className="border-t border-border/50 pt-6 flex flex-col md:flex-row items-center justify-between gap-3">
+            <p className="text-xs text-muted-foreground text-center md:text-left">
               &copy; 2026 <StoreNamePlain />. Pusat Inspeksi & Trade-in Laptop Bekas.
             </p>
             <div className="flex items-center gap-4 text-xs text-muted-foreground">
-              <a href={waLink} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
-                WhatsApp
-              </a>
+              <Link href="/#proses" className="hover:text-foreground transition-colors">
+                Proses
+              </Link>
+              <Link href="/#toko" className="hover:text-foreground transition-colors">
+                Toko
+              </Link>
+              <Link href="/#faq" className="hover:text-foreground transition-colors">
+                FAQ
+              </Link>
               <Link href="/admin" className="hover:text-foreground transition-colors">
                 Admin
               </Link>
