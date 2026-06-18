@@ -3,6 +3,12 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/lib/theme-store";
+
+// Force dynamic — supaya semua page gak di-cache sebagai static HTML.
+// Content editable dari admin (branding, homepage, lokasi), jadi harus
+// selalu fetch fresh dari DB.
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 import { LokasiProvider } from "@/lib/lokasi-store";
 import { SubmissionProvider } from "@/lib/submission-store";
 import { ThemeAwareToaster } from "@/components/theme-aware-toaster";

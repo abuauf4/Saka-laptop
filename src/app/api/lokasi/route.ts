@@ -2,13 +2,22 @@ import { db } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth-server";
 import { NextRequest, NextResponse } from "next/server";
 
+// Force dynamic — disable caching (lokasi editable dari admin)
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+const NO_CACHE = {
+  "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+  Pragma: "no-cache",
+  Expires: "0",
+};
+
 // GET /api/lokasi - Get store info (single row)
 export async function GET() {
   try {
     let lokasi = await db.lokasi.findUnique({ where: { id: "default" } });
 
     if (!lokasi) {
-      // Create default if not exists
       lokasi = await db.lokasi.create({
         data: {
           id: "default",
@@ -27,10 +36,13 @@ export async function GET() {
       });
     }
 
-    return NextResponse.json(lokasi);
+    return NextResponse.json(lokasi, { headers: NO_CACHE });
   } catch (error) {
     console.error("Error fetching lokasi:", error);
-    return NextResponse.json({ error: "Failed to fetch lokasi" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch lokasi" },
+      { status: 500, headers: NO_CACHE }
+    );
   }
 }
 
@@ -71,12 +83,18 @@ export async function PUT(request: NextRequest) {
       },
     });
 
-    return NextResponse.json(lokasi);
+    return NextResponse.json(lokasi, { headers: NO_CACHE });
   } catch (error) {
     if (error instanceof Error && error.message === "Unauthorized") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401, headers: NO_CACHE }
+      );
     }
     console.error("Error updating lokasi:", error);
-    return NextResponse.json({ error: "Failed to update lokasi" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to update lokasi" },
+      { status: 500, headers: NO_CACHE }
+    );
   }
 }
