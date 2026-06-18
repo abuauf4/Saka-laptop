@@ -7,10 +7,10 @@ node_modules/
 agent-ctx/
 Download/
 skills/
-upload/
+/upload/
 db/
 mini-services/
-scripts/
+/scripts/
 examples/
 daemon.js
 Caddyfile
