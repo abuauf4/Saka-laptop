@@ -123,7 +123,7 @@ export function ArticleDetailClient({
 
       <footer className="border-t border-border bg-card/30 py-6">
         <div className="page-container text-center">
-          <p className="text-xs text-muted-foreground">© 2026 {siteName}. Pusat Inspeksi & Trade-in Laptop Bekas.</p>
+          <p className="text-xs text-muted-foreground">© 2026 Nauka Motion. Small movement, Real impact.</p>
         </div>
       </footer>
     </div>

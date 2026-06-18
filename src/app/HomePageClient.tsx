@@ -890,8 +890,7 @@ export function HomePageClient({
                 <span className="font-semibold">{lokasi.namaToko}</span>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                Pusat Inspeksi & Trade-in Laptop Bekas. Kirim data laptop kamu,
-                tim kami lakukan QC & beri penawaran transparan.
+                Small movement, Real impact.
               </p>
             </div>
 
@@ -996,7 +995,7 @@ export function HomePageClient({
           {/* Bottom bar */}
           <div className="border-t border-border/50 pt-6 flex flex-col md:flex-row items-center justify-between gap-3">
             <p className="text-xs text-muted-foreground text-center md:text-left">
-              &copy; 2026 {lokasi.namaToko}. Pusat Inspeksi & Trade-in Laptop Bekas.
+              &copy; 2026 Nauka Motion. Small movement, Real impact.
             </p>
             <div className="flex items-center gap-4 text-xs text-muted-foreground">
               <Link href="/#proses" className="hover:text-foreground transition-colors">
