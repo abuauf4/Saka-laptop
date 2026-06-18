@@ -19,20 +19,16 @@ export async function GET(request: NextRequest) {
     const where: Record<string, unknown> = {};
     if (merk) where.merk = { contains: merk, mode: "insensitive" };
 
-    // Date range (apply to createdAt for masuk, soldAt for sold)
-    const dateFilter: Record<string, unknown> = {};
+    // Date range — apply to createdAt
     if (from || to) {
-      dateFilter.AND = [];
-      if (from) dateFilter.AND.push({ gte: new Date(from) });
-      if (to) dateFilter.AND.push({ lte: new Date(to + "T23:59:59") });
+      where.createdAt = {};
+      if (from) (where.createdAt as Record<string, unknown>).gte = new Date(from);
+      if (to) (where.createdAt as Record<string, unknown>).lte = new Date(to + "T23:59:59");
     }
 
     // Get all barang matching filters
     const allBarang = await db.barang.findMany({
-      where: {
-        ...where,
-        ...(from || to ? { createdAt: dateFilter } : {}),
-      },
+      where,
       orderBy: { createdAt: "desc" },
     });
 
