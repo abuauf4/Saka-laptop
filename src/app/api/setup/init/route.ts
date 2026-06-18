@@ -254,6 +254,37 @@ export async function GET(request: NextRequest) {
     });
     logs.push("✓ CMS module active");
 
+    // ─── 10. Create HomepageContent table (if not exists) ───
+    // Pakai raw SQL karena prisma db push gagal di Vercel build (pool exhaustion)
+    try {
+      await db.$executeRaw`
+        CREATE TABLE IF NOT EXISTS "homepage_content" (
+          "id" TEXT NOT NULL DEFAULT 'default',
+          "heroEyebrow" TEXT NOT NULL DEFAULT 'Pusat Inspeksi & Trade-in Laptop Bekas',
+          "heroTitle" TEXT NOT NULL DEFAULT 'Jual Laptop Bekas Tanpa Ribet.',
+          "heroSubtitle" TEXT NOT NULL DEFAULT 'Kirim foto dan spesifikasi laptop melalui WhatsApp. Tim kami akan membantu proses pengecekan dan penawaran.',
+          "heroImage" TEXT NOT NULL DEFAULT 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=1920&q=90',
+          "trustStats" TEXT NOT NULL DEFAULT '[]',
+          "brandTitle" TEXT NOT NULL DEFAULT 'Bukan Sekadar Membeli Laptop.',
+          "brandCopy" TEXT NOT NULL DEFAULT 'Kami membantu proses penilaian perangkat secara transparan sebelum memberikan penawaran.',
+          "brandPoints" TEXT NOT NULL DEFAULT '[]',
+          "workflowStages" TEXT NOT NULL DEFAULT '[]',
+          "tokoPhotos" TEXT NOT NULL DEFAULT '[]',
+          "deviceCategories" TEXT NOT NULL DEFAULT '[]',
+          "faqs" TEXT NOT NULL DEFAULT '[]',
+          "closingTitle" TEXT NOT NULL DEFAULT 'Laptop Lama Masih Bernilai.',
+          "closingSubtitle" TEXT NOT NULL DEFAULT 'Chat kami sekarang via WhatsApp. Gratis, tanpa komitmen.',
+          "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          "updatedAt" TIMESTAMP(3) NOT NULL,
+          CONSTRAINT "homepage_content_pkey" PRIMARY KEY ("id")
+        )
+      `;
+      logs.push("✓ HomepageContent table ready");
+    } catch (tableErr) {
+      // Table mungkin sudah ada, ignore error
+      logs.push(`ℹ HomepageContent table: ${tableErr instanceof Error ? tableErr.message : "already exists"}`);
+    }
+
     const duration = Date.now() - startTime;
 
     return NextResponse.json({
