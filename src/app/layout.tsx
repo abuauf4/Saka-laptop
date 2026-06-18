@@ -66,7 +66,7 @@ export const metadata: Metadata = {
       "Kirim data laptop bekas kamu. Tim kami melakukan QC & memberikan penawaran transparan.",
     images: [
       {
-        url: "/store-front.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Jakarta Laptops — Pusat Inspeksi & Trade-in Laptop Bekas",
@@ -78,7 +78,12 @@ export const metadata: Metadata = {
     title: "Jakarta Laptops — Pusat Inspeksi & Trade-in Laptop Bekas",
     description:
       "Kirim data laptop bekas. QC transparan, penawaran jelas, proses cepat.",
-    images: ["/store-front.png"],
+    images: ["/og-image.png"],
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.png",
+    apple: "/apple-touch-icon.png",
   },
   alternates: {
     canonical: siteUrl,
