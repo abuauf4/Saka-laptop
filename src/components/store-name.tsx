@@ -12,7 +12,7 @@ export function StoreName({
   className?: string;
 }) {
   const { lokasi, isLoaded } = useLokasi();
-  const name = isLoaded ? lokasi.namaToko : "Saka Laptop";
+  const name = isLoaded ? lokasi.namaToko : "Jakarta Laptops";
   const firstWord = name.split(" ")[0];
   const rest = name.split(" ").slice(1).join(" ");
 
@@ -28,6 +28,6 @@ export function StoreName({
  */
 export function StoreNamePlain() {
   const { lokasi, isLoaded } = useLokasi();
-  const name = isLoaded ? lokasi.namaToko : "Saka Laptop";
+  const name = isLoaded ? lokasi.namaToko : "Jakarta Laptops";
   return <>{name}</>;
 }
