@@ -153,6 +153,8 @@ model Settings {
   googleMapsUrl     String?
   googleAnalyticsId String?
   metaPixelId       String?
+  googleAdsId       String?
+  gtmContainerId    String?
   smtpHost          String?
   smtpPort          String?
   smtpUsername      String?

@@ -1,7 +1,8 @@
-// ─── Nauka CMS — Settings API Route ───
+// ─── Jakarta Laptops — Settings API Route (with auto-migrate) ───
 
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/core/lib/db";
+import { requireAuth } from "@/core/lib/auth";
 
 // Force dynamic — disable caching (editable dari admin)
 export const dynamic = "force-dynamic";
@@ -12,10 +13,20 @@ const NO_CACHE = {
   Pragma: "no-cache",
   Expires: "0",
 };
-import { requireAuth } from "@/core/lib/auth";
+
+// Auto-add new columns if they don't exist (googleAdsId, gtmContainerId)
+async function autoMigrateColumns() {
+  try {
+    await db.$executeRaw`ALTER TABLE "core_settings" ADD COLUMN IF NOT EXISTS "googleAdsId" TEXT`;
+    await db.$executeRaw`ALTER TABLE "core_settings" ADD COLUMN IF NOT EXISTS "gtmContainerId" TEXT`;
+  } catch {
+    // Columns already exist or table not found, ignore
+  }
+}
 
 export async function GET() {
   try {
+    await autoMigrateColumns();
     let settings = await db.settings.findUnique({ where: { id: "default" } });
     if (!settings) {
       settings = await db.settings.create({ data: { id: "default" } });
@@ -30,12 +41,24 @@ export async function GET() {
 export async function PUT(request: NextRequest) {
   try {
     await requireAuth();
+    await autoMigrateColumns();
     const body = await request.json();
+
+    // Whitelist fields yang boleh di-update
+    const allowedFields = [
+      "phone", "whatsapp", "email", "address", "googleMapsUrl",
+      "googleAnalyticsId", "metaPixelId", "googleAdsId", "gtmContainerId",
+      "smtpHost", "smtpPort", "smtpUsername", "smtpPassword", "maintenanceMode",
+    ];
+    const cleanBody: Record<string, unknown> = {};
+    for (const key of allowedFields) {
+      if (body[key] !== undefined) cleanBody[key] = body[key];
+    }
 
     const settings = await db.settings.upsert({
       where: { id: "default" },
-      update: body,
-      create: { id: "default", ...body },
+      update: cleanBody,
+      create: { id: "default", ...cleanBody },
     });
 
     return NextResponse.json(settings, { headers: NO_CACHE });

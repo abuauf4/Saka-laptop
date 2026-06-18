@@ -40,6 +40,8 @@ interface SettingsData {
   googleMapsUrl: string | null;
   googleAnalyticsId: string | null;
   metaPixelId: string | null;
+  googleAdsId: string | null;
+  gtmContainerId: string | null;
   smtpHost: string | null;
   smtpPort: string | null;
   smtpUsername: string | null;
@@ -68,6 +70,8 @@ export function SettingsClient() {
 
   const [googleAnalyticsId, setGoogleAnalyticsId] = useState("");
   const [metaPixelId, setMetaPixelId] = useState("");
+  const [googleAdsId, setGoogleAdsId] = useState("");
+  const [gtmContainerId, setGtmContainerId] = useState("");
 
   const [smtpHost, setSmtpHost] = useState("");
   const [smtpPort, setSmtpPort] = useState("");
@@ -92,6 +96,8 @@ export function SettingsClient() {
         setGoogleMapsUrl(data.googleMapsUrl || "");
         setGoogleAnalyticsId(data.googleAnalyticsId || "");
         setMetaPixelId(data.metaPixelId || "");
+        setGoogleAdsId(data.googleAdsId || "");
+        setGtmContainerId(data.gtmContainerId || "");
         setSmtpHost(data.smtpHost || "");
         setSmtpPort(data.smtpPort || "");
         setSmtpUsername(data.smtpUsername || "");
@@ -351,10 +357,42 @@ export function SettingsClient() {
                   Your Meta (Facebook) Pixel ID. Used for tracking conversions and retargeting ads on Facebook/Instagram.
                 </p>
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="googleAdsId" className="flex items-center gap-2">
+                  <Target className="h-3 w-3" /> Google Ads ID
+                </Label>
+                <Input
+                  id="googleAdsId"
+                  placeholder="AW-XXXXXXXXX"
+                  value={googleAdsId}
+                  onChange={(e) => setGoogleAdsId(e.target.value)}
+                  className="border-white/10 bg-white/5"
+                  disabled={!canUpdate}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Your Google Ads conversion ID (e.g., AW-123456789). Used for tracking Google Ads conversions.
+                </p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="gtmContainerId" className="flex items-center gap-2">
+                  <Code className="h-3 w-3" /> Google Tag Manager Container ID
+                </Label>
+                <Input
+                  id="gtmContainerId"
+                  placeholder="GTM-XXXXXXX"
+                  value={gtmContainerId}
+                  onChange={(e) => setGtmContainerId(e.target.value)}
+                  className="border-white/10 bg-white/5"
+                  disabled={!canUpdate}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Your GTM Container ID (e.g., GTM-ABCDEF). If set, this will override GA, Google Ads, and Meta Pixel — manage all tags from GTM dashboard.
+                </p>
+              </div>
               {canUpdate && (
                 <div className="flex justify-end">
                   <Button
-                    onClick={() => saveSection("Integrations", { googleAnalyticsId, metaPixelId })}
+                    onClick={() => saveSection("Integrations", { googleAnalyticsId, metaPixelId, googleAdsId, gtmContainerId })}
                     disabled={saving["Integrations"]}
                   >
                     {saving["Integrations"] ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}

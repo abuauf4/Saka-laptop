@@ -7,6 +7,7 @@ import { LokasiProvider } from "@/lib/lokasi-store";
 import { SubmissionProvider } from "@/lib/submission-store";
 import { ThemeAwareToaster } from "@/components/theme-aware-toaster";
 import { SchemaOrg } from "@/components/schema-org";
+import { TrackingScripts } from "@/components/tracking-scripts";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -98,6 +99,7 @@ export default function RootLayout({
           <LokasiProvider>
             <SubmissionProvider>
               <SchemaOrg />
+              <TrackingScripts />
               {children}
               <ThemeAwareToaster />
             </SubmissionProvider>
