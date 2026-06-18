@@ -1,59 +1,46 @@
 import { MetadataRoute } from "next";
-import { db } from "@/lib/prisma";
+import { db } from "@/core/lib/db";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || "https://saka-laptop.vercel.app";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://jakartalaptops.com";
 
   // Static pages
-  const staticPages = [
+  const staticPages: MetadataRoute.Sitemap = [
     {
-      url: baseUrl,
+      url: `${baseUrl}/`,
       lastModified: new Date(),
-      changeFrequency: "daily" as const,
+      changeFrequency: "daily",
       priority: 1,
-    },
-    {
-      url: `${baseUrl}/produk`,
-      lastModified: new Date(),
-      changeFrequency: "daily" as const,
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/finder`,
-      lastModified: new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
     },
     {
       url: `${baseUrl}/tentang`,
       lastModified: new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
+      changeFrequency: "monthly",
+      priority: 0.8,
     },
     {
-      url: `${baseUrl}/blog`,
+      url: `${baseUrl}/artikel`,
       lastModified: new Date(),
-      changeFrequency: "daily" as const,
-      priority: 0.8,
+      changeFrequency: "weekly",
+      priority: 0.7,
     },
   ];
 
-  // Blog articles
+  // Dynamic article pages
   let articlePages: MetadataRoute.Sitemap = [];
   try {
     const articles = await db.article.findMany({
-      where: { published: true },
+      where: { status: "published" },
       select: { slug: true, updatedAt: true },
     });
     articlePages = articles.map((a) => ({
-      url: `${baseUrl}/blog/${a.slug}`,
+      url: `${baseUrl}/artikel/${a.slug}`,
       lastModified: a.updatedAt,
-      changeFrequency: "weekly" as const,
+      changeFrequency: "monthly" as const,
       priority: 0.6,
     }));
   } catch {
-    // If DB is not available, skip articles
+    // DB error, skip articles
   }
 
   return [...staticPages, ...articlePages];

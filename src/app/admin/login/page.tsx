@@ -1,10 +1,14 @@
-// ─── Nauka CMS — Login Page (Server Component Wrapper) ───
+// ─── Jakarta Laptops — Admin Login (noindex) ───
 
 import { LoginClient } from "./login-client";
 
 export const metadata = {
-  title: "Login — Nauka CMS",
-  description: "Sign in to Nauka CMS",
+  title: "Admin Login",
+  description: "",
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function LoginPage() {

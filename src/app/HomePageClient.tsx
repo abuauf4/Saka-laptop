@@ -44,7 +44,6 @@ const menuLinks = [
   { href: "/tentang", label: "Tentang" },
   { href: "/artikel", label: "Artikel" },
   { href: "/#faq", label: "FAQ" },
-  { href: "/admin", label: "Admin" },
 ];
 
 const brandPoints = [
@@ -1014,9 +1013,6 @@ export function HomePageClient({
               </Link>
               <Link href="/#faq" className="hover:text-foreground transition-colors">
                 FAQ
-              </Link>
-              <Link href="/admin" className="hover:text-foreground transition-colors">
-                Admin
               </Link>
             </div>
           </div>

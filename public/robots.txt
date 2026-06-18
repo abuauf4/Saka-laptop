@@ -1,5 +1,9 @@
 User-agent: *
 Allow: /
 Disallow: /admin
-Disallow: /api
-Sitemap: https://nauka-laptop.vercel.app/sitemap.xml
+Disallow: /admin/
+Disallow: /api/
+Disallow: /api/setup
+Disallow: /api/diagnostic
+
+Sitemap: https://jakartalaptops.com/sitemap.xml
