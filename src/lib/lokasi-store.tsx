@@ -27,7 +27,7 @@ export interface LokasiToko {
 
 /* ── Default seed data ── */
 const defaultLokasi: LokasiToko = {
-  namaToko: "Saka Laptop",
+  namaToko: "Jakarta Laptops",
   tagline: "Toko Laptop Terpercaya",
   foto: "/store-front.png",
   alamat: "Jl. Raya Kebayoran Lama No. 12, Kel. Kebayoran Lama, Kec. Kebayoran Lama, Jakarta Selatan 12210",

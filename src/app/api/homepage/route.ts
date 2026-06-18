@@ -1,4 +1,4 @@
-// ─── Saka Laptop — Homepage Content API ───
+// ─── Jakarta Laptops — Homepage Content API ───
 // GET /api/homepage (public) — return homepage content (with defaults fallback)
 // PUT /api/homepage (auth) — update homepage content
 

@@ -106,7 +106,7 @@ export function AdminSidebar() {
                   <span className="text-sm font-bold">S</span>
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Saka Laptop</span>
+                  <span className="truncate font-semibold">Jakarta Laptops</span>
                   <span className="truncate text-xs text-muted-foreground">Pusat Inspeksi & Trade-in</span>
                 </div>
               </Link>

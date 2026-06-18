@@ -193,7 +193,7 @@ export default function HomePage() {
   // WhatsApp number from Lokasi config, fallback to placeholder
   const waNumber = (isLoaded && lokasi.whatsapp) ? lokasi.whatsapp.replace(/^0/, "62") : "6281234567890";
   const waMessage = encodeURIComponent(
-    "Halo Saka Laptop, saya mau jual laptop bekas. Bisa dibantu prosesnya?"
+    "Halo Jakarta Laptops, saya mau jual laptop bekas. Bisa dibantu prosesnya?"
   );
   const waLink = `https://wa.me/${waNumber}?text=${waMessage}`;
 
@@ -290,7 +290,7 @@ export default function HomePage() {
           <div className="absolute inset-0 z-0">
             <Image
               src={heroImage}
-              alt="Teknisi Saka Laptop sedang inspeksi laptop bekas dengan multimeter"
+              alt="Teknisi Jakarta Laptops sedang inspeksi laptop bekas dengan multimeter"
               fill
               className="object-cover object-center"
               priority

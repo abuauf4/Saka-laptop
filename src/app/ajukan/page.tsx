@@ -651,7 +651,7 @@ function Header() {
         <Link href="/" className="flex items-center gap-2.5">
           <StoreLogo />
           <span className="text-base font-semibold tracking-tight">
-            Saka Laptop
+            Jakarta Laptops
           </span>
         </Link>
         <div className="flex items-center gap-2">

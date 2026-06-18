@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
       messages: [
         {
           role: "system",
-          content: `Kamu adalah estimator harga laptop bekas profesional di Indonesia, bekerja untuk toko "Saka Laptop" yang menerima laptop bekas dari customer.
+          content: `Kamu adalah estimator harga laptop bekas profesional di Indonesia, bekerja untuk toko "Jakarta Laptops" yang menerima laptop bekas dari customer.
 
 TUGAS: Berikan estimasi harga beli (dalam Rupiah) untuk laptop bekas yang ditawarkan customer ke toko. Harga estimasi adalah harga BELI (sekitar 60-75% dari harga jual pasar, karena toko perlu margin keuntungan).
 

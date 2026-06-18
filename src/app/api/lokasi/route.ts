@@ -12,7 +12,7 @@ export async function GET() {
       lokasi = await db.lokasi.create({
         data: {
           id: "default",
-          namaToko: "Saka Laptop",
+          namaToko: "Jakarta Laptops",
           tagline: "Toko Laptop Terpercaya",
           foto: "/store-front.png",
           alamat: "Jl. Raya Kebayoran Lama No. 12, Kel. Kebayoran Lama, Kec. Kebayoran Lama, Jakarta Selatan 12210",
@@ -57,7 +57,7 @@ export async function PUT(request: NextRequest) {
       },
       create: {
         id: "default",
-        namaToko: body.namaToko || "Saka Laptop",
+        namaToko: body.namaToko || "Jakarta Laptops",
         tagline: body.tagline || "Toko Laptop Terpercaya",
         foto: body.foto || "/store-front.png",
         alamat: body.alamat || "",

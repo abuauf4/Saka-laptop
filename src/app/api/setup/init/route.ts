@@ -1,4 +1,4 @@
-// ─── Saka Laptop — Production Setup Endpoint ───
+// ─── Jakarta Laptops — Production Setup Endpoint ───
 // One-time setup endpoint to seed production database.
 // Protected by SETUP_KEY env var (random string you set in Vercel).
 //
@@ -156,11 +156,11 @@ export async function GET(request: NextRequest) {
       update: {},
       create: {
         id: "default",
-        siteName: "Saka Laptop",
+        siteName: "Jakarta Laptops",
         tagline: "Pusat Inspeksi & Trade-in Laptop Bekas",
         siteDescription:
           "Kirim data laptop bekas kamu. Tim kami akan melakukan pengecekan, QC, dan memberikan penawaran harga yang transparan.",
-        copyrightText: "© 2026 Saka Laptop. All rights reserved.",
+        copyrightText: "© 2026 Jakarta Laptops. All rights reserved.",
       },
     });
     logs.push("✓ Branding seeded");
@@ -185,15 +185,15 @@ export async function GET(request: NextRequest) {
       update: {},
       create: {
         id: "default",
-        siteTitle: "Saka Laptop — Pusat Inspeksi & Trade-in Laptop Bekas",
+        siteTitle: "Jakarta Laptops — Pusat Inspeksi & Trade-in Laptop Bekas",
         metaDescription:
           "Kirim data laptop bekas kamu. Tim kami melakukan QC & memberikan penawaran transparan.",
         keywords:
           "terima laptop bekas, trade in laptop, inspeksi laptop, QC laptop bekas, jual laptop bekas, tukar tambah laptop",
-        homepageTitle: "Saka Laptop — Pusat Inspeksi & Trade-in Laptop Bekas",
+        homepageTitle: "Jakarta Laptops — Pusat Inspeksi & Trade-in Laptop Bekas",
         homepageDesc:
           "Kirim data laptop bekas kamu. Tim kami akan melakukan pengecekan, QC, dan memberikan penawaran harga yang transparan.",
-        ogTitle: "Saka Laptop — Pusat Inspeksi & Trade-in Laptop Bekas",
+        ogTitle: "Jakarta Laptops — Pusat Inspeksi & Trade-in Laptop Bekas",
         ogDescription:
           "Kirim data laptop bekas. QC transparan, penawaran jelas, proses cepat.",
       },
@@ -206,7 +206,7 @@ export async function GET(request: NextRequest) {
       update: {},
       create: {
         id: "default",
-        namaToko: "Saka Laptop",
+        namaToko: "Jakarta Laptops",
         tagline: "Pusat Inspeksi & Trade-in Laptop Bekas",
         alamat: "Jakarta Selatan, Indonesia",
         telepon: "+62 896-6252-4542",

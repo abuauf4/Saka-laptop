@@ -23,8 +23,8 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://jakartalaptops.com"
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Saka Laptop — Pusat Inspeksi & Trade-in Laptop Bekas",
-    template: "%s — Saka Laptop",
+    default: "Jakarta Laptops — Pusat Inspeksi & Trade-in Laptop Bekas",
+    template: "%s — Jakarta Laptops",
   },
   description:
     "Kirim data laptop bekas kamu. Tim kami akan melakukan pengecekan, QC, dan memberikan penawaran harga yang transparan. Pusat inspeksi & trade-in laptop terpercaya.",
@@ -38,12 +38,12 @@ export const metadata: Metadata = {
     "pusat trade-in laptop",
     "penawaran laptop bekas",
     "laptop bekas Jakarta",
-    "Saka Laptop",
+    "Jakarta Laptops",
     "pengecekan laptop",
   ],
   authors: [{ name: "Nauka Creative Digital" }],
   creator: "Nauka Creative Digital",
-  publisher: "Saka Laptop",
+  publisher: "Jakarta Laptops",
   robots: {
     index: true,
     follow: true,
@@ -59,8 +59,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "id_ID",
     url: siteUrl,
-    siteName: "Saka Laptop",
-    title: "Saka Laptop — Pusat Inspeksi & Trade-in Laptop Bekas",
+    siteName: "Jakarta Laptops",
+    title: "Jakarta Laptops — Pusat Inspeksi & Trade-in Laptop Bekas",
     description:
       "Kirim data laptop bekas kamu. Tim kami melakukan QC & memberikan penawaran transparan.",
     images: [
@@ -68,13 +68,13 @@ export const metadata: Metadata = {
         url: "/store-front.png",
         width: 1200,
         height: 630,
-        alt: "Saka Laptop — Pusat Inspeksi & Trade-in Laptop Bekas",
+        alt: "Jakarta Laptops — Pusat Inspeksi & Trade-in Laptop Bekas",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Saka Laptop — Pusat Inspeksi & Trade-in Laptop Bekas",
+    title: "Jakarta Laptops — Pusat Inspeksi & Trade-in Laptop Bekas",
     description:
       "Kirim data laptop bekas. QC transparan, penawaran jelas, proses cepat.",
     images: ["/store-front.png"],

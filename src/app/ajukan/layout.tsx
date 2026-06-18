@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     "Kirim data laptop bekas kamu. Tim kami akan melakukan QC dan memberikan penawaran harga transparan dalam 1×24 jam.",
   openGraph: {
-    title: "Ajukan Laptop — Saka Laptop",
+    title: "Ajukan Laptop — Jakarta Laptops",
     description:
       "Kirim data laptop bekas. QC transparan, penawaran jelas, proses cepat.",
     url: "/ajukan",
