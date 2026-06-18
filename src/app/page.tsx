@@ -16,10 +16,6 @@ import {
   Phone,
   MapPin,
 } from "lucide-react";
-
-// Force dynamic rendering — NO static caching at all
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { StoreLogo } from "@/components/store-logo";
