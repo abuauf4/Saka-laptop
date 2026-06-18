@@ -381,3 +381,46 @@ model Submission {
   @@index([status])
   @@index([createdAt])
 }
+
+// ═══════════════════════════════════════
+// HOMEPAGE CONTENT (singleton, editable dari admin)
+// ═══════════════════════════════════════
+model HomepageContent {
+  id                String   @id @default("default")
+
+  // Hero section
+  heroEyebrow       String   @default("Pusat Inspeksi & Trade-in Laptop Bekas")
+  heroTitle         String   @default("Jual Laptop Bekas Tanpa Ribet.")
+  heroSubtitle      String   @default("Kirim foto dan spesifikasi laptop melalui WhatsApp. Tim kami akan membantu proses pengecekan dan penawaran.")
+  heroImage         String   @default("https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=1920&q=90")
+
+  // Trust stats (3 items, JSON array of {stat, label, desc})
+  trustStats        String   @default("[]")
+
+  // Brand statement
+  brandTitle        String   @default("Bukan Sekadar Membeli Laptop.")
+  brandCopy         String   @default("Kami membantu proses penilaian perangkat secara transparan sebelum memberikan penawaran.")
+  // JSON array of {icon, title, desc}
+  brandPoints       String   @default("[]")
+
+  // Workflow stages (5 items, JSON array of {n, title, desc})
+  workflowStages    String   @default("[]")
+
+  // Toko photos (JSON array of {src, alt, label})
+  tokoPhotos        String   @default("[]")
+
+  // Device categories (JSON array of {label, emoji})
+  deviceCategories  String   @default("[]")
+
+  // FAQ (JSON array of {q, a})
+  faqs              String   @default("[]")
+
+  // Closing CTA
+  closingTitle      String   @default("Laptop Lama Masih Bernilai.")
+  closingSubtitle   String   @default("Chat kami sekarang via WhatsApp. Gratis, tanpa komitmen.")
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("homepage_content")
+}

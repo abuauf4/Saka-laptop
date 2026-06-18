@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -164,6 +164,31 @@ export default function HomePage() {
   const { lokasi, isLoaded } = useLokasi();
   const [menuOpen, setMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [hp, setHp] = useState<Record<string, unknown> | null>(null);
+
+  // Fetch homepage content dari admin (with fallback ke hardcoded defaults)
+  useEffect(() => {
+    fetch("/api/homepage")
+      .then((r) => r.json())
+      .then(setHp)
+      .catch(() => {});
+  }, []);
+
+  // Resolve values: API content kalau ada, fallback ke hardcoded defaults
+  const heroEyebrow = (hp?.heroEyebrow as string) || "Pusat Inspeksi & Trade-in Laptop Bekas";
+  const heroTitle = (hp?.heroTitle as string) || "Jual Laptop Bekas Tanpa Ribet.";
+  const heroSubtitle = (hp?.heroSubtitle as string) || "Kirim foto dan spesifikasi laptop melalui WhatsApp. Tim kami akan membantu proses pengecekan dan penawaran.";
+  const heroImage = (hp?.heroImage as string) || "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=1920&q=90";
+  const trustStats = (hp?.trustStats as typeof brandPoints | undefined)?.length ? hp.trustStats as typeof brandPoints : undefined;
+  const brandTitle = (hp?.brandTitle as string) || "Bukan Sekadar Membeli Laptop.";
+  const brandCopy = (hp?.brandCopy as string) || "Kami membantu proses penilaian perangkat secara transparan sebelum memberikan penawaran.";
+  const brandPointsData = (hp?.brandPoints as typeof brandPoints | undefined)?.length ? hp.brandPoints as typeof brandPoints : brandPoints;
+  const workflowStagesData = (hp?.workflowStages as typeof workflowStages | undefined)?.length ? hp.workflowStages as typeof workflowStages : workflowStages;
+  const tokoPhotosData = (hp?.tokoPhotos as typeof tokoPhotos | undefined)?.length ? hp.tokoPhotos as typeof tokoPhotos : tokoPhotos;
+  const deviceCategoriesData = (hp?.deviceCategories as typeof deviceCategories | undefined)?.length ? hp.deviceCategories as typeof deviceCategories : deviceCategories;
+  const faqsData = (hp?.faqs as typeof faqs | undefined)?.length ? hp.faqs as typeof faqs : faqs;
+  const closingTitle = (hp?.closingTitle as string) || "Laptop Lama Masih Bernilai.";
+  const closingSubtitle = (hp?.closingSubtitle as string) || "Chat kami sekarang via WhatsApp. Gratis, tanpa komitmen.";
 
   // WhatsApp number from Lokasi config, fallback to placeholder
   const waNumber = (isLoaded && lokasi.whatsapp) ? lokasi.whatsapp.replace(/^0/, "62") : "6281234567890";
@@ -264,7 +289,7 @@ export default function HomePage() {
           {/* Full-bleed background image */}
           <div className="absolute inset-0 z-0">
             <Image
-              src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=1920&q=90"
+              src={heroImage}
               alt="Teknisi Saka Laptop sedang inspeksi laptop bekas dengan multimeter"
               fill
               className="object-cover object-center"
@@ -293,20 +318,25 @@ export default function HomePage() {
               >
                 <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
                 <span className="text-xs font-medium text-white/90 tracking-wide">
-                  Pusat Inspeksi & Trade-in Laptop Bekas
+                  {heroEyebrow}
                 </span>
               </motion.div>
 
               {/* Headline */}
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] text-white">
-                Jual Laptop Bekas{" "}
-                <span className="text-white">Tanpa Ribet.</span>
+                {heroTitle.includes("Tanpa Ribet") ? (
+                  <>
+                    {heroTitle.replace(" Tanpa Ribet.", "")}{" "}
+                    <span className="text-white">Tanpa Ribet.</span>
+                  </>
+                ) : (
+                  heroTitle
+                )}
               </h1>
 
               {/* Subheadline */}
               <p className="mt-6 text-base md:text-lg text-white/85 leading-relaxed max-w-xl">
-                Kirim foto dan spesifikasi laptop melalui WhatsApp. Tim kami
-                akan membantu proses pengecekan dan penawaran.
+                {heroSubtitle}
               </p>
 
               {/* CTAs */}
@@ -362,7 +392,7 @@ export default function HomePage() {
         <section className="border-b border-border bg-background">
           <div className="page-container py-12 md:py-16">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4">
-              {[
+              {(trustStats ?? [
                 {
                   stat: "12",
                   label: "Titik QC",
@@ -378,7 +408,7 @@ export default function HomePage() {
                   label: "Penawaran Transparan",
                   desc: "Harga berdasarkan hasil QC aktual, bukan tebakan. Kamu lihat sendiri apa yang diperiksa dan kenapa harganya segitu.",
                 },
-              ].map((item, i) => (
+              ]).map((item, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, y: 20 }}
@@ -415,7 +445,7 @@ export default function HomePage() {
                 transition={{ duration: 0.5 }}
                 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground"
               >
-                Bukan Sekadar Membeli Laptop.
+                {brandTitle}
               </motion.h2>
               <motion.p
                 initial={{ opacity: 0 }}
@@ -424,13 +454,12 @@ export default function HomePage() {
                 transition={{ delay: 0.15, duration: 0.5 }}
                 className="mt-5 text-base md:text-lg text-muted-foreground leading-relaxed"
               >
-                Kami membantu proses penilaian perangkat secara transparan
-                sebelum memberikan penawaran.
+                {brandCopy}
               </motion.p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8 md:gap-12">
-              {brandPoints.map((point, i) => (
+              {brandPointsData.map((point, i) => (
                 <motion.div
                   key={point.title}
                   initial={{ opacity: 0, y: 20 }}
@@ -489,7 +518,7 @@ export default function HomePage() {
             </div>
 
             <div className="max-w-3xl">
-              {workflowStages.map((stage, i) => (
+              {workflowStagesData.map((stage, i) => (
                 <motion.div
                   key={stage.n}
                   initial={{ opacity: 0, x: -20 }}
@@ -559,7 +588,7 @@ export default function HomePage() {
             </div>
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-              {tokoPhotos.map((photo, i) => (
+              {tokoPhotosData.map((photo, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, scale: 0.95 }}
@@ -615,7 +644,7 @@ export default function HomePage() {
             </div>
 
             <div className="flex flex-wrap gap-3">
-              {deviceCategories.map((cat, i) => (
+              {deviceCategoriesData.map((cat, i) => (
                 <motion.div
                   key={cat.label}
                   initial={{ opacity: 0, y: 12 }}
@@ -660,7 +689,7 @@ export default function HomePage() {
             </div>
 
             <div className="space-y-2">
-              {faqs.map((faq, i) => {
+              {faqsData.map((faq, i) => {
                 const isOpen = openFaq === i;
                 return (
                   <motion.div
@@ -717,7 +746,7 @@ export default function HomePage() {
               transition={{ duration: 0.6 }}
               className="text-3xl md:text-5xl font-bold tracking-tight max-w-3xl mx-auto leading-tight"
             >
-              Laptop Lama Masih Bernilai.
+              {closingTitle}
             </motion.h2>
             <motion.p
               initial={{ opacity: 0 }}
@@ -726,7 +755,7 @@ export default function HomePage() {
               transition={{ delay: 0.2 }}
               className="mt-6 text-white/70 max-w-xl mx-auto text-base"
             >
-              Chat kami sekarang via WhatsApp. Gratis, tanpa komitmen.
+              {closingSubtitle}
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 16 }}

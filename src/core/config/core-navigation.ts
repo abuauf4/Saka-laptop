@@ -35,6 +35,7 @@ export const CORE_NAV_GROUPS: NavGroup[] = [
   {
     label: "Tampilan",
     items: [
+      { title: "Homepage", href: "/admin/homepage", icon: "Home", permission: "settings.view" },
       { title: "Branding", href: "/admin/branding", icon: "Palette", permission: "branding.view" },
       { title: "SEO", href: "/admin/seo", icon: "Search", permission: "seo.view" },
       { title: "Settings", href: "/admin/settings", icon: "Settings", permission: "settings.view" },
