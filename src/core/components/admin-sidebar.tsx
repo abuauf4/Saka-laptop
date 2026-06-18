@@ -95,6 +95,15 @@ export function AdminSidebar() {
     ...(navigation?.modules || []),
   ];
 
+  // Filter groups: "Developer" group hanya untuk super_admin/developer
+  // "Operasional" group untuk semua role yang punya permission
+  const visibleGroups = allGroups.filter((group) => {
+    if (group.label === "Developer" && !currentUser?.isSuperAdmin) {
+      return false;
+    }
+    return true;
+  });
+
   return (
     <Sidebar collapsible="icon" className="border-r-0">
       <SidebarHeader className="px-2 py-4">
@@ -103,7 +112,7 @@ export function AdminSidebar() {
             <SidebarMenuButton size="lg" asChild>
               <Link href="/admin">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                  <span className="text-sm font-bold">S</span>
+                  <span className="text-sm font-bold">JL</span>
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">Jakarta Laptops</span>
@@ -123,7 +132,7 @@ export function AdminSidebar() {
             <LucideIcons.Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
           </div>
         ) : (
-          allGroups.map((group) => {
+          visibleGroups.map((group) => {
             const visibleItems = group.items.filter((item) => canSee(item.permission));
             if (visibleItems.length === 0) return null;
             return (
