@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -179,6 +179,15 @@ export function HomePageClient({
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Scroll detection — navbar transparent di atas hero, solid saat scroll
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // All data comes from server props — NO client-side fetch, NO flicker
   const heroEyebrow = homepage.heroEyebrow;
@@ -208,14 +217,18 @@ export function HomePageClient({
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
-      {/* ── HEADER ── */}
-      <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
+      {/* ── HEADER (transparent over hero, solid on scroll) ── */}
+      <header className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "border-b border-border bg-background/80 backdrop-blur-md"
+          : "border-b border-transparent bg-transparent"
+      }`}>
         <div className="page-container flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
             <img src={logoSrc} alt={lokasi.namaToko || "Logo"} className="h-9 w-9 rounded-xl object-cover" />
-            <span className="text-base font-semibold tracking-tight">
+            <span className={`text-base font-semibold tracking-tight ${scrolled ? "" : "text-white"}`}>
               {lokasi.namaToko ? (
-                  <span className="text-base font-semibold tracking-tight">{lokasi.namaToko.split(" ")[0]}{lokasi.namaToko.split(" ").slice(1).length > 0 && <span className="text-primary"> {lokasi.namaToko.split(" ").slice(1).join(" ")}</span>}</span>
+                  <span className="text-base font-semibold tracking-tight">{lokasi.namaToko.split(" ")[0]}{lokasi.namaToko.split(" ").slice(1).length > 0 && <span className={scrolled ? "text-primary" : "text-white/70"}> {lokasi.namaToko.split(" ").slice(1).join(" ")}</span>}</span>
                 ) : null}
             </span>
           </Link>
@@ -225,7 +238,11 @@ export function HomePageClient({
               <Link
                 key={link.href}
                 href={link.href}
-                className="px-3.5 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                className={`px-3.5 py-2 text-sm font-medium transition-colors ${
+                  scrolled
+                    ? "text-muted-foreground hover:text-foreground"
+                    : "text-white/80 hover:text-white"
+                }`}
               >
                 {link.label}
               </Link>
@@ -234,14 +251,18 @@ export function HomePageClient({
 
           <div className="flex items-center gap-2">
             <a href={waLink} target="_blank" rel="noopener noreferrer">
-              <Button size="sm" className="gap-1.5">
+              <Button size="sm" className={`gap-1.5 transition-colors ${
+                scrolled ? "" : "bg-white text-black hover:bg-white/90"
+              }`}>
                 <MessageCircle className="h-3.5 w-3.5" />
                 Ajukan Laptop
               </Button>
             </a>
             <button
               onClick={() => setMenuOpen(true)}
-              className="flex md:hidden h-10 w-10 items-center justify-center rounded-xl hover:bg-muted transition-colors"
+              className={`flex md:hidden h-10 w-10 items-center justify-center rounded-xl transition-colors ${
+                scrolled ? "hover:bg-muted" : "hover:bg-white/10 text-white"
+              }`}
               aria-label="Buka menu"
             >
               <Menu className="h-5 w-5" />
@@ -296,7 +317,7 @@ export function HomePageClient({
         {/* ─────────────────────────────────────
             SECTION 1 — HERO (full-bleed image)
             ───────────────────────────────────── */}
-        <section className="relative min-h-[88vh] md:min-h-[92vh] flex items-center overflow-hidden">
+        <section className="relative min-h-screen flex items-center overflow-hidden">
           {/* Full-bleed background image */}
           <div className="absolute inset-0 z-0">
             <Image
