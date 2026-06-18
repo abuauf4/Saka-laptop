@@ -285,6 +285,26 @@ export async function GET(request: NextRequest) {
       logs.push(`ℹ HomepageContent table: ${tableErr instanceof Error ? tableErr.message : "already exists"}`);
     }
 
+    // ─── 11. Create Testimoni table (if not exists) ───
+    try {
+      await db.$executeRaw`
+        CREATE TABLE IF NOT EXISTS "Testimoni" (
+          "id" TEXT NOT NULL,
+          "nama" TEXT NOT NULL,
+          "role" TEXT NOT NULL,
+          "teks" TEXT NOT NULL,
+          "rating" INTEGER NOT NULL DEFAULT 5,
+          "laptop" TEXT NOT NULL DEFAULT '',
+          "avatar" TEXT NOT NULL DEFAULT '',
+          "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          CONSTRAINT "Testimoni_pkey" PRIMARY KEY ("id")
+        )
+      `;
+      logs.push("✓ Testimoni table ready");
+    } catch (tableErr) {
+      logs.push(`ℹ Testimoni table: ${tableErr instanceof Error ? tableErr.message : "already exists"}`);
+    }
+
     const duration = Date.now() - startTime;
 
     return NextResponse.json({
