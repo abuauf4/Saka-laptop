@@ -1,10 +1,24 @@
 // ─── Jakarta Laptops — Homepage Content API ───
 // GET /api/homepage (public) — return homepage content (with defaults fallback)
 // PUT /api/homepage (auth) — update homepage content
+//
+// Cache strategy: no-store (always fetch fresh from DB)
+// Karena content editable dari admin, gak boleh di-cache di edge.
 
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/core/lib/db";
 import { requireAuth } from "@/core/lib/auth";
+
+// Force dynamic — disable static + edge caching
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+/** Helper: set no-cache headers supaya response selalu fresh */
+const NO_CACHE_HEADERS = {
+  "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+  Pragma: "no-cache",
+  Expires: "0",
+};
 
 // ─── Default values (synced dengan yang hardcoded di page.tsx sebelumnya) ───
 const DEFAULT_CONTENT = {
@@ -106,7 +120,9 @@ export async function GET() {
 
     if (!content) {
       // Return defaults (kalau belum ada record di DB)
-      return NextResponse.json(DEFAULT_CONTENT);
+      return NextResponse.json(DEFAULT_CONTENT, {
+        headers: NO_CACHE_HEADERS,
+      });
     }
 
     // Merge DB values + parse JSON fields
@@ -125,11 +141,15 @@ export async function GET() {
       faqs: parseJsonField(content.faqs, DEFAULT_CONTENT.faqs),
       closingTitle: content.closingTitle || DEFAULT_CONTENT.closingTitle,
       closingSubtitle: content.closingSubtitle || DEFAULT_CONTENT.closingSubtitle,
+    }, {
+      headers: NO_CACHE_HEADERS,
     });
   } catch (error) {
     console.error("Homepage GET error:", error);
     // Fallback ke defaults kalau DB error
-    return NextResponse.json(DEFAULT_CONTENT);
+    return NextResponse.json(DEFAULT_CONTENT, {
+      headers: NO_CACHE_HEADERS,
+    });
   }
 }
 

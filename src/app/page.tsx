@@ -167,8 +167,12 @@ export default function HomePage() {
   const [hp, setHp] = useState<Record<string, unknown> | null>(null);
 
   // Fetch homepage content dari admin (with fallback ke hardcoded defaults)
+  // cache: 'no-store' supaya selalu fetch fresh (gak cached di browser/edge)
   useEffect(() => {
-    fetch("/api/homepage")
+    fetch("/api/homepage", {
+      cache: "no-store",
+      headers: { "Cache-Control": "no-cache" },
+    })
       .then((r) => r.json())
       .then(setHp)
       .catch(() => {});
