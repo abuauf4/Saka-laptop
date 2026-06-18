@@ -65,22 +65,59 @@ function parseJson<T>(raw: string | null | undefined, fallback: T): T {
 
 // ─── Fetch Homepage Content (server-side, via internal API) ───
 export async function fetchHomepageContent(): Promise<HomepageData> {
-  // Fetch from internal API — guaranteed to return data with fallback defaults
-  const baseUrl = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-
+  // Strategy: use headers() to get the actual request URL (works in Vercel + local)
+  // Then fetch /api/homepage internally — API has DEFAULT_CONTENT fallback
   try {
-    const res = await fetch(`${baseUrl}/api/homepage`, {
-      cache: "no-store",
-      headers: { "Cache-Control": "no-cache" },
-    });
+    const { headers } = await import("next/headers");
+    const headersList = await headers();
+    const host = headersList.get("host") || "";
+    const protocol = headersList.get("x-forwarded-proto") || "https";
+    const baseUrl = host ? `${protocol}://${host}` : "";
 
-    if (res.ok) {
-      return await res.json();
+    if (baseUrl) {
+      const res = await fetch(`${baseUrl}/api/homepage`, {
+        cache: "no-store",
+        headers: { "Cache-Control": "no-cache" },
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        // Validate: ensure arrays are actually arrays
+        return {
+          heroEyebrow: data.heroEyebrow || "",
+          heroTitle: data.heroTitle || "",
+          heroSubtitle: data.heroSubtitle || "",
+          heroImage: data.heroImage || "",
+          trustStats: Array.isArray(data.trustStats) ? data.trustStats : [],
+          brandTitle: data.brandTitle || "",
+          brandCopy: data.brandCopy || "",
+          brandPoints: Array.isArray(data.brandPoints) ? data.brandPoints : [],
+          workflowStages: Array.isArray(data.workflowStages) ? data.workflowStages : [],
+          tokoPhotos: Array.isArray(data.tokoPhotos) ? data.tokoPhotos : [],
+          deviceCategories: Array.isArray(data.deviceCategories) ? data.deviceCategories : [],
+          faqs: Array.isArray(data.faqs) ? data.faqs : [],
+          closingTitle: data.closingTitle || "",
+          closingSubtitle: data.closingSubtitle || "",
+        };
+      }
     }
   } catch (error) {
-    console.error("fetchHomepageContent via API error, trying DB directly:", error);
+    console.error("fetchHomepageContent via headers API error:", error);
+  }
+
+  // Fallback: try VERCEL_URL env var
+  try {
+    const vercelUrl = process.env.VERCEL_URL;
+    if (vercelUrl) {
+      const res = await fetch(`https://${vercelUrl}/api/homepage`, {
+        cache: "no-store",
+      });
+      if (res.ok) {
+        return await res.json();
+      }
+    }
+  } catch (error) {
+    console.error("fetchHomepageContent via VERCEL_URL error:", error);
   }
 
   // Fallback: query DB directly
