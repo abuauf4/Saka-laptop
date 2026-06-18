@@ -317,7 +317,7 @@ export function HomePageClient({
         {/* ─────────────────────────────────────
             SECTION 1 — HERO (full-bleed image)
             ───────────────────────────────────── */}
-        <section className="relative min-h-screen flex items-center overflow-hidden">
+        <section className="relative min-h-screen flex items-end overflow-hidden">
           {/* Full-bleed background image */}
           <div className="absolute inset-0 z-0">
             <Image
@@ -334,7 +334,7 @@ export function HomePageClient({
           </div>
 
           {/* Content overlay */}
-          <div className="relative z-10 page-container w-full py-20 md:py-28">
+          <div className="relative z-10 page-container w-full pb-24 md:pb-32 pt-32">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
