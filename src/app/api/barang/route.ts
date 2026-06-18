@@ -14,6 +14,36 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get("status") || "";
     const merk = searchParams.get("merk") || "";
 
+    // Auto-create table if not exists
+    try {
+      await db.$executeRaw`
+        CREATE TABLE IF NOT EXISTS "barang" (
+          "id" TEXT NOT NULL,
+          "kode" TEXT NOT NULL,
+          "merk" TEXT NOT NULL,
+          "tipe" TEXT NOT NULL,
+          "spesifikasi" TEXT NOT NULL DEFAULT '',
+          "keterangan" TEXT NOT NULL DEFAULT '',
+          "hargaBeli" INTEGER NOT NULL DEFAULT 0,
+          "status" TEXT NOT NULL DEFAULT 'available',
+          "hargaJual" INTEGER,
+          "namaPembeli" TEXT,
+          "noWa" TEXT,
+          "domisili" TEXT,
+          "soldAt" TIMESTAMP(3),
+          "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          "updatedAt" TIMESTAMP(3) NOT NULL,
+          CONSTRAINT "barang_pkey" PRIMARY KEY ("id")
+        )
+      `;
+      await db.$executeRaw`CREATE UNIQUE INDEX IF NOT EXISTS "barang_kode_key" ON "barang"("kode")`;
+      await db.$executeRaw`CREATE INDEX IF NOT EXISTS "barang_status_idx" ON "barang"("status")`;
+      await db.$executeRaw`CREATE INDEX IF NOT EXISTS "barang_createdAt_idx" ON "barang"("createdAt")`;
+      await db.$executeRaw`CREATE INDEX IF NOT EXISTS "barang_merk_idx" ON "barang"("merk")`;
+    } catch {
+      // Table already exists, ignore
+    }
+
     const where: Record<string, unknown> = {};
     if (status) where.status = status;
     if (merk) where.merk = { contains: merk, mode: "insensitive" };
@@ -28,7 +58,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     console.error("Barang GET error:", error);
-    return NextResponse.json({ error: "Gagal fetch barang" }, { status: 500 });
+    const msg = error instanceof Error ? error.message : "Unknown error";
+    return NextResponse.json(
+      { error: "Gagal fetch barang", detail: msg },
+      { status: 500 }
+    );
   }
 }
 
@@ -43,7 +77,37 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Merk dan tipe wajib diisi" }, { status: 400 });
     }
 
-    // Generate kode: BRG-XXXXXX (6 random alphanumeric)
+    // Auto-create table if not exists (idempotent)
+    try {
+      await db.$executeRaw`
+        CREATE TABLE IF NOT EXISTS "barang" (
+          "id" TEXT NOT NULL,
+          "kode" TEXT NOT NULL,
+          "merk" TEXT NOT NULL,
+          "tipe" TEXT NOT NULL,
+          "spesifikasi" TEXT NOT NULL DEFAULT '',
+          "keterangan" TEXT NOT NULL DEFAULT '',
+          "hargaBeli" INTEGER NOT NULL DEFAULT 0,
+          "status" TEXT NOT NULL DEFAULT 'available',
+          "hargaJual" INTEGER,
+          "namaPembeli" TEXT,
+          "noWa" TEXT,
+          "domisili" TEXT,
+          "soldAt" TIMESTAMP(3),
+          "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          "updatedAt" TIMESTAMP(3) NOT NULL,
+          CONSTRAINT "barang_pkey" PRIMARY KEY ("id")
+        )
+      `;
+      await db.$executeRaw`CREATE UNIQUE INDEX IF NOT EXISTS "barang_kode_key" ON "barang"("kode")`;
+      await db.$executeRaw`CREATE INDEX IF NOT EXISTS "barang_status_idx" ON "barang"("status")`;
+      await db.$executeRaw`CREATE INDEX IF NOT EXISTS "barang_createdAt_idx" ON "barang"("createdAt")`;
+      await db.$executeRaw`CREATE INDEX IF NOT EXISTS "barang_merk_idx" ON "barang"("merk")`;
+    } catch {
+      // Table already exists, ignore
+    }
+
+    // Generate kode: BRG-XXXXXX
     const kode = `BRG-${Date.now().toString(36).toUpperCase().slice(-6)}${Math.random().toString(36).toUpperCase().slice(2, 5)}`;
 
     const barang = await db.barang.create({
@@ -64,6 +128,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     console.error("Barang POST error:", error);
-    return NextResponse.json({ error: "Gagal tambah barang" }, { status: 500 });
+    const msg = error instanceof Error ? error.message : "Unknown error";
+    return NextResponse.json(
+      { error: "Gagal tambah barang", detail: msg },
+      { status: 500 }
+    );
   }
 }
