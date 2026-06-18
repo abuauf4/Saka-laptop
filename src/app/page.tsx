@@ -332,8 +332,6 @@ export default function HomePage() {
             </motion.div>
           </div>
 
-          {/* Bottom fade into next section */}
-          <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-background to-transparent z-10 pointer-events-none" />
         </section>
 
         {/* ─────────────────────────────────────
