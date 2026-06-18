@@ -39,6 +39,7 @@ interface NavItem {
 interface NavGroup {
   label: string;
   items: NavItem[];
+  devOnly?: boolean;
 }
 
 interface NavigationData {
@@ -95,10 +96,9 @@ export function AdminSidebar() {
     ...(navigation?.modules || []),
   ];
 
-  // Filter groups: "Developer" group hanya untuk super_admin/developer
-  // "Operasional" group untuk semua role yang punya permission
+  // Filter groups: devOnly groups hanya untuk super_admin
   const visibleGroups = allGroups.filter((group) => {
-    if (group.label === "Developer" && !currentUser?.isSuperAdmin) {
+    if (group.devOnly && !currentUser?.isSuperAdmin) {
       return false;
     }
     return true;

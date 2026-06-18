@@ -305,6 +305,37 @@ export async function GET(request: NextRequest) {
       logs.push(`ℹ Testimoni table: ${tableErr instanceof Error ? tableErr.message : "already exists"}`);
     }
 
+    // ─── 12. Create Barang table (if not exists) ───
+    try {
+      await dbLegacy.$executeRaw`
+        CREATE TABLE IF NOT EXISTS "barang" (
+          "id" TEXT NOT NULL,
+          "kode" TEXT NOT NULL,
+          "merk" TEXT NOT NULL,
+          "tipe" TEXT NOT NULL,
+          "spesifikasi" TEXT NOT NULL DEFAULT '',
+          "keterangan" TEXT NOT NULL DEFAULT '',
+          "hargaBeli" INTEGER NOT NULL DEFAULT 0,
+          "status" TEXT NOT NULL DEFAULT 'available',
+          "hargaJual" INTEGER,
+          "namaPembeli" TEXT,
+          "noWa" TEXT,
+          "domisili" TEXT,
+          "soldAt" TIMESTAMP(3),
+          "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          "updatedAt" TIMESTAMP(3) NOT NULL,
+          CONSTRAINT "barang_pkey" PRIMARY KEY ("id")
+        )
+      `;
+      await dbLegacy.$executeRaw`CREATE UNIQUE INDEX IF NOT EXISTS "barang_kode_key" ON "barang"("kode")`;
+      await dbLegacy.$executeRaw`CREATE INDEX IF NOT EXISTS "barang_status_idx" ON "barang"("status")`;
+      await dbLegacy.$executeRaw`CREATE INDEX IF NOT EXISTS "barang_createdAt_idx" ON "barang"("createdAt")`;
+      await dbLegacy.$executeRaw`CREATE INDEX IF NOT EXISTS "barang_merk_idx" ON "barang"("merk")`;
+      logs.push("✓ Barang table ready");
+    } catch (tableErr) {
+      logs.push(`ℹ Barang table: ${tableErr instanceof Error ? tableErr.message : "already exists"}`);
+    }
+
     const duration = Date.now() - startTime;
 
     return NextResponse.json({

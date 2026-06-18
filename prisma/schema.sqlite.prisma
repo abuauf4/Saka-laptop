@@ -424,3 +424,29 @@ model HomepageContent {
 
   @@map("homepage_content")
 }
+
+// ═══════════════════════════════════════
+// BARANG (Operational Inventory + Kasir)
+// ═══════════════════════════════════════
+model Barang {
+  id           String    @id @default(cuid())
+  kode         String    @unique
+  merk         String
+  tipe         String
+  spesifikasi  String    @default("")
+  keterangan   String    @default("")
+  hargaBeli    Int       @default(0)
+  status       String    @default("available")
+  hargaJual    Int?
+  namaPembeli  String?
+  noWa         String?
+  domisili     String?
+  soldAt       DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([merk])
+  @@map("barang")
+}
