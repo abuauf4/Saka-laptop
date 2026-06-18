@@ -84,6 +84,12 @@ export function TentangClient({
               <p className="mt-6 text-base md:text-lg text-muted-foreground leading-relaxed">
                 {brandCopy || siteDescription || tagline}
               </p>
+              <p className="mt-4 text-base text-muted-foreground leading-relaxed">
+                Jakarta Laptops membantu proses penilaian dan pembelian laptop bekas secara profesional.
+              </p>
+              <p className="mt-2 text-base text-muted-foreground leading-relaxed">
+                Berlokasi di Jakarta, kami menangani inspeksi perangkat, pengecekan kondisi, dan proses penawaran dengan pendekatan yang jelas dan transparan.
+              </p>
             </motion.div>
           </div>
         </section>
