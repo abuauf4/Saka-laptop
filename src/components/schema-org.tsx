@@ -36,7 +36,7 @@ export function SchemaOrg() {
   const webSiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: lokasi.namaToko || "Saka Laptop",
+    name: lokasi.namaToko || "",
     url: siteUrl,
     description:
       "Toko laptop terpercaya yang menyediakan laptop gaming, ultrabook, laptop kerja, dan laptop sekolah berkualitas.",
@@ -55,8 +55,8 @@ export function SchemaOrg() {
     ? {
         "@context": "https://schema.org",
         "@type": "ElectronicsStore",
-        name: lokasi.namaToko || "Saka Laptop",
-        description: `${lokasi.namaToko} adalah toko laptop terpercaya di ${lokasi.alamat || "Jakarta Selatan"} yang menyediakan laptop gaming, ultrabook, laptop kerja, dan laptop sekolah berkualitas dengan harga terbaik.`,
+        name: lokasi.namaToko || "",
+        description: `${lokasi.namaToko} adalah toko laptop terpercaya di ${lokasi.alamat || ""} yang menyediakan laptop gaming, ultrabook, laptop kerja, dan laptop sekolah berkualitas dengan harga terbaik.`,
         url: siteUrl,
         image: lokasi.foto?.startsWith("http")
           ? lokasi.foto
@@ -108,7 +108,7 @@ export function SchemaOrg() {
           "@context": "https://schema.org",
           "@type": "Product",
           name: p.nama,
-          description: `Laptop ${p.kategori} — ${p.nama} tersedia di ${lokasi.namaToko || "Saka Laptop"}`,
+          description: `Laptop ${p.kategori} — ${p.nama} tersedia di ${lokasi.namaToko || ""}`,
           image: p.image?.startsWith("http")
             ? p.image
             : p.image
@@ -125,7 +125,7 @@ export function SchemaOrg() {
             availability: "https://schema.org/InStock",
             seller: {
               "@type": "Organization",
-              name: lokasi.namaToko || "Saka Laptop",
+              name: lokasi.namaToko || "",
             },
           },
         }))
