@@ -13,6 +13,8 @@ import {
   Map,
   BarChart3,
   Share2,
+  Target,
+  Code,
   Server,
   AlertTriangle,
   Loader2,
