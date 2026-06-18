@@ -16,6 +16,10 @@ import {
   Phone,
   MapPin,
 } from "lucide-react";
+
+// Force dynamic rendering — NO static caching at all
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { StoreLogo } from "@/components/store-logo";
@@ -167,11 +171,13 @@ export default function HomePage() {
   const [hp, setHp] = useState<Record<string, unknown> | null>(null);
 
   // Fetch homepage content dari admin (with fallback ke hardcoded defaults)
-  // cache: 'no-store' supaya selalu fetch fresh (gak cached di browser/edge)
+  // Cache-busting: timestamp di URL + no-store + no-cache headers
+  // Triple protection against ALL caching layers (browser, CDN, edge)
   useEffect(() => {
-    fetch("/api/homepage", {
+    const ts = Date.now();
+    fetch(`/api/homepage?t=${ts}`, {
       cache: "no-store",
-      headers: { "Cache-Control": "no-cache" },
+      headers: { "Cache-Control": "no-cache", Pragma: "no-cache" },
     })
       .then((r) => r.json())
       .then(setHp)

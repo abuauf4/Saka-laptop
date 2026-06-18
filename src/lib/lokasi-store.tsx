@@ -63,9 +63,9 @@ export function LokasiProvider({ children }: { children: ReactNode }) {
 
     async function fetchLokasi() {
       try {
-        const res = await fetch("/api/lokasi", {
+        const res = await fetch(`/api/lokasi?t=${Date.now()}`, {
           cache: "no-store",
-          headers: { "Cache-Control": "no-cache" },
+          headers: { "Cache-Control": "no-cache", Pragma: "no-cache" },
         });
         if (res.ok) {
           const data = await res.json();

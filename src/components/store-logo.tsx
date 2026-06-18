@@ -23,10 +23,10 @@ export function StoreLogo({
   useEffect(() => {
     async function fetchLogo() {
       try {
-        // cache: 'no-store' supaya gak cached di browser
-        const res = await fetch("/api/lokasi/logo", {
+        // cache: 'no-store' + timestamp supaya gak cached di browser
+        const res = await fetch(`/api/lokasi/logo?t=${Date.now()}`, {
           cache: "no-store",
-          headers: { "Cache-Control": "no-cache" },
+          headers: { "Cache-Control": "no-cache", Pragma: "no-cache" },
         });
         if (res.ok) {
           const data = await res.json();
