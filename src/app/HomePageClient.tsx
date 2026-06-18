@@ -376,7 +376,8 @@ export function HomePageClient({
                 <a href={waLink} target="_blank" rel="noopener noreferrer">
                   <Button
                     size="lg"
-                    className="w-full sm:w-auto min-h-[54px] px-8 gap-2 text-base font-semibold rounded-xl"
+                    variant="outline"
+                    className="w-full sm:w-auto min-h-[54px] px-8 gap-2 text-base font-semibold rounded-xl border-white/60 text-white bg-white/5 hover:bg-white/15 hover:text-white hover:border-white"
                   >
                     <MessageCircle className="h-4 w-4" />
                     Ajukan Laptop
