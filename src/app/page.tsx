@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { StoreLogo } from "@/components/store-logo";
 import { StoreName, StoreNamePlain } from "@/components/store-name";
+import { HeroSkeleton, NavbarSkeleton, SectionSkeleton } from "@/components/skeleton-home";
 import { useLokasi } from "@/lib/lokasi-store";
 
 /* ───────────────────────────────────────────
@@ -166,9 +167,11 @@ export default function HomePage() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [hp, setHp] = useState<Record<string, unknown> | null>(null);
 
-  // Fetch homepage content dari admin (with fallback ke hardcoded defaults)
+  // Fetch homepage content dari admin
   // Cache-busting: timestamp di URL + no-store + no-cache headers
   // Triple protection against ALL caching layers (browser, CDN, edge)
+  const [hpLoaded, setHpLoaded] = useState(false);
+
   useEffect(() => {
     const ts = Date.now();
     fetch(`/api/homepage?t=${ts}`, {
@@ -176,32 +179,39 @@ export default function HomePage() {
       headers: { "Cache-Control": "no-cache", Pragma: "no-cache" },
     })
       .then((r) => r.json())
-      .then(setHp)
-      .catch(() => {});
+      .then((data) => {
+        setHp(data);
+        setHpLoaded(true);
+      })
+      .catch(() => setHpLoaded(true)); // fail-open: stop showing skeleton on error
   }, []);
 
-  // Resolve values: API content kalau ada, fallback ke hardcoded defaults
-  const heroEyebrow = (hp?.heroEyebrow as string) || "Pusat Inspeksi & Trade-in Laptop Bekas";
-  const heroTitle = (hp?.heroTitle as string) || "Jual Laptop Bekas Tanpa Ribet.";
-  const heroSubtitle = (hp?.heroSubtitle as string) || "Kirim foto dan spesifikasi laptop melalui WhatsApp. Tim kami akan membantu proses pengecekan dan penawaran.";
-  const heroImage = (hp?.heroImage as string) || "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=1920&q=90";
-  const trustStats = (hp?.trustStats as typeof brandPoints | undefined)?.length ? hp.trustStats as typeof brandPoints : undefined;
-  const brandTitle = (hp?.brandTitle as string) || "Bukan Sekadar Membeli Laptop.";
-  const brandCopy = (hp?.brandCopy as string) || "Kami membantu proses penilaian perangkat secara transparan sebelum memberikan penawaran.";
-  const brandPointsData = (hp?.brandPoints as typeof brandPoints | undefined)?.length ? hp.brandPoints as typeof brandPoints : brandPoints;
-  const workflowStagesData = (hp?.workflowStages as typeof workflowStages | undefined)?.length ? hp.workflowStages as typeof workflowStages : workflowStages;
-  const tokoPhotosData = (hp?.tokoPhotos as typeof tokoPhotos | undefined)?.length ? hp.tokoPhotos as typeof tokoPhotos : tokoPhotos;
-  const deviceCategoriesData = (hp?.deviceCategories as typeof deviceCategories | undefined)?.length ? hp.deviceCategories as typeof deviceCategories : deviceCategories;
-  const faqsData = (hp?.faqs as typeof faqs | undefined)?.length ? hp.faqs as typeof faqs : faqs;
-  const closingTitle = (hp?.closingTitle as string) || "Laptop Lama Masih Bernilai.";
-  const closingSubtitle = (hp?.closingSubtitle as string) || "Chat kami sekarang via WhatsApp. Gratis, tanpa komitmen.";
+  // Resolve values dari API — NO hardcoded fallback.
+  // Kalau hpLoaded=false, page shows skeleton instead of stale content.
+  const heroEyebrow = (hp?.heroEyebrow as string) || "";
+  const heroTitle = (hp?.heroTitle as string) || "";
+  const heroSubtitle = (hp?.heroSubtitle as string) || "";
+  const heroImage = (hp?.heroImage as string) || "";
+  const trustStats = (hp?.trustStats as typeof brandPoints | undefined) ?? [];
+  const brandTitle = (hp?.brandTitle as string) || "";
+  const brandCopy = (hp?.brandCopy as string) || "";
+  const brandPointsData = (hp?.brandPoints as typeof brandPoints | undefined) ?? [];
+  const workflowStagesData = (hp?.workflowStages as typeof workflowStages | undefined) ?? [];
+  const tokoPhotosData = (hp?.tokoPhotos as typeof tokoPhotos | undefined) ?? [];
+  const deviceCategoriesData = (hp?.deviceCategories as typeof deviceCategories | undefined) ?? [];
+  const faqsData = (hp?.faqs as typeof faqs | undefined) ?? [];
+  const closingTitle = (hp?.closingTitle as string) || "";
+  const closingSubtitle = (hp?.closingSubtitle as string) || "";
 
-  // WhatsApp number from Lokasi config, fallback to placeholder
-  const waNumber = (isLoaded && lokasi.whatsapp) ? lokasi.whatsapp.replace(/^0/, "62") : "6281234567890";
+  // WhatsApp number from Lokasi config
+  const waNumber = isLoaded && lokasi.whatsapp ? lokasi.whatsapp.replace(/^0/, "62") : "";
   const waMessage = encodeURIComponent(
-    "Halo Jakarta Laptops, saya mau jual laptop bekas. Bisa dibantu prosesnya?"
+    `Halo${lokasi.namaToko ? ` ${lokasi.namaToko}` : ""}, saya mau jual laptop bekas. Bisa dibantu prosesnya?`
   );
-  const waLink = `https://wa.me/${waNumber}?text=${waMessage}`;
+  const waLink = waNumber ? `https://wa.me/${waNumber}?text=${waMessage}` : "#";
+
+  // Loading state for hero section — show skeleton until both hpLoaded AND lokasi loaded
+  const heroReady = hpLoaded && isLoaded && !!heroTitle && !!waNumber;
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
@@ -309,6 +319,9 @@ export default function HomePage() {
 
           {/* Content overlay */}
           <div className="relative z-10 page-container w-full py-20 md:py-28">
+            {!heroReady ? (
+              <HeroSkeleton />
+            ) : (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -388,6 +401,7 @@ export default function HomePage() {
                 </span>
               </motion.div>
             </motion.div>
+            )}
           </div>
 
         </section>
@@ -745,6 +759,14 @@ export default function HomePage() {
             ───────────────────────────────────── */}
         <section className="bg-[#000000] text-white">
           <div className="page-container py-20 md:py-32 text-center">
+            {!closingTitle ? (
+              <div className="max-w-3xl mx-auto space-y-4" aria-busy="true">
+                <span className="block rounded bg-white/10 animate-pulse h-12 w-3/4 mx-auto" />
+                <span className="block rounded bg-white/10 animate-pulse h-6 w-1/2 mx-auto" />
+                <span className="block rounded bg-white/10 animate-pulse h-12 w-48 mx-auto" />
+              </div>
+            ) : (
+              <>
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -781,6 +803,8 @@ export default function HomePage() {
                 </Button>
               </a>
             </motion.div>
+              </>
+            )}
           </div>
         </section>
       </main>

@@ -25,20 +25,27 @@ export interface LokasiToko {
   mapsLink: string;       // Google Maps link for "Buka Maps"
 }
 
-/* ── Default seed data ── */
-const defaultLokasi: LokasiToko = {
-  namaToko: "Jakarta Laptops",
-  tagline: "Toko Laptop Terpercaya",
-  foto: "/store-front.png",
-  alamat: "Jl. Raya Kebayoran Lama No. 12, Kel. Kebayoran Lama, Kec. Kebayoran Lama, Jakarta Selatan 12210",
-  telepon: "+62 896-6252-4542",
-  whatsapp: "6289662524542",
-  jamWeekday: "Senin - Sabtu: 09.00 - 21.00 WIB",
-  jamWeekend: "Minggu: 10.00 - 18.00 WIB",
-  lat: -6.2445,
-  lng: 106.7813,
-  mapsLink: "https://maps.google.com/?q=Saka+Laptop+Jl.+Raya+Kebayoran+Lama+Jakarta+Selatan",
+/* ── Empty initial state — NO hardcoded defaults.
+   We show skeleton until API returns real data from DB.
+   Old hardcoded values like "Jakarta Laptops" are removed to avoid
+   stale content flashing before fresh data loads. ── */
+const emptyLokasi: LokasiToko = {
+  namaToko: "",
+  tagline: "",
+  foto: "",
+  alamat: "",
+  telepon: "",
+  whatsapp: "",
+  jamWeekday: "",
+  jamWeekend: "",
+  lat: 0,
+  lng: 0,
+  mapsLink: "",
 };
+
+/** @deprecated Use emptyLokasi. Kept for backward compat dengan kode lama
+ *  yang import defaultLokasi. */
+const defaultLokasi = emptyLokasi;
 
 /* ── Context shape ── */
 interface LokasiStore {
@@ -52,7 +59,7 @@ const LokasiContext = createContext<LokasiStore | null>(null);
 
 /* ── Provider ── */
 export function LokasiProvider({ children }: { children: ReactNode }) {
-  const [lokasi, setLokasi] = useState<LokasiToko>(defaultLokasi);
+  const [lokasi, setLokasi] = useState<LokasiToko>(emptyLokasi);
   const [isLoaded, setIsLoaded] = useState(false);
   const initialized = useRef(false);
 
@@ -78,8 +85,8 @@ export function LokasiProvider({ children }: { children: ReactNode }) {
             whatsapp: data.whatsapp || defaultLokasi.whatsapp,
             jamWeekday: data.jamWeekday || defaultLokasi.jamWeekday,
             jamWeekend: data.jamWeekend || defaultLokasi.jamWeekend,
-            lat: data.lat ?? defaultLokasi.lat,
-            lng: data.lng ?? defaultLokasi.lng,
+            lat: data.lat ?? 0,
+            lng: data.lng ?? 0,
             mapsLink: data.mapsLink || defaultLokasi.mapsLink,
           });
         }
@@ -112,8 +119,8 @@ export function LokasiProvider({ children }: { children: ReactNode }) {
           whatsapp: updated.whatsapp || defaultLokasi.whatsapp,
           jamWeekday: updated.jamWeekday || defaultLokasi.jamWeekday,
           jamWeekend: updated.jamWeekend || defaultLokasi.jamWeekend,
-          lat: updated.lat ?? defaultLokasi.lat,
-          lng: updated.lng ?? defaultLokasi.lng,
+          lat: updated.lat ?? 0,
+          lng: updated.lng ?? 0,
           mapsLink: updated.mapsLink || defaultLokasi.mapsLink,
         });
       }
