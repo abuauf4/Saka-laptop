@@ -118,23 +118,23 @@ const faqs = [
 const tokoPhotos = [
   {
     src: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=800&q=80",
-    alt: "Teknisi sedang mengecek laptop",
-    label: "Area Teknisi",
+    alt: "Teknisi inspeksi laptop",
+    label: "Inspeksi Fisik",
   },
   {
     src: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=800&q=80",
-    alt: "Meja kerja dengan laptop",
-    label: "Meja Inspeksi",
+    alt: "Meja inspeksi dengan tools",
+    label: "Meja Kerja",
   },
   {
     src: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&q=80",
-    alt: "Proses pengecekan perangkat",
-    label: "Pengecekan Fisik",
+    alt: "Pengecekan komponen perangkat",
+    label: "QC Detail",
   },
   {
     src: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=800&q=80",
     alt: "Rak penyimpanan laptop",
-    label: "Rak Penyimpanan",
+    label: "Inventory",
   },
 ];
 
@@ -242,8 +242,8 @@ export default function HomePage() {
           {/* Full-bleed background image */}
           <div className="absolute inset-0 z-0">
             <Image
-              src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=1920&q=90"
-              alt="Teknisi Saka Laptop sedang mengecek perangkat di meja inspeksi"
+              src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=1920&q=90"
+              alt="MacBook di meja kayu — laptop bekas siap diperiksa"
               fill
               className="object-cover object-center"
               priority
