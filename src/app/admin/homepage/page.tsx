@@ -20,6 +20,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ImageUpload } from "@/components/image-upload";
 
 // ─── Types ───
 interface TrustStat {
@@ -224,12 +225,12 @@ export default function HomepageEditorPage() {
               className="min-h-[60px]"
             />
           </Field>
-          <Field label="Hero Image URL" hint="URL gambar background hero (1920×1080 recommended)">
-            <Input
+          <Field label="Hero Image" hint="Upload atau paste URL gambar background hero (1920×1080 recommended)">
+            <ImageUpload
               value={content.heroImage}
-              onChange={(e) => setContent({ ...content, heroImage: e.target.value })}
-              className="h-10"
-              placeholder="https://..."
+              onChange={(url) => setContent({ ...content, heroImage: url })}
+              label="Hero Image"
+              folder="Homepage"
             />
           </Field>
         </Section>
@@ -362,12 +363,14 @@ export default function HomepageEditorPage() {
                   placeholder="Label (cth: Inspeksi Fisik)"
                   className="h-10"
                 />
-                <Input
-                  value={item.src}
-                  onChange={(e) => updateArrayItem<TokoPhoto>("tokoPhotos", i, { src: e.target.value })}
-                  placeholder="Image URL"
-                  className="h-10 sm:col-span-2"
-                />
+                <div className="sm:col-span-2">
+                  <ImageUpload
+                    value={item.src}
+                    onChange={(url) => updateArrayItem<TokoPhoto>("tokoPhotos", i, { src: url })}
+                    label={item.label || "Toko Photo"}
+                    folder="Toko"
+                  />
+                </div>
                 <Input
                   value={item.alt}
                   onChange={(e) => updateArrayItem<TokoPhoto>("tokoPhotos", i, { alt: e.target.value })}

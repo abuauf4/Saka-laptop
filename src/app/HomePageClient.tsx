@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
-import type { HomepageData, LokasiData } from "@/lib/homepage-data";
+import type { HomepageData, LokasiData, TestimoniData } from "@/lib/homepage-data";
 
 /* ───────────────────────────────────────────
    JAKARTA LAPTOPS — HOMEPAGE CLIENT
@@ -41,6 +41,8 @@ import type { HomepageData, LokasiData } from "@/lib/homepage-data";
 const menuLinks = [
   { href: "/#proses", label: "Proses" },
   { href: "/#toko", label: "Toko" },
+  { href: "/tentang", label: "Tentang" },
+  { href: "/artikel", label: "Artikel" },
   { href: "/#faq", label: "FAQ" },
   { href: "/admin", label: "Admin" },
 ];
@@ -168,10 +170,12 @@ export function HomePageClient({
   homepage,
   lokasi,
   logo,
+  testimoni,
 }: {
   homepage: HomepageData;
   lokasi: LokasiData;
   logo: string;
+  testimoni: TestimoniData[];
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
@@ -742,6 +746,74 @@ export function HomePageClient({
         </section>
 
         {/* ─────────────────────────────────────
+            SECTION 6.5 — TESTIMONI
+            ───────────────────────────────────── */}
+        {testimoni.length > 0 && (
+          <section id="testimoni" className="border-b border-border">
+            <div className="page-container py-20 md:py-28 max-w-5xl">
+              <div className="max-w-2xl mb-14">
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  className="text-xs font-semibold uppercase tracking-[0.2em] text-primary mb-3"
+                >
+                  Testimoni
+                </motion.p>
+                <motion.h2
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.1 }}
+                  className="text-3xl md:text-4xl font-bold tracking-tight"
+                >
+                  Apa Kata Customer Kami
+                </motion.h2>
+              </div>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {testimoni.slice(0, 6).map((t, i) => (
+                  <motion.div
+                    key={t.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.08 }}
+                    className="p-5 rounded-xl border border-border/50 bg-card/40"
+                  >
+                    <div className="flex items-center gap-1 mb-3">
+                      {Array.from({ length: 5 }).map((_, idx) => (
+                        <span
+                          key={idx}
+                          className={`text-sm ${idx < t.rating ? "text-amber-500" : "text-muted-foreground/30"}`}
+                        >
+                          ★
+                        </span>
+                      ))}
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-4 line-clamp-4">
+                      "{t.teks}"
+                    </p>
+                    <div className="flex items-center gap-3">
+                      {t.avatar ? (
+                        <img src={t.avatar} alt={t.nama} className="h-9 w-9 rounded-full object-cover" />
+                      ) : (
+                        <div className="h-9 w-9 rounded-full bg-primary/15 flex items-center justify-center text-xs font-bold text-primary">
+                          {t.nama.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                      <div>
+                        <p className="text-sm font-semibold">{t.nama}</p>
+                        <p className="text-xs text-muted-foreground">{t.role}{t.laptop ? ` • ${t.laptop}` : ""}</p>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ─────────────────────────────────────
             SECTION 7 — CLOSING CTA (dark bg)
             ───────────────────────────────────── */}
         <section className="bg-[#000000] text-white">
@@ -887,6 +959,12 @@ export function HomePageClient({
                 <Link href="/#toko" className="hover:text-foreground transition-colors">
                   Toko
                 </Link>
+                <Link href="/tentang" className="hover:text-foreground transition-colors">
+                  Tentang
+                </Link>
+                <Link href="/artikel" className="hover:text-foreground transition-colors">
+                  Artikel
+                </Link>
                 <Link href="/#faq" className="hover:text-foreground transition-colors">
                   FAQ
                 </Link>
@@ -905,6 +983,12 @@ export function HomePageClient({
               </Link>
               <Link href="/#toko" className="hover:text-foreground transition-colors">
                 Toko
+              </Link>
+              <Link href="/tentang" className="hover:text-foreground transition-colors">
+                Tentang
+              </Link>
+              <Link href="/artikel" className="hover:text-foreground transition-colors">
+                Artikel
               </Link>
               <Link href="/#faq" className="hover:text-foreground transition-colors">
                 FAQ

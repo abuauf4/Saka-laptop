@@ -23,6 +23,7 @@ export const PERMISSION_CATEGORIES = [
   { slug: "seo", label: "SEO" },
   { slug: "media", label: "Media" },
   { slug: "articles", label: "Articles" },
+  { slug: "testimoni", label: "Testimoni" },
   { slug: "settings", label: "Settings" },
   { slug: "modules", label: "Modules" },
 ] as const;

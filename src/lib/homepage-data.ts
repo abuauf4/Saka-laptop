@@ -191,3 +191,34 @@ export async function fetchLogo(): Promise<LogoData> {
     return { logoData: "" };
   }
 }
+
+// ─── Fetch Testimoni (server-side) ───
+export interface TestimoniData {
+  id: string;
+  nama: string;
+  role: string;
+  teks: string;
+  rating: number;
+  laptop: string;
+  avatar: string;
+}
+
+export async function fetchTestimoni(): Promise<TestimoniData[]> {
+  try {
+    const testimoni = await dbLegacy.testimoni.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+    return testimoni.map((t) => ({
+      id: t.id,
+      nama: t.nama || "",
+      role: t.role || "",
+      teks: t.teks || "",
+      rating: t.rating || 5,
+      laptop: t.laptop || "",
+      avatar: t.avatar || "",
+    }));
+  } catch (error) {
+    console.error("fetchTestimoni error:", error);
+    return [];
+  }
+}

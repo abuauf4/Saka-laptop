@@ -30,6 +30,7 @@ export const CORE_NAV_GROUPS: NavGroup[] = [
     items: [
       { title: "Media", href: "/admin/media", icon: "Image", permission: "media.view" },
       { title: "Artikel", href: "/admin/articles", icon: "FileText", permission: "articles.view" },
+      { title: "Testimoni", href: "/admin/testimoni", icon: "MessageSquareHeart", permission: "testimoni.view" },
     ],
   },
   {

@@ -6,8 +6,10 @@ import {
   fetchHomepageContent,
   fetchLokasi,
   fetchLogo,
+  fetchTestimoni,
   type HomepageData,
   type LokasiData,
+  type TestimoniData,
 } from "@/lib/homepage-data";
 import { HomePageClient } from "./HomePageClient";
 
@@ -17,10 +19,11 @@ export const revalidate = 0;
 
 export default async function HomePage() {
   // Fetch semua data di server, parallel
-  const [homepage, lokasi, logo] = await Promise.all([
+  const [homepage, lokasi, logo, testimoni] = await Promise.all([
     fetchHomepageContent(),
     fetchLokasi(),
     fetchLogo(),
+    fetchTestimoni(),
   ]);
 
   // Pass resolved data as props — client component gak perlu fetch
@@ -29,6 +32,7 @@ export default async function HomePage() {
       homepage={homepage}
       lokasi={lokasi}
       logo={logo.logoData}
+      testimoni={testimoni}
     />
   );
 }
