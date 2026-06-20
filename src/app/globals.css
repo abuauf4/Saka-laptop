@@ -736,7 +736,7 @@ body:not(.dark)::before {
   opacity: 0.7;
 }
 
-body:not(.dark) header,
+/* Content below pattern — but NOT header (header keeps its Tailwind z-50) */
 body:not(.dark) main,
 body:not(.dark) footer,
 body:not(.dark) section {
