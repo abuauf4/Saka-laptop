@@ -225,18 +225,20 @@ export async function fetchLogo(): Promise<LogoData> {
 // ─── Fetch Testimoni (server-side) ───
 export async function fetchTestimoni(): Promise<TestimoniData[]> {
   try {
-    const testimoni = await dbLegacy.testimoni.findMany({
-      orderBy: { createdAt: "desc" },
-    });
-    return testimoni.map((t) => ({
-      id: t.id,
-      nama: t.nama || "",
-      role: t.role || "",
-      teks: t.teks || "",
-      rating: t.rating || 5,
-      laptop: t.laptop || "",
-      avatar: t.avatar || "",
-    }));
+    // Note: Testimoni model has no `createdAt` field, so we don't orderBy it.
+    // Sort in-memory by rating desc (highest rating first) for a nicer display.
+    const testimoni = await dbLegacy.testimoni.findMany();
+    return testimoni
+      .map((t) => ({
+        id: t.id,
+        nama: t.nama || "",
+        role: t.role || "",
+        teks: t.teks || "",
+        rating: t.rating || 5,
+        laptop: t.laptop || "",
+        avatar: t.avatar || "",
+      }))
+      .sort((a, b) => b.rating - a.rating);
   } catch (error) {
     console.error("fetchTestimoni error:", error);
     return [];
