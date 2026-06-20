@@ -16,8 +16,8 @@ export interface LokasiToko {
   tagline: string;
   foto: string;           // URL or path to store photo
   alamat: string;
-  telepon: string;        // e.g. "+62 896-6252-4542"
-  whatsapp: string;       // e.g. "6289662524542"
+  telepon: string;        // e.g. "0881010302510"
+  whatsapp: string;       // e.g. "62881010302510"
   jamWeekday: string;     // e.g. "Senin - Sabtu: 09.00 - 21.00 WIB"
   jamWeekend: string;     // e.g. "Minggu: 10.00 - 18.00 WIB"
   lat: number;            // Latitude for map marker
