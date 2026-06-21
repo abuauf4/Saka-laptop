@@ -336,6 +336,46 @@ export async function GET(request: NextRequest) {
       logs.push(`ℹ Barang table: ${tableErr instanceof Error ? tableErr.message : "already exists"}`);
     }
 
+    // ─── 13. Create LandingPageContent table (if not exists) ───
+    // Untuk /jual-laptop-bekas-jakarta supply acquisition LP.
+    // CMS-editable via /admin/landing-page.
+    try {
+      await db.$executeRaw`
+        CREATE TABLE IF NOT EXISTS "landing_page_content" (
+          "id" TEXT NOT NULL DEFAULT 'default',
+          "heroEyebrow" TEXT NOT NULL DEFAULT 'JUAL LAPTOP BEKAS JAKARTA',
+          "heroTitle" TEXT NOT NULL DEFAULT 'Jual Laptop Bekas Anda Hari Ini.',
+          "heroSubtitle" TEXT NOT NULL DEFAULT 'Estimasi harga cepat, proses transparan, pembayaran langsung. Pickup gratis Jabodetabek untuk laptop berkualitas.',
+          "heroPrimaryCta" TEXT NOT NULL DEFAULT 'Kirim Foto Laptop',
+          "heroSecondaryCta" TEXT NOT NULL DEFAULT 'Chat WhatsApp',
+          "heroTrustBadges" TEXT NOT NULL DEFAULT '[]',
+          "valuePillars" TEXT NOT NULL DEFAULT '[]',
+          "processSteps" TEXT NOT NULL DEFAULT '[]',
+          "estimasiTitle" TEXT NOT NULL DEFAULT 'Cek Estimasi Harga Laptop Anda',
+          "estimasiSubtitle" TEXT NOT NULL DEFAULT 'Interactive widget, no commit, hasil instan',
+          "estimasiCtaLabel" TEXT NOT NULL DEFAULT 'Lanjut Chat WhatsApp untuk Penawaran Akurat',
+          "faqs" TEXT NOT NULL DEFAULT '[]',
+          "trustStats" TEXT NOT NULL DEFAULT '[]',
+          "trustTitle" TEXT NOT NULL DEFAULT 'Dipercaya 500+ Supplier',
+          "trustSubtitle" TEXT NOT NULL DEFAULT 'Social proof & track record',
+          "finalCtaTitle" TEXT NOT NULL DEFAULT 'Siap Jual Laptop Bekas Anda?',
+          "finalCtaSubtitle" TEXT NOT NULL DEFAULT 'Estimasi harga dalam 15 menit. Pickup gratis Jabodetabek. Bayar spot.',
+          "finalCtaPrimary" TEXT NOT NULL DEFAULT 'Kirim Foto Laptop',
+          "finalCtaSecondary" TEXT NOT NULL DEFAULT 'Chat WhatsApp',
+          "metaTitle" TEXT NOT NULL DEFAULT 'Jual Laptop Bekas Jakarta — Estimasi Cepat, Pickup Gratis | Jakarta Laptops',
+          "metaDescription" TEXT NOT NULL DEFAULT 'Jual laptop bekas Jakarta dengan estimasi harga cepat, proses transparan, pembayaran langsung. Pickup gratis Jabodetabek. Terima kondisi minus. Chat WA sekarang!',
+          "ogTitle" TEXT NOT NULL DEFAULT 'Jual Laptop Bekas Anda Hari Ini — Jakarta Laptops',
+          "ogDescription" TEXT NOT NULL DEFAULT 'Estimasi harga cepat, proses transparan, pembayaran langsung. Pickup gratis Jabodetabek.',
+          "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          "updatedAt" TIMESTAMP(3) NOT NULL,
+          CONSTRAINT "landing_page_content_pkey" PRIMARY KEY ("id")
+        )
+      `;
+      logs.push("✓ LandingPageContent table ready");
+    } catch (tableErr) {
+      logs.push(`ℹ LandingPageContent table: ${tableErr instanceof Error ? tableErr.message : "already exists"}`);
+    }
+
     const duration = Date.now() - startTime;
 
     return NextResponse.json({
