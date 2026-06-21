@@ -4,12 +4,13 @@
 // /jual-laptop-bekas-jakarta — Supply acquisition focused LP.
 // Sections: Hero → 5 Value Pillars → Process → Estimasi Widget → FAQ → Trust → Final CTA
 //
-// CTA strategy:
-//   Primary "Kirim Foto Laptop" → /ajukan (existing form flow)
-//   Secondary "Chat WhatsApp" → wa.me link with pre-fill + UTM
+// CTA strategy (updated per business brief):
+//   ALL CTAs go directly to WhatsApp (no form, no DB involvement).
+//   Frontend = pure lead gen to WA. Admin = decoupled operational backend.
+//
+// WA link pattern: wa.me/{number}?text={prefill}&utm_source={utm}
 
 import { useState } from "react";
-import Link from "next/link";
 import {
   Clock,
   Camera,
@@ -97,14 +98,14 @@ export function LandingPageClient({ content }: LandingPageClientProps) {
                 {content.heroSubtitle}
               </p>
 
-              {/* CTAs */}
+              {/* CTAs — both go to WA direct */}
               <div className="flex flex-wrap gap-3">
-                <Link href="/ajukan?utm_source=lp_jual_laptop_bekas&utm_medium=organic&utm_campaign=supply_acquisition">
+                <a href={waLink} target="_blank" rel="noopener noreferrer">
                   <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 text-base h-auto">
                     {content.heroPrimaryCta}
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
-                </Link>
+                </a>
                 <a href={waLink} target="_blank" rel="noopener noreferrer">
                   <Button size="lg" variant="outline" className="border-blue-600 text-blue-700 hover:bg-blue-50 font-bold px-6 py-3 text-base h-auto">
                     <MessageCircle className="mr-2 h-5 w-5" />
@@ -208,12 +209,12 @@ export function LandingPageClient({ content }: LandingPageClientProps) {
             </div>
 
             <div className="text-center mt-10">
-              <Link href="/ajukan?utm_source=lp_jual_laptop_bekas&utm_medium=organic&utm_campaign=supply_acquisition">
+              <a href={waLink} target="_blank" rel="noopener noreferrer">
                 <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 h-auto">
                   {content.heroPrimaryCta}
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
-              </Link>
+              </a>
             </div>
           </div>
         </section>
@@ -310,12 +311,12 @@ export function LandingPageClient({ content }: LandingPageClientProps) {
           <p className="text-blue-300 mb-8 text-lg">{content.finalCtaSubtitle}</p>
 
           <div className="flex flex-wrap gap-3 justify-center">
-            <Link href="/ajukan?utm_source=lp_jual_laptop_bekas&utm_medium=organic&utm_campaign=supply_acquisition">
+            <a href={waLink} target="_blank" rel="noopener noreferrer">
               <Button size="lg" className="bg-blue-500 hover:bg-blue-600 text-white font-bold px-6 py-3 h-auto">
                 {content.finalCtaPrimary}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-            </Link>
+            </a>
             <a href={waLink} target="_blank" rel="noopener noreferrer">
               <Button size="lg" variant="outline" className="border-blue-400 text-white hover:bg-blue-950 font-bold px-6 py-3 h-auto bg-transparent">
                 <MessageCircle className="mr-2 h-5 w-5" />
@@ -330,11 +331,11 @@ export function LandingPageClient({ content }: LandingPageClientProps) {
       {/* STICKY MOBILE CTA (always visible bottom) */}
       {/* ─────────────────────────────────────────────────────── */}
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-slate-900 border-t border-blue-500 p-3 md:hidden flex gap-2 shadow-lg">
-        <Link href="/ajukan?utm_source=lp_jual_laptop_bekas&utm_medium=organic&utm_campaign=supply_acquisition" className="flex-1">
+        <a href={waLink} target="_blank" rel="noopener noreferrer" className="flex-1">
           <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 h-auto text-sm">
             {content.heroPrimaryCta}
           </Button>
-        </Link>
+        </a>
         <a href={waLink} target="_blank" rel="noopener noreferrer" className="flex-1">
           <Button variant="outline" className="w-full border-blue-400 text-white hover:bg-blue-950 font-bold py-2 h-auto text-sm bg-transparent">
             <MessageCircle className="mr-1 h-4 w-4" />
@@ -399,11 +400,11 @@ function QuickEstimasiWidget({ waLink }: { waLink: string }) {
             </div>
           </div>
 
-          <Link href="/ajukan?utm_source=lp_jual_laptop_bekas&utm_medium=organic&utm_campaign=supply_acquisition">
+          <a href={waLink} target="_blank" rel="noopener noreferrer">
             <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold mt-2">
-              Dapatkan Estimasi
+              Dapatkan Estimasi via WhatsApp
             </Button>
-          </Link>
+          </a>
         </div>
       </CardContent>
     </Card>
