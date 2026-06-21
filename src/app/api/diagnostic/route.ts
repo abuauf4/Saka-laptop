@@ -100,16 +100,17 @@ export async function GET(request: NextRequest) {
 
   // Diagnosis summary
   const issues: string[] = [];
-  if (!diagnostics.env.DATABASE_URL_set) issues.push("DATABASE_URL not set");
-  if (!diagnostics.env.DATABASE_URL_uses_pgbouncer)
+  const env = diagnostics.env as Record<string, unknown>;
+  if (!env.DATABASE_URL_set) issues.push("DATABASE_URL not set");
+  if (!env.DATABASE_URL_uses_pgbouncer)
     issues.push("DATABASE_URL missing ?pgBouncer=true — REQUIRED for Supabase pooler");
-  if (!diagnostics.env.DATABASE_URL_connection_limit_1)
+  if (!env.DATABASE_URL_connection_limit_1)
     issues.push("DATABASE_URL missing ?connection_limit=1 — REQUIRED for Vercel serverless");
-  if (diagnostics.env.DATABASE_URL_port === "5432")
+  if (env.DATABASE_URL_port === "5432")
     issues.push("DATABASE_URL uses port 5432 (direct) — should be 6543 (pgBouncer/Supavisor)");
-  if (!diagnostics.env.DATABASE_URL_is_pooler)
+  if (!env.DATABASE_URL_is_pooler)
     issues.push("DATABASE_URL not using pooler hostname (*.pooler.supabase.com)");
-  if (!diagnostics.env.JWT_SECRET_set) issues.push("JWT_SECRET not set");
+  if (!env.JWT_SECRET_set) issues.push("JWT_SECRET not set");
   if (lastError) issues.push("DB connection failed — see db.error");
 
   diagnostics.issues = issues;

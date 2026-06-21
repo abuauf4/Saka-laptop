@@ -34,7 +34,7 @@ export async function GET() {
     return NextResponse.json(settings, { headers: NO_CACHE });
   } catch (error) {
     console.error("Get settings error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 }, { headers: NO_CACHE });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500, headers: NO_CACHE });
   }
 }
 
@@ -65,9 +65,9 @@ export async function PUT(request: NextRequest) {
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : "Internal server error";
     if (msg === "Unauthorized") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 }, { headers: NO_CACHE });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401, headers: NO_CACHE });
     }
     console.error("Update settings error:", error);
-    return NextResponse.json({ error: msg }, { status: 500 }, { headers: NO_CACHE });
+    return NextResponse.json({ error: msg }, { status: 500, headers: NO_CACHE });
   }
 }

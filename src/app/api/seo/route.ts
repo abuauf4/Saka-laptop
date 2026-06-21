@@ -23,7 +23,7 @@ export async function GET() {
     return NextResponse.json(seo, { headers: NO_CACHE });
   } catch (error) {
     console.error("Get SEO error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 }, { headers: NO_CACHE });
+    return NextResponse.json({ error: "Internal server error" }, { status: 500, headers: NO_CACHE });
   }
 }
 
@@ -31,7 +31,7 @@ export async function PUT(request: NextRequest) {
   try {
     const auth = await requireAuth();
     if (auth.role !== "super_admin" && !auth.permissions.includes("seo.update")) {
-      return NextResponse.json({ error: "Forbidden: Insufficient permissions" }, { status: 403 }, { headers: NO_CACHE });
+      return NextResponse.json({ error: "Forbidden: Insufficient permissions" }, { status: 403, headers: NO_CACHE });
     }
 
     const body = await request.json();
@@ -46,9 +46,9 @@ export async function PUT(request: NextRequest) {
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : "Internal server error";
     if (msg === "Unauthorized") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 }, { headers: NO_CACHE });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401, headers: NO_CACHE });
     }
     console.error("Update SEO error:", error);
-    return NextResponse.json({ error: msg }, { status: 500 }, { headers: NO_CACHE });
+    return NextResponse.json({ error: msg }, { status: 500, headers: NO_CACHE });
   }
 }

@@ -2,6 +2,7 @@
 // Server-side only. Manages the core_modules table.
 
 import { db } from "./db";
+import { Prisma } from "@prisma/client";
 
 export interface ModuleInfo {
   id: string;
@@ -25,9 +26,9 @@ function parseConfig(raw: unknown): Record<string, unknown> | null {
 }
 
 /** Serialize config to native object (Prisma will handle Json or String automatically) */
-function serializeConfig(config: Record<string, unknown> | null | undefined): Record<string, unknown> | string | null {
-  if (!config) return null;
-  return config; // Prisma handles conversion based on schema type
+function serializeConfig(config: Record<string, unknown> | null | undefined) {
+  if (!config) return Prisma.JsonNull;
+  return config as Prisma.InputJsonValue;
 }
 
 /**

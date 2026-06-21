@@ -282,7 +282,7 @@ export default function PenawaranPage() {
                       <div className="flex flex-wrap gap-1.5">
                         {Object.entries(qcChecklist).map(([key, value]) => {
                           const item = (
-                            QC_ITEMS_LIST as { id: string; label: string }[]
+                            QC_ITEMS_LIST as unknown as { id: string; label: string }[]
                           ).find((i) => i.id === key);
                           if (!item) return null;
                           const v = value as string;

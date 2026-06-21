@@ -344,14 +344,14 @@ async function main() {
   // ── Seed Developer User ──
   const hashedPassword = await bcrypt.hash("122333", 10);
   await prisma.user.upsert({
-    where: { username: "Bagas" },
+    where: { email: "bagas@jakartalaptops.com" },
     update: {},
     create: {
       id: "dev_1",
-      username: "Bagas",
+      fullName: "Bagas",
+      email: "bagas@jakartalaptops.com",
       password: hashedPassword,
-      role: "developer",
-      permissions: JSON.stringify(["dashboard", "produk", "testimoni", "kasir", "transaksi", "profil"]),
+      status: "active",
     },
   });
   console.log("Seeded developer user (Bagas)");

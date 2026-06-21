@@ -49,7 +49,7 @@ interface NavigationData {
 
 // Dynamic icon resolver
 function IconComponent({ name, className }: { name: string; className?: string }) {
-  const Icon = (LucideIcons as Record<string, React.ComponentType<{ className?: string }>>)[name];
+  const Icon = (LucideIcons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[name];
   if (!Icon) return <LucideIcons.Circle className={className} />;
   return <Icon className={className} />;
 }

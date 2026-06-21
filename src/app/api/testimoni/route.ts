@@ -8,9 +8,7 @@ export const dynamic = "force-dynamic";
 // GET — public, list all testimoni
 export async function GET() {
   try {
-    const testimoni = await db.testimoni.findMany({
-      orderBy: { createdAt: "desc" },
-    });
+    const testimoni = await db.testimoni.findMany();
     return NextResponse.json(testimoni, {
       headers: { "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0" },
     });

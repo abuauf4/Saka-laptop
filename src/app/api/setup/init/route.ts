@@ -307,7 +307,7 @@ export async function GET(request: NextRequest) {
 
     // ─── 12. Create Barang table (if not exists) ───
     try {
-      await dbLegacy.$executeRaw`
+      await db.$executeRaw`
         CREATE TABLE IF NOT EXISTS "barang" (
           "id" TEXT NOT NULL,
           "kode" TEXT NOT NULL,
@@ -327,10 +327,10 @@ export async function GET(request: NextRequest) {
           CONSTRAINT "barang_pkey" PRIMARY KEY ("id")
         )
       `;
-      await dbLegacy.$executeRaw`CREATE UNIQUE INDEX IF NOT EXISTS "barang_kode_key" ON "barang"("kode")`;
-      await dbLegacy.$executeRaw`CREATE INDEX IF NOT EXISTS "barang_status_idx" ON "barang"("status")`;
-      await dbLegacy.$executeRaw`CREATE INDEX IF NOT EXISTS "barang_createdAt_idx" ON "barang"("createdAt")`;
-      await dbLegacy.$executeRaw`CREATE INDEX IF NOT EXISTS "barang_merk_idx" ON "barang"("merk")`;
+      await db.$executeRaw`CREATE UNIQUE INDEX IF NOT EXISTS "barang_kode_key" ON "barang"("kode")`;
+      await db.$executeRaw`CREATE INDEX IF NOT EXISTS "barang_status_idx" ON "barang"("status")`;
+      await db.$executeRaw`CREATE INDEX IF NOT EXISTS "barang_createdAt_idx" ON "barang"("createdAt")`;
+      await db.$executeRaw`CREATE INDEX IF NOT EXISTS "barang_merk_idx" ON "barang"("merk")`;
       logs.push("✓ Barang table ready");
     } catch (tableErr) {
       logs.push(`ℹ Barang table: ${tableErr instanceof Error ? tableErr.message : "already exists"}`);

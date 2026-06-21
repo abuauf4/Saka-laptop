@@ -27,7 +27,7 @@ export async function GET() {
     return NextResponse.json({ logoData: logo.logoData }, { headers: NO_CACHE });
   } catch (error) {
     console.error("Error fetching logo:", error);
-    return NextResponse.json({ logoData: "" }, { status: 500 }, { headers: NO_CACHE });
+    return NextResponse.json({ logoData: "" }, { status: 500, headers: NO_CACHE });
   }
 }
 
@@ -46,9 +46,9 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ logoData: logo.logoData }, { headers: NO_CACHE });
   } catch (error) {
     if (error instanceof Error && error.message === "Unauthorized") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 }, { headers: NO_CACHE });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401, headers: NO_CACHE });
     }
     console.error("Error updating logo:", error);
-    return NextResponse.json({ error: "Failed to update logo" }, { status: 500 }, { headers: NO_CACHE });
+    return NextResponse.json({ error: "Failed to update logo" }, { status: 500, headers: NO_CACHE });
   }
 }
