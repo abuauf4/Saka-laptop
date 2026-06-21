@@ -29,20 +29,20 @@ export const MACBOOK_LP_CONTENT: LandingPageData = {
   heroEyebrow: "JUAL MACBOOK BEKAS JAKARTA",
   heroTitle: "Jual MacBook Bekas Anda Hari Ini.",
   heroSubtitle:
-    "Spesialis MacBook Air/Pro M1, M2, M3, Intel. Estimasi harga tinggi, proses transparan, pembayaran langsung. Pickup gratis Jabodetabek untuk unit berkualitas.",
+    "Spesialis MacBook Air/Pro M1, M2, M3, Intel. Estimasi harga tinggi, proses transparan, pembayaran langsung di jam kerja. Pickup gratis Jabodetabek untuk unit di atas Rp 5 juta.",
   heroPrimaryCta: "Kirim Foto MacBook",
   heroSecondaryCta: "Chat WhatsApp",
   heroTrustBadges: [
-    { text: "Respon 15 menit" },
-    { text: "Pembayaran hari sama" },
+    { text: "Respons cepat" },
+    { text: "Pembayaran cepat di jam kerja" },
     { text: "Terima kondisi minus" },
   ],
 
   valuePillars: [
     {
       icon: "Clock",
-      headline: "Respon 15 Menit",
-      subCopy: "Tim kami respon WA dalam 15 menit jam kerja (08:00-21:00).",
+      headline: "Respons Cepat",
+      subCopy: "Tim kami responsif di jam kerja (08:00-21:00) setiap hari.",
     },
     {
       icon: "Camera",
@@ -56,8 +56,8 @@ export const MACBOOK_LP_CONTENT: LandingPageData = {
     },
     {
       icon: "Wallet",
-      headline: "Bayar Hari Sama",
-      subCopy: "Cash atau transfer langsung setelah inspeksi selesai.",
+      headline: "Pembayaran Cepat",
+      subCopy: "Cash atau transfer langsung setelah inspeksi (selama jam kerja 08:00-21:00).",
     },
     {
       icon: "AlertCircle",
@@ -125,12 +125,12 @@ export const MACBOOK_LP_CONTENT: LandingPageData = {
     },
     {
       q: "Berapa lama proses inspeksi MacBook?",
-      a: "Inspeksi fisik 30-60 menit di lokasi Jakarta. Cek battery health via System Report, keyboard test, layar Retina (dead pixel, backlight bleed), port (USB-C, MagSafe), Touch ID/Bar. Setelah deal, pembayaran spot.",
+      a: "Inspeksi fisik 30-60 menit di lokasi Jakarta. Cek battery health via System Report, keyboard test, layar Retina (dead pixel, backlight bleed), port (USB-C, MagSafe), Touch ID/Bar. Setelah deal, pembayaran spot selama jam kerja (08:00-21:00).",
       keyword: "lama proses jual macbook",
     },
     {
       q: "Pembayaran cash atau transfer?",
-      a: "Keduanya. Cash untuk deal langsung setelah inspeksi. Transfer bank (BCA/Mandiri/BRI) untuk nominal besar atau atas request. QRIS tersedia untuk nominal di bawah Rp 5 juta.",
+      a: "Keduanya. Cash untuk deal langsung setelah inspeksi (selama jam kerja 08:00-21:00). Transfer bank (BCA/Mandiri/BRI) untuk nominal besar atau atas request. QRIS tersedia untuk nominal di bawah Rp 5 juta.",
       keyword: "jual macbook cash jakarta",
     },
     {
@@ -141,16 +141,16 @@ export const MACBOOK_LP_CONTENT: LandingPageData = {
   ],
 
   trustStats: [
-    { stat: "200+", label: "MacBook diakuisisi sejak 2024" },
-    { stat: "15 mnt", label: "Rata-rata waktu respon WA" },
-    { stat: "8 titik", label: "QC inspection khusus MacBook" },
+    { stat: "12 titik", label: "QC + Apple diagnostic" },
+    { stat: "1-2 jam", label: "Estimasi setelah foto" },
+    { stat: "Jabodetabek", label: "Pickup gratis unit di atas Rp 5jt" },
   ],
-  trustTitle: "Dipercaya 200+ Pemilik MacBook",
-  trustSubtitle: "Spesialis Apple device di Jakarta",
+  trustTitle: "Spesialis MacBook di Jakarta",
+  trustSubtitle: "Paham nilai M1/M2/M3, battery health, dan kelengkapan",
 
   finalCtaTitle: "Siap Jual MacBook Bekas Anda?",
   finalCtaSubtitle:
-    "Estimasi harga dalam 15 menit. Pickup gratis Jabodetabek untuk MacBook di atas Rp 5jt. Bayar spot.",
+    "Estimasi harga dalam 1-2 jam. Pickup gratis Jabodetabek untuk MacBook di atas Rp 5jt. Pembayaran cepat di jam kerja.",
   finalCtaPrimary: "Kirim Foto MacBook",
   finalCtaSecondary: "Chat WhatsApp",
 
@@ -168,20 +168,20 @@ export const GAMING_LP_CONTENT: LandingPageData = {
   heroEyebrow: "JUAL LAPTOP GAMING BEKAS",
   heroTitle: "Jual Laptop Gaming Bekas Anda Hari Ini.",
   heroSubtitle:
-    "Spesialis laptop gaming: Asus ROG, MSI, Acer Predator, Lenovo Legion. Estimasi harga tinggi untuk unit RTX/Ryzen spekulatif. Pickup gratis Jabodetabek.",
+    "Spesialis laptop gaming: Asus ROG, MSI, Acer Predator, Lenovo Legion. Estimasi harga tinggi untuk unit RTX/Ryzen spekulatif. Pickup gratis Jabodetabek untuk laptop gaming di atas Rp 5 juta.",
   heroPrimaryCta: "Kirim Foto Laptop Gaming",
   heroSecondaryCta: "Chat WhatsApp",
   heroTrustBadges: [
-    { text: "Respon 15 menit" },
-    { text: "Pembayaran hari sama" },
+    { text: "Respons cepat" },
+    { text: "Pembayaran cepat di jam kerja" },
     { text: "Terima kondisi minus" },
   ],
 
   valuePillars: [
     {
       icon: "Clock",
-      headline: "Respon 15 Menit",
-      subCopy: "Tim kami respon WA dalam 15 menit jam kerja (08:00-21:00).",
+      headline: "Respons Cepat",
+      subCopy: "Tim kami responsif di jam kerja (08:00-21:00) setiap hari.",
     },
     {
       icon: "Camera",
@@ -195,8 +195,8 @@ export const GAMING_LP_CONTENT: LandingPageData = {
     },
     {
       icon: "Wallet",
-      headline: "Bayar Hari Sama",
-      subCopy: "Cash atau transfer langsung setelah inspeksi selesai.",
+      headline: "Pembayaran Cepat",
+      subCopy: "Cash atau transfer langsung setelah inspeksi (selama jam kerja 08:00-21:00).",
     },
     {
       icon: "AlertCircle",
@@ -264,12 +264,12 @@ export const GAMING_LP_CONTENT: LandingPageData = {
     },
     {
       q: "Berapa lama proses inspeksi laptop gaming?",
-      a: "Inspeksi fisik 30-60 menit. Selain cek standar (layar, keyboard, baterai), kami lakukan stress test GPU 10 menit dengan FurMark, cek thermals, dan benchmark. Setelah deal, pembayaran spot.",
+      a: "Inspeksi fisik 30-60 menit. Selain cek standar (layar, keyboard, baterai), kami lakukan stress test GPU 10 menit dengan FurMark, cek thermals, dan benchmark. Setelah deal, pembayaran spot selama jam kerja (08:00-21:00).",
       keyword: "lama proses jual laptop gaming",
     },
     {
       q: "Pembayaran cash atau transfer?",
-      a: "Keduanya. Cash untuk deal langsung setelah inspeksi. Transfer bank (BCA/Mandiri/BRI) untuk nominal besar. QRIS tersedia untuk nominal di bawah Rp 5 juta.",
+      a: "Keduanya. Cash untuk deal langsung setelah inspeksi (selama jam kerja 08:00-21:00). Transfer bank (BCA/Mandiri/BRI) untuk nominal besar. QRIS tersedia untuk nominal di bawah Rp 5 juta.",
       keyword: "jual laptop gaming cash jakarta",
     },
     {
@@ -280,16 +280,16 @@ export const GAMING_LP_CONTENT: LandingPageData = {
   ],
 
   trustStats: [
-    { stat: "150+", label: "Laptop gaming diakuisisi sejak 2024" },
-    { stat: "15 mnt", label: "Rata-rata waktu respon WA" },
-    { stat: "15 titik", label: "QC inspection termasuk GPU stress test" },
+    { stat: "12 titik", label: "QC + GPU stress test" },
+    { stat: "1-2 jam", label: "Estimasi setelah foto" },
+    { stat: "Jabodetabek", label: "Pickup gratis unit di atas Rp 5jt" },
   ],
-  trustTitle: "Dipercaya 150+ Gamer Jakarta",
-  trustSubtitle: "Spesialis laptop gaming spekulatif",
+  trustTitle: "Spesialis Laptop Gaming di Jakarta",
+  trustSubtitle: "Paham nilai RTX/Ryzen, thermals, dan kondisi GPU",
 
   finalCtaTitle: "Siap Jual Laptop Gaming Bekas Anda?",
   finalCtaSubtitle:
-    "Estimasi harga dalam 15 menit. Pickup gratis Jabodetabek untuk laptop gaming di atas Rp 5jt. Bayar spot.",
+    "Estimasi harga dalam 1-2 jam. Pickup gratis Jabodetabek untuk laptop gaming di atas Rp 5jt. Pembayaran cepat di jam kerja.",
   finalCtaPrimary: "Kirim Foto Laptop Gaming",
   finalCtaSecondary: "Chat WhatsApp",
 
@@ -307,20 +307,20 @@ export const TUKAR_TAMBAH_LP_CONTENT: LandingPageData = {
   heroEyebrow: "TUKAR TAMBAH LAPTOP JAKARTA",
   heroTitle: "Tukar Tambah Laptop Lama Anda Hari Ini.",
   heroSubtitle:
-    "Upgrade ke laptop yang lebih baru dengan trade-in. Estimasi harga laptop lama cepat, selisih bayar/cashback. Pickup gratis Jabodetabek.",
+    "Upgrade ke laptop yang lebih baru dengan trade-in. Estimasi harga laptop lama cepat, selisih bayar/cashback. Pickup gratis Jabodetabek untuk trade-in di atas Rp 3 juta.",
   heroPrimaryCta: "Kirim Foto Laptop Lama",
   heroSecondaryCta: "Chat WhatsApp",
   heroTrustBadges: [
-    { text: "Respon 15 menit" },
+    { text: "Respons cepat" },
     { text: "Selisih bisa cashback" },
-    { text: "Inventory banyak pilihan" },
+    { text: "Inventory beragam, tanya via WA" },
   ],
 
   valuePillars: [
     {
       icon: "Clock",
-      headline: "Respon 15 Menit",
-      subCopy: "Tim kami respon WA dalam 15 menit jam kerja (08:00-21:00).",
+      headline: "Respons Cepat",
+      subCopy: "Tim kami responsif di jam kerja (08:00-21:00) setiap hari.",
     },
     {
       icon: "Camera",
@@ -339,8 +339,8 @@ export const TUKAR_TAMBAH_LP_CONTENT: LandingPageData = {
     },
     {
       icon: "AlertCircle",
-      headline: "Inventory Lengkap",
-      subCopy: "Pilihan laptop hasil refurbish mulus dengan garansi 1 bulan.",
+      headline: "Inventory Beragam",
+      subCopy: "Pilihan laptop hasil refurbish mulus dengan garansi 1 bulan. Stok tanya via WA.",
     },
   ],
 
@@ -393,7 +393,7 @@ export const TUKAR_TAMBAH_LP_CONTENT: LandingPageData = {
     },
     {
       q: "Inventory laptop baru apa saja yang tersedia?",
-      a: "Inventory kami mayoritas laptop bekas refurbish mulus dengan garansi 1 bulan. Brand lengkap: Lenovo ThinkPad, Dell Latitude, HP EliteBook, MacBook, laptop gaming. Update inventory bisa dicek via WA.",
+      a: "Inventory kami mayoritas laptop bekas refurbish mulus dengan garansi 1 bulan. Brand lengkap: Lenovo ThinkPad, Dell Latitude, HP EliteBook, MacBook, laptop gaming. Stok berubah cepat, tanya via WA untuk unit terbaru.",
       keyword: "inventory laptop bekas jakarta",
     },
     {
@@ -408,7 +408,7 @@ export const TUKAR_TAMBAH_LP_CONTENT: LandingPageData = {
     },
     {
       q: "Pembayaran selisih bagaimana?",
-      a: "Cash atau transfer bank untuk selisih yang harus dibayar. Kalau selisih untuk Anda (cashback), kami bayar cash atau transfer langsung. QRIS tersedia untuk nominal di bawah Rp 5 juta.",
+      a: "Cash atau transfer bank untuk selisih yang harus dibayar (selama jam kerja 08:00-21:00). Kalau selisih untuk Anda (cashback), kami bayar cash atau transfer langsung. QRIS tersedia untuk nominal di bawah Rp 5 juta.",
       keyword: "pembayaran tukar tambah laptop",
     },
     {
@@ -419,23 +419,23 @@ export const TUKAR_TAMBAH_LP_CONTENT: LandingPageData = {
   ],
 
   trustStats: [
-    { stat: "180+", label: "Trade-in sukses sejak 2024" },
-    { stat: "15 mnt", label: "Rata-rata waktu respon WA" },
-    { stat: "50+", label: "Unit di inventory siap tukar" },
+    { stat: "12 titik", label: "QC inspection per unit" },
+    { stat: "1-2 jam", label: "Estimasi setelah foto" },
+    { stat: "1 bln", label: "Garansi inventory refurbished" },
   ],
-  trustTitle: "Dipercaya 180+ Customer Trade-In",
-  trustSubtitle: "Proses fair, inventory berkualitas",
+  trustTitle: "Trade-In Adil & Transparan",
+  trustSubtitle: "Estimasi fair, inventory berkualitas",
 
   finalCtaTitle: "Siap Tukar Tambah Laptop Anda?",
   finalCtaSubtitle:
-    "Estimasi laptop lama dalam 15 menit. Pickup gratis Jabodetabek. Inventory 50+ unit siap pilih.",
+    "Estimasi laptop lama dalam 1-2 jam. Pickup gratis Jabodetabek. Inventory beragam, tanya stok via WA.",
   finalCtaPrimary: "Kirim Foto Laptop Lama",
   finalCtaSecondary: "Chat WhatsApp",
 
   metaTitle:
     "Tukar Tambah Laptop Jakarta — Estimasi Cepat, Inventory Lengkap | Jakarta Laptops",
   metaDescription:
-    "Tukar tambah laptop Jakarta. Estimasi harga laptop lama cepat, pilih laptop baru dari inventory 50+ unit, selisih fleksibel. Pickup gratis Jabodetabek. Chat WA!",
+    "Tukar tambah laptop Jakarta. Estimasi harga laptop lama cepat, pilih laptop baru dari inventory beragam, selisih fleksibel. Pickup gratis Jabodetabek. Chat WA!",
   ogTitle: "Tukar Tambah Laptop Lama Anda Hari Ini — Jakarta Laptops",
   ogDescription:
     "Trade-in laptop Jakarta. Estimasi cepat, inventory lengkap, pickup gratis Jabodetabek.",
@@ -458,8 +458,8 @@ export const KANTOR_LP_CONTENT: LandingPageData = {
   valuePillars: [
     {
       icon: "Clock",
-      headline: "Respon 15 Menit",
-      subCopy: "Tim korporat kami respon WA dalam 15 menit jam kerja (08:00-21:00).",
+      headline: "Respons Cepat",
+      subCopy: "Tim korporat kami responsif di jam kerja (08:00-21:00) setiap hari.",
     },
     {
       icon: "Camera",
@@ -500,7 +500,7 @@ export const KANTOR_LP_CONTENT: LandingPageData = {
       step: "3",
       headline: "Pickup & QC Onsite",
       subCopy: "Tim kami datang, inspeksi per unit, data wipe onsite jika diperlukan.",
-      duration: "1-3 hari",
+      duration: "1-2 hari kerja",
     },
     {
       step: "4",
@@ -558,12 +558,12 @@ export const KANTOR_LP_CONTENT: LandingPageData = {
   ],
 
   trustStats: [
-    { stat: "30+", label: "Corporate deal sejak 2024" },
-    { stat: "500+", label: "Unit kantor diakuisisi" },
-    { stat: "100%", label: "Data wipe bersertifikat" },
+    { stat: "10+", label: "Minimum unit untuk bulk acquisition" },
+    { stat: "100%", label: "Data wipe bersertifikat (DoD 3-pass)" },
+    { stat: "Jabodetabek", label: "Pickup gratis area" },
   ],
-  trustTitle: "Dipercaya 30+ Perusahaan Jakarta",
-  trustSubtitle: "Corporate IT disposal specialist",
+  trustTitle: "Corporate IT Disposal Specialist",
+  trustSubtitle: "Pickup bulk, data wipe, invoice corporate",
 
   finalCtaTitle: "Siap Jual Laptop Kantor Bekas Anda?",
   finalCtaSubtitle:

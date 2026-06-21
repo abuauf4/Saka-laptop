@@ -83,20 +83,20 @@ export const DEFAULT_LP_CONTENT: LandingPageData = {
   heroEyebrow: "JUAL LAPTOP BEKAS JAKARTA",
   heroTitle: "Jual Laptop Bekas Anda Hari Ini.",
   heroSubtitle:
-    "Estimasi harga cepat, proses transparan, pembayaran langsung. Pickup gratis Jabodetabek untuk laptop berkualitas.",
+    "Estimasi harga cepat, proses transparan, pembayaran langsung di jam kerja. Pickup gratis Jabodetabek. Terima ThinkPad, Latitude, EliteBook, MacBook, dan brand lainnya.",
   heroPrimaryCta: "Kirim Foto Laptop",
   heroSecondaryCta: "Chat WhatsApp",
   heroTrustBadges: [
-    { text: "Respon 15 menit" },
-    { text: "Pembayaran hari sama" },
+    { text: "Respons cepat" },
+    { text: "Pembayaran cepat di jam kerja" },
     { text: "Terima kondisi minus" },
   ],
 
   valuePillars: [
     {
       icon: "Clock",
-      headline: "Respon 15 Menit",
-      subCopy: "Tim kami respon WA dalam 15 menit jam kerja (08:00-21:00).",
+      headline: "Respons Cepat",
+      subCopy: "Tim kami responsif di jam kerja (08:00-21:00) setiap hari.",
     },
     {
       icon: "Camera",
@@ -110,8 +110,8 @@ export const DEFAULT_LP_CONTENT: LandingPageData = {
     },
     {
       icon: "Wallet",
-      headline: "Bayar Hari Sama",
-      subCopy: "Cash atau transfer langsung setelah inspeksi selesai.",
+      headline: "Pembayaran Cepat",
+      subCopy: "Cash atau transfer langsung setelah inspeksi selesai (selama jam kerja 08:00-21:00).",
     },
     {
       icon: "AlertCircle",
@@ -174,7 +174,7 @@ export const DEFAULT_LP_CONTENT: LandingPageData = {
     },
     {
       q: "Berapa lama proses inspeksi?",
-      a: "Inspeksi fisik 30-60 menit di lokasi Jakarta. Untuk online, kirim foto via WA dan dapatkan estimasi dalam 1-2 jam. Setelah deal, pembayaran spot.",
+      a: "Inspeksi fisik 30-60 menit di lokasi Jakarta. Untuk online, kirim foto via WA dan dapatkan estimasi dalam 1-2 jam. Setelah deal, pembayaran spot selama jam kerja (08:00-21:00).",
       keyword: "lama proses jual laptop",
     },
     {
@@ -184,7 +184,7 @@ export const DEFAULT_LP_CONTENT: LandingPageData = {
     },
     {
       q: "Pembayaran cash atau transfer?",
-      a: "Keduanya. Cash untuk deal B2C langsung setelah inspeksi. Transfer bank untuk deal corporate atau atas request. QRIS juga tersedia untuk nominal di bawah Rp 5 juta.",
+      a: "Keduanya. Cash untuk deal B2C langsung setelah inspeksi (selama jam kerja 08:00-21:00). Transfer bank untuk deal corporate atau atas request. QRIS juga tersedia untuk nominal di bawah Rp 5 juta.",
       keyword: "jual laptop cash jakarta",
     },
     {
@@ -195,16 +195,16 @@ export const DEFAULT_LP_CONTENT: LandingPageData = {
   ],
 
   trustStats: [
-    { stat: "500+", label: "Laptop diakuisisi sejak 2024" },
-    { stat: "15 mnt", label: "Rata-rata waktu respon WA" },
     { stat: "12 titik", label: "QC inspection per unit" },
+    { stat: "1-2 jam", label: "Estimasi harga setelah foto" },
+    { stat: "Jabodetabek", label: "Area pickup gratis" },
   ],
-  trustTitle: "Dipercaya 500+ Supplier",
-  trustSubtitle: "Social proof & track record",
+  trustTitle: "Proses Transparan, Penawaran Jujur",
+  trustSubtitle: "Inspeksi menyeluruh sebelum deal",
 
   finalCtaTitle: "Siap Jual Laptop Bekas Anda?",
   finalCtaSubtitle:
-    "Estimasi harga dalam 15 menit. Pickup gratis Jabodetabek. Bayar spot.",
+    "Estimasi harga dalam 1-2 jam. Pickup gratis Jabodetabek. Pembayaran cepat di jam kerja.",
   finalCtaPrimary: "Kirim Foto Laptop",
   finalCtaSecondary: "Chat WhatsApp",
 
