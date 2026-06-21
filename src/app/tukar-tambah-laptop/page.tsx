@@ -3,7 +3,7 @@
 
 import type { Metadata } from "next";
 import { TUKAR_TAMBAH_LP_CONTENT, LP_UTM_SOURCES } from "@/lib/lp-children-content";
-import { LandingPageClient } from "@/components/landing-page/LandingPageClient";
+import { LpPageClient } from "@/components/landing-page/LpPageClient";
 
 export const revalidate = 300;
 
@@ -95,9 +95,8 @@ export default function TukarTambahLaptopPage() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
       ))}
-      <LandingPageClient
+      <LpPageClient
         content={TUKAR_TAMBAH_LP_CONTENT}
-        utmSource={LP_UTM_SOURCES.tukarTambah}
         waMessage="Halo, saya mau tukar tambah laptop. Saya lampirkan foto laptop lama + spek, dan saya cari laptop baru."
       />
     </>

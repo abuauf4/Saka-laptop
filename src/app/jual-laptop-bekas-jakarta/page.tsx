@@ -6,7 +6,7 @@
 
 import type { Metadata } from "next";
 import { fetchLandingPageContent } from "@/lib/landing-page-data";
-import { LandingPageClient } from "@/components/landing-page/LandingPageClient";
+import { LpPageClient } from "@/components/landing-page/LpPageClient";
 
 // Cache di edge/CDN selama 5 menit (sama dengan homepage).
 // LP content gak berubah tiap menit, jadi caching ngurangin TTFB drastis.
@@ -185,7 +185,7 @@ export default async function JualLaptopBekasJakartaPage() {
         />
       ))}
 
-      <LandingPageClient content={content} />
+      <LpPageClient content={content} />
     </>
   );
 }

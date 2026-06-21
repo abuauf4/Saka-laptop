@@ -3,7 +3,7 @@
 
 import type { Metadata } from "next";
 import { KANTOR_LP_CONTENT, LP_UTM_SOURCES } from "@/lib/lp-children-content";
-import { LandingPageClient } from "@/components/landing-page/LandingPageClient";
+import { LpPageClient } from "@/components/landing-page/LpPageClient";
 
 export const revalidate = 300;
 
@@ -110,9 +110,8 @@ export default function JualLaptopKantorBekasPage() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
       ))}
-      <LandingPageClient
+      <LpPageClient
         content={KANTOR_LP_CONTENT}
-        utmSource={LP_UTM_SOURCES.kantor}
         waMessage="Halo, saya mau jual laptop kantor bekas (bulk). Saya lampirkan foto, daftar unit, brand, model, dan jumlah."
       />
     </>

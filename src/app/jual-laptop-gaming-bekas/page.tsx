@@ -4,7 +4,7 @@
 
 import type { Metadata } from "next";
 import { GAMING_LP_CONTENT, LP_UTM_SOURCES } from "@/lib/lp-children-content";
-import { LandingPageClient } from "@/components/landing-page/LandingPageClient";
+import { LpPageClient } from "@/components/landing-page/LpPageClient";
 
 export const revalidate = 300;
 
@@ -113,9 +113,8 @@ export default function JualLaptopGamingBekasPage() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
       ))}
-      <LandingPageClient
+      <LpPageClient
         content={GAMING_LP_CONTENT}
-        utmSource={LP_UTM_SOURCES.gaming}
         waMessage="Halo, saya mau jual laptop gaming bekas. Saya lampirkan foto, brand, GPU, dan spek."
       />
     </>

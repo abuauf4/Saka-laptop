@@ -5,7 +5,7 @@
 
 import type { Metadata } from "next";
 import { MACBOOK_LP_CONTENT, LP_UTM_SOURCES } from "@/lib/lp-children-content";
-import { LandingPageClient } from "@/components/landing-page/LandingPageClient";
+import { LpPageClient } from "@/components/landing-page/LpPageClient";
 import type { LandingPageData } from "@/lib/landing-page-data";
 
 // Override utm source di content (untuk WA link tracking)
@@ -138,9 +138,8 @@ export default function JualMacbookBekasJakartaPage() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
       ))}
-      <LandingPageClient
+      <LpPageClient
         content={content}
-        utmSource={LP_UTM_SOURCES.macbook}
         waMessage="Halo, saya mau jual MacBook bekas. Saya lampirkan foto, model, dan spek."
       />
     </>
