@@ -18,3 +18,4 @@ generate_deploy_guide.py
 worklog.md
 supabase-setup.sql
 bun.lock
+tsconfig.tsbuildinfo

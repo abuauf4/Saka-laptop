@@ -433,6 +433,64 @@ model HomepageContent {
 }
 
 // ═══════════════════════════════════════
+// LANDING PAGE CONTENT (SEO-targeted LP for supply acquisition)
+// Separate from HomepageContent — dedicated to /jual-laptop-bekas-jakarta
+// CMS-editable via /admin/landing-page
+// ═══════════════════════════════════════
+model LandingPageContent {
+  id                String   @id @default("default")
+
+  // ─── Hero section ───
+  heroEyebrow       String   @default("JUAL LAPTOP BEKAS JAKARTA")
+  heroTitle         String   @default("Jual Laptop Bekas Anda Hari Ini.")
+  heroSubtitle      String   @default("Estimasi harga cepat, proses transparan, pembayaran langsung. Pickup gratis Jabodetabek untuk laptop berkualitas.")
+  heroPrimaryCta    String   @default("Kirim Foto Laptop")
+  heroSecondaryCta  String   @default("Chat WhatsApp")
+  // 3 micro-trust badges (JSON: { text }[])
+  heroTrustBadges   String   @default("[]")
+
+  // ─── 5 Value Proposition Pillars ───
+  // JSON: { icon, headline, subCopy }[]
+  valuePillars      String   @default("[]")
+
+  // ─── 4-Step Process ───
+  // JSON: { step, headline, subCopy, duration }[]
+  processSteps      String   @default("[]")
+
+  // ─── Estimasi Widget ───
+  estimasiTitle     String   @default("Cek Estimasi Harga Laptop Anda")
+  estimasiSubtitle  String   @default("Interactive widget, no commit, hasil instan")
+  estimasiCtaLabel  String   @default("Lanjut Chat WhatsApp untuk Penawaran Akurat")
+
+  // ─── FAQ SEO (8 questions default) ───
+  // JSON: { q, a, keyword }[]
+  faqs              String   @default("[]")
+
+  // ─── Trust signals section ───
+  // JSON: { stat, label }[]
+  trustStats        String   @default("[]")
+  trustTitle        String   @default("Dipercaya 500+ Supplier")
+  trustSubtitle     String   @default("Social proof & track record")
+
+  // ─── Final CTA section ───
+  finalCtaTitle     String   @default("Siap Jual Laptop Bekas Anda?")
+  finalCtaSubtitle  String   @default("Estimasi harga dalam 15 menit. Pickup gratis Jabodetabek. Bayar spot.")
+  finalCtaPrimary   String   @default("Kirim Foto Laptop")
+  finalCtaSecondary String   @default("Chat WhatsApp")
+
+  // ─── SEO metadata ───
+  metaTitle         String   @default("Jual Laptop Bekas Jakarta — Estimasi Cepat, Pickup Gratis | Jakarta Laptops")
+  metaDescription   String   @default("Jual laptop bekas Jakarta dengan estimasi harga cepat, proses transparan, pembayaran langsung. Pickup gratis Jabodetabek. Terima kondisi minus. Chat WA sekarang!")
+  ogTitle           String   @default("Jual Laptop Bekas Anda Hari Ini — Jakarta Laptops")
+  ogDescription     String   @default("Estimasi harga cepat, proses transparan, pembayaran langsung. Pickup gratis Jabodetabek.")
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("landing_page_content")
+}
+
+// ═══════════════════════════════════════
 // BARANG (Operational Inventory + Kasir)
 // ═══════════════════════════════════════
 model Barang {
