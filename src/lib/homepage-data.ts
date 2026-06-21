@@ -2,8 +2,9 @@
 // Fetch semua homepage content di server saat request.
 // Dipakai oleh page.tsx (server component) untuk pass props ke client.
 //
-// Strategy: call /api/homepage internally (server-to-server) untuk
-// konsistensi. API udah tested & return data dengan fallback defaults.
+// Strategy: direct Prisma query (DB) dengan fallback ke empty values.
+// Hindari pakai headers() atau no-store fetch karena memaksa dynamic
+// rendering, konflik dengan ISR revalidate=300 di homepage.
 
 import { db as dbLegacy } from "@/lib/prisma";
 
@@ -63,67 +64,13 @@ function parseJson<T>(raw: string | null | undefined, fallback: T): T {
   }
 }
 
-// ─── Fetch Homepage Content (server-side, via internal API) ───
+// ─── Fetch Homepage Content (server-side, direct Prisma query) ───
+// Direct DB query dengan fallback ke empty values.
+// Pattern ini cocok untuk ISR (revalidate=300) karena gak pakai headers()
+// atau no-store fetch yang memaksa dynamic rendering.
 export async function fetchHomepageContent(): Promise<HomepageData> {
-  // Strategy: use headers() to get the actual request URL (works in Vercel + local)
-  // Then fetch /api/homepage internally — API has DEFAULT_CONTENT fallback
   try {
-    const { headers } = await import("next/headers");
-    const headersList = await headers();
-    const host = headersList.get("host") || "";
-    const protocol = headersList.get("x-forwarded-proto") || "https";
-    const baseUrl = host ? `${protocol}://${host}` : "";
-
-    if (baseUrl) {
-      const res = await fetch(`${baseUrl}/api/homepage`, {
-        cache: "no-store",
-        headers: { "Cache-Control": "no-cache" },
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        // Validate: ensure arrays are actually arrays
-        return {
-          heroEyebrow: data.heroEyebrow || "",
-          heroTitle: data.heroTitle || "",
-          heroSubtitle: data.heroSubtitle || "",
-          heroImage: data.heroImage || "",
-          trustStats: Array.isArray(data.trustStats) ? data.trustStats : [],
-          brandTitle: data.brandTitle || "",
-          brandCopy: data.brandCopy || "",
-          brandPoints: Array.isArray(data.brandPoints) ? data.brandPoints : [],
-          workflowStages: Array.isArray(data.workflowStages) ? data.workflowStages : [],
-          tokoPhotos: Array.isArray(data.tokoPhotos) ? data.tokoPhotos : [],
-          deviceCategories: Array.isArray(data.deviceCategories) ? data.deviceCategories : [],
-          faqs: Array.isArray(data.faqs) ? data.faqs : [],
-          closingTitle: data.closingTitle || "",
-          closingSubtitle: data.closingSubtitle || "",
-        };
-      }
-    }
-  } catch (error) {
-    console.error("fetchHomepageContent via headers API error:", error);
-  }
-
-  // Fallback: try VERCEL_URL env var
-  try {
-    const vercelUrl = process.env.VERCEL_URL;
-    if (vercelUrl) {
-      const res = await fetch(`https://${vercelUrl}/api/homepage`, {
-        cache: "no-store",
-      });
-      if (res.ok) {
-        return await res.json();
-      }
-    }
-  } catch (error) {
-    console.error("fetchHomepageContent via VERCEL_URL error:", error);
-  }
-
-  // Fallback: query DB directly
-  try {
-    const { db } = await import("@/core/lib/db");
-    const content = await db.homepageContent.findUnique({
+    const content = await dbLegacy.homepageContent.findUnique({
       where: { id: "default" },
     });
 
@@ -145,11 +92,11 @@ export async function fetchHomepageContent(): Promise<HomepageData> {
         closingSubtitle: content.closingSubtitle || "",
       };
     }
-  } catch (dbError) {
-    console.error("fetchHomepageContent DB fallback error:", dbError);
+  } catch (error) {
+    console.error("fetchHomepageContent DB error:", error);
   }
 
-  // Last resort: empty
+  // Fallback: empty values (homepage akan render dengan empty state)
   return {
     heroEyebrow: "",
     heroTitle: "",
