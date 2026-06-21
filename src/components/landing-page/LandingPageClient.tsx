@@ -62,21 +62,30 @@ function getIcon(name: string) {
 }
 
 // ─── Build WhatsApp link with pre-fill + UTM ───
-function buildWaLink(whatsappNumber: string, utmSource = "lp_jual_laptop_bekas") {
+// utmSource default ke parent LP. Untuk LP anak, pass utmSource dari page.tsx.
+// messageText default ke generic "mau jual laptop bekas". Untuk LP anak yang
+// punya konteks beda (macbook, gaming, dll), pass messageText custom.
+function buildWaLink(
+  whatsappNumber: string,
+  utmSource = "lp_jual_laptop_bekas",
+  messageText = "Halo, saya mau jual laptop bekas. Saya lampirkan foto dan spek."
+) {
   const cleanNumber = (whatsappNumber || "").replace(/[^0-9]/g, "");
-  const message = encodeURIComponent(
-    "Halo, saya mau jual laptop bekas. Saya lampirkan foto dan spek."
-  );
+  const message = encodeURIComponent(messageText);
   return `https://wa.me/${cleanNumber}?text=${message}&utm_source=${utmSource}&utm_medium=organic&utm_campaign=supply_acquisition`;
 }
 
 interface LandingPageClientProps {
   content: LandingPageData;
+  /** UTM source untuk WA link tracking. Default: lp_jual_laptop_bekas (parent) */
+  utmSource?: string;
+  /** Custom WA pre-fill message. Default: generic "mau jual laptop bekas" */
+  waMessage?: string;
 }
 
-export function LandingPageClient({ content }: LandingPageClientProps) {
+export function LandingPageClient({ content, utmSource, waMessage }: LandingPageClientProps) {
   const { lokasi } = useLokasi();
-  const waLink = buildWaLink(lokasi.whatsapp);
+  const waLink = buildWaLink(lokasi.whatsapp, utmSource, waMessage);
 
   return (
     <main className="min-h-screen bg-white">

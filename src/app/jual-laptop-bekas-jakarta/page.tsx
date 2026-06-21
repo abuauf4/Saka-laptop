@@ -6,7 +6,7 @@
 
 import type { Metadata } from "next";
 import { fetchLandingPageContent } from "@/lib/landing-page-data";
-import { LandingPageClient } from "./LandingPageClient";
+import { LandingPageClient } from "@/components/landing-page/LandingPageClient";
 
 // Cache di edge/CDN selama 5 menit (sama dengan homepage).
 // LP content gak berubah tiap menit, jadi caching ngurangin TTFB drastis.
