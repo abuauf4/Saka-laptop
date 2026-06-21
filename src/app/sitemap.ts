@@ -12,11 +12,45 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily",
       priority: 1,
     },
+    // ─── Landing Pages (supply acquisition) ───
+    // Parent LP (CMS-driven, paling penting)
+    {
+      url: `${baseUrl}/jual-laptop-bekas-jakarta`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    // 4 LP anak (hardcoded copy, target keyword spesifik)
+    {
+      url: `${baseUrl}/jual-macbook-bekas-jakarta`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/jual-laptop-gaming-bekas`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/tukar-tambah-laptop`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/jual-laptop-kantor-bekas`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    // ─── Other static pages ───
     {
       url: `${baseUrl}/tentang`,
       lastModified: new Date(),
       changeFrequency: "monthly",
-      priority: 0.8,
+      priority: 0.7,
     },
     {
       url: `${baseUrl}/artikel`,
