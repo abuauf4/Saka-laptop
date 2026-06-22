@@ -30,10 +30,10 @@ export function LpHeroSection({ content, lokasi, waMessage }: LpHeroSectionProps
 
   return (
     <section className="relative min-h-[85vh] flex items-end overflow-hidden border-b border-border">
-      {/* Background image — pakai heroImage dari HomepageContent default (reuse dari homepage) */}
+      {/* Background image — pakai hero image lokal (same untuk semua LP, brand consistency) */}
       <div className="absolute inset-0 z-0">
         <img
-          src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=1920&q=90"
+          src="/hero-laptop-inspeksi.webp"
           alt="Teknisi Jakarta Laptops sedang inspeksi laptop bekas"
           className="w-full h-full object-cover object-center"
         />
