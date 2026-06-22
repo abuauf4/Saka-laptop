@@ -102,13 +102,13 @@ export function HardcodedArticle({ article }: HardcodedArticleProps) {
             <article
               className="prose prose-slate max-w-none
                 prose-headings:font-bold prose-headings:tracking-tight
-                prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-5 prose-h2:scroll-mt-20
-                prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3 prose-h3:scroll-mt-20
-                prose-p:text-foreground prose-p:leading-relaxed prose-p:my-5
+                prose-h2:text-2xl prose-h2:mt-14 prose-h2:mb-5 prose-h2:scroll-mt-20
+                prose-h3:text-xl prose-h3:mt-10 prose-h3:mb-3 prose-h3:scroll-mt-20
+                prose-p:text-foreground prose-p:leading-relaxed prose-p:my-6
                 prose-a:text-primary prose-a:underline
                 prose-strong:font-semibold
-                prose-ul:my-5 prose-li:my-2 prose-ul:leading-relaxed
-                prose-ol:my-5 prose-ol:leading-relaxed
+                prose-ul:my-6 prose-li:my-2 prose-ul:leading-relaxed
+                prose-ol:my-6 prose-ol:leading-relaxed
                 prose-blockquote:border-l-primary prose-blockquote:text-muted-foreground"
               dangerouslySetInnerHTML={{ __html: article.content }}
             />
