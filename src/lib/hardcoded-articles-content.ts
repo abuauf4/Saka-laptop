@@ -211,101 +211,138 @@ export const LAPTOP_JAKARTA_ARTICLE: HardcodedArticleContent = {
 // ─── 3. /laptop-binus ───
 export const LAPTOP_BINUS_ARTICLE: HardcodedArticleContent = {
   category: "Tips Mahasiswa",
-  title: "Laptop Binus: Tips Jual Laptop Bekas untuk Mahasiswa Binus Jakarta",
+  title: "Jual Laptop Bekas untuk Mahasiswa Binus Jakarta",
   excerpt:
-    "Mahasiswa Binus yang lulus atau upgrade laptop? Panduan jual laptop bekas dengan harga terbaik, area pickup dekat kampus Binus, dan tips khusus untuk mahasiswa.",
+    "Panduan lengkap jual laptop bekas untuk mahasiswa Binus Jakarta — area pickup dekat kampus, brand yang diterima, tips persiapan, dan proses estimasi harga yang transparan.",
   content: `
-<p>Lulus Binus. Tau-tau laptop kuliah cuma numpuk debu di kamar.</p>
+<p>Mahasiswa Binus sering melakukan upgrade laptop saat memasuki dunia kerja, berganti kebutuhan perkuliahan, atau membutuhkan perangkat yang lebih sesuai dengan bidang yang ditekuni. Daripada laptop lama hanya tersimpan dan tidak terpakai, menjualnya bisa menjadi pilihan yang lebih bermanfaat.</p>
 
-<p>Cerita klasik. Mahasiswa lulus, dapat kerjaan, dapet laptop kantor dari kantor baru. Laptop lama cuma dipakai buat nonton Netflix. Sayang banget kan? Itu aset yang masih bernilai.</p>
+<h2>Kenapa Mahasiswa Binus Menjual Laptop Bekas?</h2>
 
-<p>Artikel ini buat kamu mahasiswa Binus yang mau jual laptop bekas. Kita bahas kapan waktu yang tepat jual, area pickup dekat kampus, brand yang biasa dipakai mahasiswa Binus, sampai tips dapet harga lebih tinggi.</p>
+<p>Ada beberapa kondisi yang umum membuat mahasiswa Binus memutuskan untuk menjual laptop lama mereka, antara lain:</p>
 
-<h2>Kenapa Mahasiswa Binus Butuh Jual Laptop Bekas?</h2>
-<p>Bukan cuma saat lulus. Ada beberapa momen mahasiswa Binus biasanya jual laptop lama:</p>
 <ul>
-  <li><strong>Lulus kuliah</strong> — laptop kuliah ganti dengan laptop kerja (biasanya ThinkPad/Latitude)</li>
-  <li><strong>Upgrade spesifikasi</strong> — pindah ke MacBook atau laptop gaming</li>
-  <li><strong>Tugas akhir / skripsi selesai</strong> — laptop berat diganti yang lebih portabel</li>
-  <li><strong>Internship / magang</strong> — dapat laptop kantor, laptop pribadi dijual</li>
-  <li><strong>Butuh duit cepat</strong> — jual laptop untuk modal lain</li>
+  <li>Lulus kuliah dan beralih ke laptop kerja yang lebih sesuai kebutuhan profesional.</li>
+  <li>Upgrade ke perangkat dengan spesifikasi yang lebih tinggi, seperti MacBook atau laptop gaming terbaru.</li>
+  <li>Setelah tugas akhir atau skripsi selesai dan membutuhkan perangkat yang lebih ringan serta portabel.</li>
+  <li>Mendapat fasilitas laptop dari tempat magang atau perusahaan.</li>
+  <li>Ingin mengalihkan dana ke kebutuhan atau investasi lainnya.</li>
 </ul>
-
-<p>Apapun alasannya, prosesnya harus simpel. Kamu fokus kuliah atau kerja, bukan pusing negosiasi harga laptop.</p>
 
 <h2>Area Pickup Dekat Kampus Binus</h2>
-<p>Jakarta Laptops melayani pickup di area kampus Binus Jakarta:</p>
+
+<p>Jakarta Laptops melayani penjemputan laptop di berbagai area kampus Binus Jakarta, antara lain:</p>
+
 <ul>
-  <li><strong>Binus Kemanggisan</strong> (Jakarta Barat) — pickup gratis di area ini</li>
-  <li><strong>Binus Bekasi</strong> (Summarecon Mal Bekasi) — pickup gratis</li>
-  <li><strong>Binus Alam Sutera</strong> (Tangerang) — pickup gratis</li>
-  <li><strong>Binus Senayan</strong> (Jakarta Pusat) — pickup gratis</li>
+  <li>Binus Kemanggisan (Jakarta Barat)</li>
+  <li>Binus Bekasi (Summarecon Bekasi)</li>
+  <li>Binus Alam Sutera (Tangerang)</li>
+  <li>Binus Senayan (Jakarta Pusat)</li>
 </ul>
 
-<p>Untuk laptop dengan estimasi di atas Rp 2 juta, pickup gratis. Tinggal chat WhatsApp. Kasih alamat. Tim kami jemput.</p>
+<p>Prosesnya mudah. Cukup kirim informasi laptop melalui WhatsApp, lalu tim kami akan membantu mengatur proses penjemputan sesuai lokasi dan jadwal yang tersedia.</p>
 
-<h2>Brand Laptop yang Biasa Dipakai Mahasiswa Binus</h2>
-<p>Berdasarkan pengalaman kami, mahasiswa Binus biasanya pakai:</p>
+<h2>Brand Laptop yang Umum Digunakan Mahasiswa Binus</h2>
+
+<p>Beberapa merek laptop yang sering digunakan mahasiswa Binus dan dapat kami terima antara lain:</p>
+
 <ul>
-  <li><strong>MacBook Air M1/M2</strong> — populer untuk desain & programming</li>
-  <li><strong>Asus ROG / TUF</strong> — gaming + tugas berat</li>
-  <li><strong>Lenovo Legion / IdeaPad Gaming</strong> — value gaming</li>
-  <li><strong>Acer Predator / Nitro</strong> — alternatif gaming</li>
-  <li><strong>Lenovo ThinkPad</strong> — untuk programming & multitasking</li>
-  <li><strong>HP Pavilion / Envy</strong> — multimedia & desain</li>
-  <li><strong>Dell XPS</strong> — premium untuk programming</li>
+  <li>MacBook Air dan MacBook Pro</li>
+  <li>Asus ROG dan Asus TUF</li>
+  <li>Lenovo Legion dan IdeaPad Gaming</li>
+  <li>Acer Predator dan Acer Nitro</li>
+  <li>Lenovo ThinkPad</li>
+  <li>HP Pavilion dan HP Envy</li>
+  <li>Dell XPS</li>
+  <li>MSI Gaming Series</li>
 </ul>
 
-<p>Semua brand di atas diterima Jakarta Laptops dengan harga kompetitif.</p>
+<p>Laptop dari berbagai merek dan seri lainnya juga dapat kami bantu evaluasi.</p>
 
-<h2>Tips Jual Laptop Bekas untuk Mahasiswa Binus</h2>
-<p>Sebelum jual, lakukan ini. Bukan cuma formalitas — beneran ngaruh ke estimasi.</p>
-<ol>
-  <li><strong>Backup tugas kuliah</strong> — pindah ke Google Drive atau external HDD</li>
-  <li><strong>Sign out dari akun kampus</strong> — Binusmaya, Microsoft 365 Binus, Adobe Creative Cloud (kalau pakai akun student)</li>
-  <li><strong>Reset factory</strong> — hapus semua data pribadi</li>
-  <li><strong>Kumpulkan kelengkapan</strong> — charger, box, struk beli (kalau ada, bisa bantu naik harga)</li>
-  <li><strong>Cek kondisi</strong> — catat cacat (ret, ngedrop, keyboard bermasalah) sebelum inspeksi</li>
-</ol>
+<h2>Tips Sebelum Menjual Laptop Bekas</h2>
 
-<p>Lupa backup data? Bisa berhari-hari kamu urus. Lupa sign out akun Binusmaya? Bisa kena lock dari IT kampus. Skip step ini = masalah besar.</p>
+<p>Agar proses penjualan berjalan lebih lancar, lakukan beberapa langkah berikut:</p>
 
-<h2>Estimasi Harga Laptop Mahasiswa Binus</h2>
-<p>Harga laptop bekas ditentukan oleh banyak faktor — brand, model, tahun, spesifikasi, kondisi fisik, sampai kelengkapan. Tidak ada harga patokan tetap karena setiap unit unik.</p>
+<h3>1. Backup Data Penting</h3>
 
-<p>Yang paling ngaruh ke estimasi harga:</p>
+<p>Pastikan seluruh tugas kuliah, dokumen, foto, dan file penting sudah dipindahkan ke cloud storage atau media penyimpanan lainnya.</p>
+
+<h3>2. Keluar dari Akun Pribadi</h3>
+
+<p>Lakukan sign out dari seluruh akun yang masih terhubung, seperti:</p>
+
 <ul>
-  <li><strong>Kondisi fisik</strong> — mulus, ret, ngezdrop, atau rusak berat</li>
-  <li><strong>Kelengkapan</strong> — box + charger lengkap bisa naikkan estimasi</li>
-  <li><strong>Tahun produksi</strong> — makin baru makin tinggi</li>
-  <li><strong>Spesifikasi</strong> — RAM, SSD, GPU (untuk laptop gaming)</li>
-  <li><strong>Pasar</strong> — tren supply & demand bulan berjalan</li>
+  <li>Microsoft 365</li>
+  <li>Google Account</li>
+  <li>Adobe Creative Cloud</li>
+  <li>Akun kampus dan layanan akademik lainnya</li>
 </ul>
 
-<p>Untuk dapat estimasi akurat sesuai kondisi laptop kamu, kirim foto via WhatsApp. Tim kami berikan estimasi dalam 1-2 jam berdasarkan inspeksi foto, tanpa biaya, tanpa komitmen.</p>
+<h3>3. Reset Laptop</h3>
 
-<h2>Proses Jual Laptop untuk Mahasiswa Binus</h2>
-<p>Sama dengan customer lain — simpel 4 langkah.</p>
-<ol>
-  <li><strong>Chat WhatsApp</strong> — kirim foto laptop + spek</li>
-  <li><strong>Dapat estimasi</strong> dalam 1-2 jam</li>
-  <li><strong>Pickup / antar</strong> — pickup gratis di area kampus Binus untuk laptop di atas Rp 2 juta</li>
-  <li><strong>Inspeksi & bayar</strong> — 30-60 menit, bayar spot setelah deal</li>
-</ol>
+<p>Lakukan factory reset untuk menghapus data pribadi sebelum laptop diperiksa atau berpindah tangan.</p>
 
-<h2>Tips Dapat Harga Lebih Tinggi untuk Mahasiswa Binus</h2>
-<p>Beberapa trik khusus buat mahasiswa:</p>
+<h3>4. Siapkan Kelengkapan</h3>
+
+<p>Charger, box, kartu garansi, atau bukti pembelian dapat membantu proses verifikasi perangkat.</p>
+
+<h3>5. Informasikan Kondisi Laptop</h3>
+
+<p>Sampaikan kondisi laptop secara jujur, termasuk jika terdapat lecet, kerusakan fisik, kendala baterai, keyboard, layar, atau komponen lainnya.</p>
+
+<h2>Bagaimana Estimasi Nilai Laptop Ditentukan?</h2>
+
+<p>Setiap laptop memiliki nilai yang berbeda tergantung pada beberapa faktor berikut:</p>
+
 <ul>
-  <li><strong>Bawa Kartu Pelajar / KTM</strong> — kami kasih diskon khusus untuk mahasiswa (bisa naik estimasi 5-10%)</li>
-  <li><strong>Bawa struk beli</strong> — bukti pembelian resmi bisa naik harga</li>
-  <li><strong>Jual saat lulus</strong> — banyak mahasiswa lulus bareng, permintaan laptop refurbish naik, harga jual juga naik</li>
-  <li><strong>Bawa teman</strong> yang juga mau jual — bulk deal dapet harga lebih baik</li>
+  <li>Merek dan tipe laptop</li>
+  <li>Tahun produksi</li>
+  <li>Spesifikasi hardware (prosesor, RAM, SSD, GPU, dan lainnya)</li>
+  <li>Kondisi fisik perangkat</li>
+  <li>Kondisi fungsi dan performa</li>
+  <li>Kelengkapan unit</li>
+  <li>Kondisi pasar saat proses penjualan</li>
+</ul>
+
+<p>Karena setiap unit memiliki kondisi yang unik, estimasi akan disesuaikan berdasarkan spesifikasi dan kondisi aktual laptop.</p>
+
+<p>Untuk mendapatkan estimasi yang lebih akurat, cukup kirim foto laptop beserta spesifikasinya melalui WhatsApp. Tim kami akan melakukan pengecekan dan memberikan estimasi tanpa biaya serta tanpa kewajiban untuk menjual.</p>
+
+<h2>Proses Jual Laptop Bekas</h2>
+
+<p>Proses penjualan dibuat sesederhana mungkin:</p>
+
+<h3>1. Kirim Informasi Laptop</h3>
+
+<p>Kirim foto laptop beserta spesifikasi dan kondisi terkini melalui WhatsApp.</p>
+
+<h3>2. Terima Estimasi</h3>
+
+<p>Tim kami akan melakukan evaluasi awal berdasarkan informasi yang diberikan.</p>
+
+<h3>3. Penjemputan atau Pengantaran</h3>
+
+<p>Laptop dapat dijemput atau diantar sesuai kesepakatan.</p>
+
+<h3>4. Pemeriksaan dan Penyelesaian Transaksi</h3>
+
+<p>Setelah pemeriksaan selesai dan kedua pihak sepakat, proses transaksi dapat langsung diselesaikan.</p>
+
+<h2>Tips Agar Laptop Lebih Menarik untuk Dijual</h2>
+
+<ul>
+  <li>Bersihkan laptop sebelum difoto atau diperiksa.</li>
+  <li>Sertakan charger dan kelengkapan yang masih tersisa.</li>
+  <li>Cantumkan spesifikasi secara lengkap.</li>
+  <li>Berikan informasi kondisi perangkat secara jujur dan detail.</li>
+  <li>Siapkan bukti pembelian apabila masih tersedia.</li>
 </ul>
 
 <h2>Kesimpulan</h2>
-<p>Jual laptop bekas untuk mahasiswa Binus Jakarta gampang kalau tahu prosesnya. Pickup gratis di area kampus. Estimasi cepat via WhatsApp. Bayar spot setelah inspeksi.</p>
 
-<p>Kalau mau mulai, kirim foto laptop ke WhatsApp kami.</p>
+<p>Menjual laptop bekas bagi mahasiswa Binus Jakarta dapat dilakukan dengan mudah dan praktis. Dengan menyiapkan informasi yang lengkap serta kondisi perangkat yang jelas, proses evaluasi dan transaksi dapat berjalan lebih cepat.</p>
+
+<p>Jika ingin mengetahui estimasi sesuai tipe, spesifikasi, dan kondisi laptop yang dimiliki, cukup kirim foto serta detail perangkat melalui WhatsApp untuk mendapatkan penilaian awal.</p>
 `,
   related: RELATED_ARTICLES,
   waMessage: "Halo, saya mahasiswa Binus, mau tanya estimasi harga laptop saya.",
