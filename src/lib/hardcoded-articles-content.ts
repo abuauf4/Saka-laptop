@@ -133,7 +133,7 @@ export const LAPTOP_JAKARTA_ARTICLE: HardcodedArticleContent = {
 <h2>Tips Dapat Harga Terbaik untuk Laptop Jakarta</h2>
 <ol>
   <li><strong>Bersihkan laptop</strong> sebelum inspeksi — kotoran bikin impression jelek</li>
-  <li><strong>Bawa kelengkapan</strong> (charger, box) — bisa naik harga Rp 100-300 ribu</li>
+  <li><strong>Bawa kelengkapan</strong> (charger, box) — bisa naik estimasi harga</li>
   <li><strong>Jujur soal kondisi</strong> — cacat yang ketahuan saat QC bikin harga turun lebih</li>
   <li><strong>Pilih waktu yang tepat</strong> — akhir bulan / akhir tahun biasanya lebih bagus (perusahaan refresh device)</li>
   <li><strong>Riset harga pasar</strong> — cek OLX/Tokopedia untuk model serupa</li>
@@ -221,17 +221,16 @@ export const LAPTOP_BINUS_ARTICLE: HardcodedArticleContent = {
 </ol>
 
 <h2>Estimasi Harga Laptop Mahasiswa Binus</h2>
-<p>Beberapa contoh estimasi harga laptop bekas mahasiswa Binus (berdasarkan kondisi mulus dengan kelengkapan charger):</p>
+<p>Harga laptop bekas ditentukan oleh banyak faktor — brand, model, tahun, spesifikasi, kondisi fisik, sampai kelengkapan. Tidak ada harga patokan tetap karena setiap unit unik.</p>
+<p>Yang paling ngaruh ke estimasi harga:</p>
 <ul>
-  <li>MacBook Air M1 2020 8/256 — Rp 7-9 juta</li>
-  <li>MacBook Air M2 2022 8/256 — Rp 10-12 juta</li>
-  <li>Asus ROG Strix G15 (RTX 3050) — Rp 8-10 juta</li>
-  <li>Lenovo Legion 5 (RTX 3060) — Rp 9-11 juta</li>
-  <li>ThinkPad T480 i5 8th 16/256 — Rp 3.5-4.5 juta</li>
-  <li>Dell XPS 13 9310 i5 16/512 — Rp 8-10 juta</li>
+  <li><strong>Kondisi fisik</strong> — mulus, ret, ngezdrop, atau rusak berat</li>
+  <li><strong>Kelengkapan</strong> — box + charger lengkap bisa naikkan estimasi</li>
+  <li><strong>Tahun produksi</strong> — makin baru makin tinggi</li>
+  <li><strong>Spesifikasi</strong> — RAM, SSD, GPU (untuk laptop gaming)</li>
+  <li><strong>Pasar</strong> — tren supply & demand bulan berjalan</li>
 </ul>
-
-<p><em>Catatan: estimasi berubah sesuai kondisi pasar dan kondisi unit. Kirim foto untuk estimasi akurat.</em></p>
+<p>Untuk dapat estimasi akurat sesuai kondisi laptop kamu, kirim foto via WhatsApp. Tim kami berikan estimasi dalam 1-2 jam berdasarkan inspeksi foto, tanpa biaya, tanpa komitmen.</p>
 
 <h2>Proses Jual Laptop untuk Mahasiswa Binus</h2>
 <p>Sama dengan customer lain — simpel 4 langkah:</p>
@@ -281,7 +280,7 @@ export const JUAL_LAPTOP_ARTICLE: HardcodedArticleContent = {
   <li><strong>Tahun produksi</strong> — makin baru makin tinggi</li>
   <li><strong>Spesifikasi</strong> — RAM (8GB minimum, 16GB+ lebih laku), SSD (256GB minimum), GPU (untuk gaming)</li>
   <li><strong>Kondisi fisik</strong> — mulus > ret kecil > rusak</li>
-  <li><strong>Kelengkapan</strong> — box + charger = +Rp 100-300 ribu</li>
+  <li><strong>Kelengkapan</strong> — box + charger lengkap bisa naik estimasi</li>
 </ul>
 
 <h2>Pilih Tempat Jual Laptop</h2>
