@@ -16,6 +16,7 @@
     "db:seed": "npx tsx prisma/seed.ts",
     "db:seed-rbac": "npx tsx scripts/seed-rbac.ts",
     "db:seed-lokasi": "npx tsx scripts/seed-lokasi.ts",
+    "db:seed-articles": "npx tsx scripts/seed-hardcoded-articles.ts",
     "db:activate-cms": "npx tsx scripts/register-cms.ts",
     "db:use-postgres": "cp prisma/schema.production.prisma prisma/schema.prisma && prisma generate",
     "db:use-sqlite": "cp prisma/schema.sqlite.prisma prisma/schema.prisma && prisma generate"
