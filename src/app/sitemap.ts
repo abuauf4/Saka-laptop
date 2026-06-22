@@ -45,6 +45,38 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.8,
     },
+    // LP baru (keyword "jual laptop jakarta" broad)
+    {
+      url: `${baseUrl}/jual-laptop-jakarta`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    // ─── Hardcoded articles (SEO informational keywords) ───
+    {
+      url: `${baseUrl}/jual-laptop-bekas`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/laptop-jakarta`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/laptop-binus`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/jual-laptop`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
     // ─── Other static pages ───
     {
       url: `${baseUrl}/tentang`,
