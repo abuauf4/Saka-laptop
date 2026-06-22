@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { Calendar, ArrowLeft, ArrowRight, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatDateTime } from "@/lib/format";
@@ -41,11 +40,7 @@ export function ArticleDetailClient({
         {/* Hero */}
         <section className="border-b border-border">
           <div className="page-container py-12 md:py-16 max-w-3xl">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
+            <div className="animate-fade-in-up">
               {article.categoryName && (
                 <span className="text-xs font-semibold uppercase tracking-[0.2em] text-primary mb-3 block">
                   {article.categoryName}
@@ -59,11 +54,11 @@ export function ArticleDetailClient({
                   {article.excerpt}
                 </p>
               )}
-              <div className="flex items-center gap-2 mt-6 text-xs text-muted-foreground">
+              <div className="flex items-center gap-2 mt-6 text-xs text-muted-foreground" suppressHydrationWarning>
                 <Calendar className="h-3.5 w-3.5" />
-                {formatDateTime(article.createdAt)}
+                <span suppressHydrationWarning>{formatDateTime(article.createdAt)}</span>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 

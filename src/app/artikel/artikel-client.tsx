@@ -3,7 +3,6 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { MessageCircle, FileText, Calendar, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -94,12 +93,10 @@ export function ArtikelClient({
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filtered.map((article, i) => (
-                <motion.div
+                <div
                   key={article.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.08 }}
+                  className="animate-fade-in-up"
+                  style={{ animationDelay: `${i * 80}ms`, animationFillMode: "both" }}
                 >
                   <Link href={`/artikel/${article.slug}`}>
                     <article className="rounded-xl border border-border/50 overflow-hidden hover:border-primary/30 hover:shadow-soft-sm transition-all cursor-pointer group">
@@ -122,18 +119,20 @@ export function ArtikelClient({
                           {article.title}
                         </h2>
                         <p className="text-sm text-muted-foreground line-clamp-2">{article.excerpt}</p>
-                        <div className="flex items-center gap-2 mt-3 text-xs text-muted-foreground">
+                        <div className="flex items-center gap-2 mt-3 text-xs text-muted-foreground" suppressHydrationWarning>
                           <Calendar className="h-3 w-3" />
-                          {new Date(article.createdAt).toLocaleDateString("id-ID", {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          })}
+                          <span suppressHydrationWarning>
+                            {new Date(article.createdAt).toLocaleDateString("id-ID", {
+                              day: "numeric",
+                              month: "long",
+                              year: "numeric",
+                            })}
+                          </span>
                         </div>
                       </div>
                     </article>
                   </Link>
-                </motion.div>
+                </div>
               ))}
             </div>
           )}
