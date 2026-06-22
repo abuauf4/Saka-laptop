@@ -16,7 +16,6 @@ import { SiteFooter } from "@/components/home/site-footer";
 import { WhatsappFab } from "@/components/home/whatsapp-fab";
 import { LpHeroSection } from "./sections/lp-hero-section";
 import { LpTrustStatsSection } from "./sections/lp-trust-stats-section";
-import { LpValuePillarsSection } from "./sections/lp-value-pillars-section";
 import { LpProcessSection } from "./sections/lp-process-section";
 import { LpFaqSection } from "./sections/lp-faq-section";
 import { LpClosingCtaSection } from "./sections/lp-closing-cta-section";
@@ -60,7 +59,6 @@ export function LpPageClient({ content, waMessage }: LpPageClientProps) {
           waMessage={waMessage}
         />
         <LpTrustStatsSection content={content} />
-        <LpValuePillarsSection content={content} />
         <LpProcessSection content={content} />
         <LpFaqSection content={content} />
         <LpClosingCtaSection
