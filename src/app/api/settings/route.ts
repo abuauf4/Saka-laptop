@@ -1,6 +1,7 @@
 // ─── Jakarta Laptops — Settings API Route (with auto-migrate) ───
 
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { db } from "@/core/lib/db";
 import { requireAuth } from "@/core/lib/auth";
 
@@ -60,6 +61,9 @@ export async function PUT(request: NextRequest) {
       update: cleanBody,
       create: { id: "default", ...cleanBody },
     });
+
+    // Invalidate homepage ISR cache (TrackingScripts in layout reads settings)
+    revalidatePath("/");
 
     return NextResponse.json(settings, { headers: NO_CACHE });
   } catch (error: unknown) {

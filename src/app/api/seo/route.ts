@@ -1,6 +1,7 @@
 // ─── Nauka CMS — SEO API Route
 
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { db } from "@/core/lib/db";
 
 // Force dynamic — disable caching (editable dari admin)
@@ -41,6 +42,9 @@ export async function PUT(request: NextRequest) {
       update: body,
       create: { id: "default", ...body },
     });
+
+    // Invalidate homepage ISR cache (SEO affects layout metadata)
+    revalidatePath("/");
 
     return NextResponse.json(seo, { headers: NO_CACHE });
   } catch (error: unknown) {

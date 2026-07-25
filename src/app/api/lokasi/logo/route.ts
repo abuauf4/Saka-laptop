@@ -1,6 +1,7 @@
 import { db } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth-server";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 
 
 // Force dynamic — disable caching (editable dari admin)
@@ -42,6 +43,9 @@ export async function PUT(request: NextRequest) {
       update: { logoData: body.logoData ?? "" },
       create: { id: "default", logoData: body.logoData ?? "" },
     });
+
+    // Invalidate homepage ISR cache (logo rendered on homepage)
+    revalidatePath("/");
 
     return NextResponse.json({ logoData: logo.logoData }, { headers: NO_CACHE });
   } catch (error) {

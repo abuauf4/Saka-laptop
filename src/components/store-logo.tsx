@@ -7,7 +7,7 @@ import { SkeletonBox } from "@/components/skeleton-home";
  * Renders the store logo from database (StoreLogo table).
  * Shows skeleton until loaded — NO default logo fallback.
  *
- * Cache strategy: timestamp in URL + no-store + no-cache headers
+ * Cache strategy: browser cache with normal fetch (no cache-busting)
  */
 export function StoreLogo({
   className = "h-9 w-9 rounded-xl object-cover",
@@ -22,10 +22,7 @@ export function StoreLogo({
   useEffect(() => {
     async function fetchLogo() {
       try {
-        const res = await fetch(`/api/lokasi/logo?t=${Date.now()}`, {
-          cache: "no-store",
-          headers: { "Cache-Control": "no-cache", Pragma: "no-cache" },
-        });
+        const res = await fetch("/api/lokasi/logo");
         if (res.ok) {
           const data = await res.json();
           if (data.logoData) {
@@ -33,8 +30,7 @@ export function StoreLogo({
             if (logoSrc.startsWith("data:")) {
               setSrc(logoSrc);
             } else {
-              const sep = logoSrc.includes("?") ? "&" : "?";
-              setSrc(`${logoSrc}${sep}t=${Date.now()}`);
+              setSrc(logoSrc);
             }
           }
           // If no logoData, src stays null → keep showing skeleton

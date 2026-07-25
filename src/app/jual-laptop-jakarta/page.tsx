@@ -144,7 +144,8 @@ const CONTENT: LandingPageData = {
     "Estimasi cepat, proses transparan, pembayaran cepat. Pickup gratis Jabodetabek.",
 };
 
-export const revalidate = 300;
+// Static cache — content hanya berubah via admin (revalidatePath on-demand).
+export const revalidate = false;
 
 export const metadata: Metadata = {
   title: CONTENT.metaTitle,

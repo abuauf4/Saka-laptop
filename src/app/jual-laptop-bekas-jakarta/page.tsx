@@ -8,10 +8,8 @@ import type { Metadata } from "next";
 import { fetchLandingPageContent } from "@/lib/landing-page-data";
 import { LpPageClient } from "@/components/landing-page/LpPageClient";
 
-// Cache di edge/CDN selama 5 menit (sama dengan homepage).
-// LP content gak berubah tiap menit, jadi caching ngurangin TTFB drastis.
-// Admin masih bisa lihat perubahan setelah revalidate.
-export const revalidate = 300;
+// Static cache — content hanya berubah via admin (revalidatePath on-demand).
+export const revalidate = false;
 
 // ─── Dynamic metadata (pakai content dari DB) ───
 export async function generateMetadata(): Promise<Metadata> {

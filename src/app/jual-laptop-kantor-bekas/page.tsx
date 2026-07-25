@@ -5,7 +5,8 @@ import type { Metadata } from "next";
 import { KANTOR_LP_CONTENT, LP_UTM_SOURCES } from "@/lib/lp-children-content";
 import { LpPageClient } from "@/components/landing-page/LpPageClient";
 
-export const revalidate = 300;
+// Static cache — content hanya berubah via admin (revalidatePath on-demand).
+export const revalidate = false;
 
 export const metadata: Metadata = {
   title: KANTOR_LP_CONTENT.metaTitle,

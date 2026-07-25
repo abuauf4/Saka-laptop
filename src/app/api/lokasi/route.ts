@@ -1,6 +1,7 @@
 import { db } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth-server";
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 
 // Force dynamic — disable caching (lokasi editable dari admin)
 export const dynamic = "force-dynamic";
@@ -82,6 +83,9 @@ export async function PUT(request: NextRequest) {
         mapsLink: body.mapsLink || "",
       },
     });
+
+    // Invalidate homepage ISR cache (lokasi rendered on homepage)
+    revalidatePath("/");
 
     return NextResponse.json(lokasi, { headers: NO_CACHE });
   } catch (error) {

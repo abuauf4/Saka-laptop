@@ -1,6 +1,7 @@
 // ─── Jakarta Laptops — Branding API Route (no-cache)
 
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { db } from "@/core/lib/db";
 import { requireAuth } from "@/core/lib/auth";
 
@@ -47,6 +48,9 @@ export async function PUT(request: NextRequest) {
       update: body,
       create: { id: "default", ...body },
     });
+
+    // Invalidate homepage ISR cache (branding affects layout metadata)
+    revalidatePath("/");
 
     return NextResponse.json(branding, { headers: NO_CACHE_HEADERS });
   } catch (error: unknown) {
