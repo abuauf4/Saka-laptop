@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X, MessageCircle } from "lucide-react";
+import { Menu, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import type { LokasiData } from "@/data/homepage-static";
@@ -117,21 +117,13 @@ export function SiteHeader({
 
       <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
         <SheetContent className="w-[300px] bg-background border-border p-0">
-          <div className="flex items-center justify-between border-b border-border px-4 h-16">
-            <div className="flex items-center gap-2">
-              <img
-                src={logoSrc}
-                alt={namaToko || "Logo"}
-                className="h-8 w-8 rounded-lg object-cover"
-              />
-              <span className="font-semibold">{namaToko}</span>
-            </div>
-            <button
-              onClick={() => setMenuOpen(false)}
-              className="flex h-8 w-8 items-center justify-center rounded-lg hover:bg-muted"
-            >
-              <X className="h-4 w-4" />
-            </button>
+          <div className="flex items-center gap-2 border-b border-border px-4 h-16">
+            <img
+              src={logoSrc}
+              alt={namaToko || "Logo"}
+              className="h-8 w-8 rounded-lg object-cover"
+            />
+            <span className="font-semibold">{namaToko}</span>
           </div>
           <nav className="flex flex-col p-4 gap-1">
             {menuLinks.map((link) => (
