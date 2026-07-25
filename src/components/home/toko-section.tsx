@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { HomepageData } from "@/lib/homepage-data";
+import type { HomepageData } from "@/data/homepage-static";
 
 export function TokoSection({ homepage }: { homepage: HomepageData }) {
   return (

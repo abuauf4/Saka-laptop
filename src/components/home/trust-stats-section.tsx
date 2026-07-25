@@ -1,4 +1,4 @@
-import type { HomepageData } from "@/lib/homepage-data";
+import type { HomepageData } from "@/data/homepage-static";
 
 const FALLBACK_STATS = [
   {

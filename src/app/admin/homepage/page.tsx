@@ -178,6 +178,20 @@ export default function HomepageEditorPage() {
 
   return (
     <div className="min-h-full bg-background">
+      {/* Deprecation Notice */}
+      <div className="border-b-4 border-amber-500 bg-amber-50 dark:bg-amber-950/30">
+        <div className="page-container py-3">
+          <p className="text-sm font-semibold text-amber-800 dark:text-amber-200 flex items-center gap-2">
+            <span className="inline-block h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
+            Homepage Sudah Fully Static — Editor Ini Tidak Lagi Berpengaruh
+          </p>
+          <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
+            Homepage sekarang menggunakan data dari <code className="bg-amber-100 dark:bg-amber-900 px-1 rounded">src/data/homepage-static.ts</code>. 
+            Perubahan di sini tidak akan terlihat di homepage publik. Untuk mengubah homepage, edit file static tersebut langsung di kode.
+          </p>
+        </div>
+      </div>
+
       {/* Header */}
       <div className="border-b border-border/40 bg-card/30 sticky top-0 z-10 backdrop-blur-md">
         <div className="page-container py-4 flex items-center justify-between gap-4">
@@ -185,6 +199,7 @@ export default function HomepageEditorPage() {
             <h1 className="text-xl font-bold flex items-center gap-2">
               <Home className="h-5 w-5 text-primary" />
               Homepage Editor
+              <span className="text-xs font-normal text-muted-foreground bg-muted px-2 py-0.5 rounded-full">Deprecated</span>
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
               Edit semua section homepage dari sini

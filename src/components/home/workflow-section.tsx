@@ -1,4 +1,4 @@
-import type { HomepageData } from "@/lib/homepage-data";
+import type { HomepageData } from "@/data/homepage-static";
 
 export function WorkflowSection({
   homepage,

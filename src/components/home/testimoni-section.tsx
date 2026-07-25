@@ -1,4 +1,4 @@
-import type { TestimoniData } from "@/lib/homepage-data";
+import type { TestimoniData } from "@/data/homepage-static";
 
 export function TestimoniSection({
   testimoni,

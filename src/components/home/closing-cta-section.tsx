@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { MessageCircle, ArrowRight } from "lucide-react";
-import type { HomepageData, LokasiData } from "@/lib/homepage-data";
+import type { HomepageData, LokasiData } from "@/data/homepage-static";
 import { buildWaLink } from "./shared";
 
 export function ClosingCtaSection({

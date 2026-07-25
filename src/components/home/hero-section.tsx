@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, ShieldCheck, Eye, Clock } from "lucide-react";
-import type { LokasiData, HomepageData } from "@/lib/homepage-data";
+import type { LokasiData, HomepageData } from "@/data/homepage-static";
 import { buildWaLink } from "./shared";
 
 export function HeroSection({
