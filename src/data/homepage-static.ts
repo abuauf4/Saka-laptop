@@ -212,8 +212,8 @@ export const LOKASI: LokasiData = {
   foto: "/assets/homepage/logo.svg",
   alamat:
     "Jl. Salam 3, RT.10/RW.3, Kb. Jeruk, Kec. Kb. Jeruk, Kota Jakarta Barat, Daerah Khusus Ibukota Jakarta 11530",
-  telepon: "+6287816086261",
-  whatsapp: "6287816086261",
+  telepon: "+62881010302510",
+  whatsapp: "62881010302510",
   jamWeekday: "Senin - Sabtu: 09.00 - 21.00 WIB",
   jamWeekend: "Minggu: 10.00 - 18.00 WIB",
   mapsLink: "https://maps.app.goo.gl/bENhSKVVmPKcfAeq9?g_st=ac",
