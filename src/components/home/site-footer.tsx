@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Phone, MessageCircle, MapPin, Clock } from "lucide-react";
-import type { LokasiData } from "@/lib/homepage-data";
+import type { LokasiData } from "@/data/homepage-static";
 import { buildWaLink, resolveLogo } from "./shared";
 
 const footerLinks = [

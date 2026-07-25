@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import type { LokasiData } from "@/lib/homepage-data";
+import type { LokasiData } from "@/data/homepage-static";
 import { buildWaLink } from "./shared";
 
 /**

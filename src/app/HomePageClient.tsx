@@ -1,6 +1,6 @@
 "use client";
 
-import type { HomepageData, LokasiData, TestimoniData } from "@/lib/homepage-data";
+import type { HomepageData, LokasiData, TestimoniData } from "@/data/homepage-static";
 import { SiteHeader } from "@/components/home/site-header";
 import { HeroSection } from "@/components/home/hero-section";
 import { TrustStatsSection } from "@/components/home/trust-stats-section";

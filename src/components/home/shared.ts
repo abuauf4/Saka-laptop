@@ -1,5 +1,5 @@
 // ─── Shared helpers for homepage sections ───
-import type { LokasiData } from "@/lib/homepage-data";
+import type { LokasiData } from "@/data/homepage-static";
 
 /** Build wa.me link with prefilled message. */
 export function buildWaLink(lokasi: LokasiData): string {

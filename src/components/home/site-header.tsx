@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Menu, X, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
-import type { LokasiData } from "@/lib/homepage-data";
+import type { LokasiData } from "@/data/homepage-static";
 import { buildWaLink, resolveLogo } from "./shared";
 
 const menuLinks = [

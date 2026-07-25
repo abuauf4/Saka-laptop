@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import type { HomepageData } from "@/lib/homepage-data";
+import type { HomepageData } from "@/data/homepage-static";
 
 export function FaqSection({ homepage }: { homepage: HomepageData }) {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
