@@ -19,7 +19,7 @@ export interface HomepageData {
   brandPoints: { icon: string; title: string; desc: string }[];
   workflowStages: { n: string; title: string; desc: string }[];
   tokoPhotos: { src: string; alt: string; label: string }[];
-  deviceCategories: { label: string; emoji: string }[];
+  deviceCategories: { label: string }[];
   faqs: { q: string; a: string }[];
   closingTitle: string;
   closingSubtitle: string;
@@ -131,30 +131,45 @@ export const HOMEPAGE_CONTENT: HomepageData = {
       label: "Pembongkaran",
     },
     {
-      src: "/assets/homepage/toko-qc-detail.jpg",
+      src: "/assets/homepage/toko-tertata-rapih.webp",
       alt: "Pengecekan komponen dengan multimeter",
       label: "Tertata Rapih",
     },
     {
-      src: "/assets/homepage/toko-tes-fungsi.jpg",
+      src: "/assets/homepage/toko-photo-2.webp",
       alt: "Tes layar dan keyboard",
       label: "",
     },
     {
-      src: "/assets/homepage/toko-meja-kerja.jpg",
-      alt: "Meja kerja teknisi dengan tools lengkap",
+      src: "/assets/homepage/toko-photo-3.webp",
+      alt: "Jual laptop",
+      label: "",
+    },
+    {
+      src: "/assets/homepage/toko-photo-4.webp",
+      alt: "Jual Macbook",
+      label: "",
+    },
+    {
+      src: "/assets/homepage/toko-photo-5.webp",
+      alt: "Aktivitas toko",
+      label: "",
+    },
+    {
+      src: "/assets/homepage/toko-photo-6.webp",
+      alt: "Aktivitas toko",
       label: "",
     },
   ],
 
   deviceCategories: [
-    { label: "Laptop Kantor", emoji: "\uD83D\uDCBC" },
-    { label: "Laptop Gaming", emoji: "\uD83C\uDFAE" },
-    { label: "MacBook", emoji: "\uD83C\uDF4E" },
-    { label: "Workstation", emoji: "\uD83D\uDDA5\uFE0F" },
-    { label: "Komputer", emoji: "\uD83D\uDDA5\uFE0F" },
-    { label: "Monitor", emoji: "\uD83D\uDDFA\uFE0F" },
-    { label: "Aset IT Kantor", emoji: "\uD83D\uDDE3\uFE0F" },
+    { label: "Laptop Kantor" },
+    { label: "Laptop Gaming" },
+    { label: "MacBook" },
+    { label: "Workstation" },
+    { label: "Komputer" },
+    { label: "Monitor" },
+    { label: "Aset IT Kantor" },
   ],
 
   faqs: [
@@ -222,8 +237,7 @@ export const LOKASI: LokasiData = {
 };
 
 // ─── Logo (migrated from StoreLogo DB singleton) ───
-// DB had empty logoData — fallback to local SVG logo.
-export const LOGO = "/assets/homepage/logo.svg";
+export const LOGO = "/assets/homepage/logo.jpg";
 
 // ─── Testimoni (migrated from Testimoni DB table) ───
 export const TESTIMONI: TestimoniData[] = [
