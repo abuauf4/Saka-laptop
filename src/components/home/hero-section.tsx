@@ -16,7 +16,7 @@ export function HeroSection({
   const heroTitle = homepage.heroTitle;
 
   return (
-    <section className="relative min-h-screen flex items-end overflow-hidden">
+    <section className="relative min-h-screen flex items-end overflow-x-hidden overflow-y-hidden">
       <div className="absolute inset-0 z-0">
         <Image
           src={homepage.heroImage}

@@ -31,12 +31,11 @@ export function WhatsappFab({ lokasi }: { lokasi: LokasiData }) {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Ajukan via WhatsApp"
-      className={`fixed bottom-5 right-5 z-50 flex items-center gap-3 rounded-full bg-[#25D366] text-white shadow-lg hover:bg-[#1ebe5a] hover:shadow-xl active:scale-95 transition-all duration-300 ${
+      className={`fixed bottom-5 right-5 z-50 flex items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg hover:bg-[#1ebe5a] hover:shadow-xl active:scale-95 transition-all duration-300 sm:gap-3 sm:px-5 sm:py-3 w-14 h-14 sm:w-auto sm:h-auto ${
         visible
           ? "opacity-100 translate-y-0 pointer-events-auto"
           : "opacity-0 translate-y-4 pointer-events-none"
       }`}
-      style={{ padding: "12px 20px 12px 14px" }}
     >
       <svg
         viewBox="0 0 24 24"
