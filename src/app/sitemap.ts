@@ -1,6 +1,11 @@
 import { MetadataRoute } from "next";
 import { db } from "@/core/lib/db";
 
+// Stable date for static pages — sitemap output must be deterministic
+// so it doesn't produce a different response on every request.
+// Note: this only affects the sitemap XML itself, not other pages.
+const SITE_LAST_MODIFIED = new Date("2025-07-25");
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://jakartalaptops.com";
 
@@ -8,7 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}/`,
-      lastModified: new Date(),
+      lastModified: SITE_LAST_MODIFIED,
       changeFrequency: "daily",
       priority: 1,
     },
@@ -16,58 +21,58 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Parent LP (CMS-driven, paling penting)
     {
       url: `${baseUrl}/jual-laptop-bekas-jakarta`,
-      lastModified: new Date(),
+      lastModified: SITE_LAST_MODIFIED,
       changeFrequency: "weekly",
       priority: 0.9,
     },
     // 4 LP anak (hardcoded copy, target keyword spesifik)
     {
       url: `${baseUrl}/jual-macbook-bekas-jakarta`,
-      lastModified: new Date(),
+      lastModified: SITE_LAST_MODIFIED,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${baseUrl}/jual-laptop-gaming-bekas`,
-      lastModified: new Date(),
+      lastModified: SITE_LAST_MODIFIED,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${baseUrl}/tukar-tambah-laptop`,
-      lastModified: new Date(),
+      lastModified: SITE_LAST_MODIFIED,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${baseUrl}/jual-laptop-kantor-bekas`,
-      lastModified: new Date(),
+      lastModified: SITE_LAST_MODIFIED,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     // LP baru (keyword "jual laptop jakarta" broad)
     {
       url: `${baseUrl}/jual-laptop-jakarta`,
-      lastModified: new Date(),
+      lastModified: SITE_LAST_MODIFIED,
       changeFrequency: "weekly",
       priority: 0.9,
     },
     // ─── Other static pages ───
     {
       url: `${baseUrl}/tentang`,
-      lastModified: new Date(),
+      lastModified: SITE_LAST_MODIFIED,
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
       url: `${baseUrl}/artikel`,
-      lastModified: new Date(),
+      lastModified: SITE_LAST_MODIFIED,
       changeFrequency: "weekly",
       priority: 0.7,
     },
   ];
 
-  // Dynamic article pages
+  // Dynamic article pages — use updatedAt from DB (stable per article)
   let articlePages: MetadataRoute.Sitemap = [];
   try {
     const articles = await db.article.findMany({

@@ -14,8 +14,8 @@ const content: LandingPageData = {
   // heroPrimaryCta & heroSecondaryCta tetap sama, yang beda utm di client component
 };
 
-// ISR 5 menit (sama dengan parent)
-export const revalidate = 300;
+// Static cache — content hanya berubah via admin (revalidatePath on-demand).
+export const revalidate = false;
 
 export const metadata: Metadata = {
   title: MACBOOK_LP_CONTENT.metaTitle,

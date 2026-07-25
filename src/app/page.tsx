@@ -13,11 +13,9 @@ import {
 } from "@/lib/homepage-data";
 import { HomePageClient } from "./HomePageClient";
 
-// Cache di edge/CDN selama 5 menit. Homepage content gak berubah tiap menit,
-// jadi caching 5 menit ngurangin TTFB drastis (~500ms → ~50ms di Vercel).
-// Admin masih bisa langsung lihat perubahan setelah revalidate.
-// Set `dynamic = "force-dynamic"` untuk disable caching completely.
-export const revalidate = 300;
+// Static cache — content hanya berubah via admin (revalidatePath on-demand).
+// Tidak ada timer-based ISR write. Revalidation hanya dipicu saat admin save.
+export const revalidate = false;
 
 export default async function HomePage() {
   // Fetch semua data di server, parallel

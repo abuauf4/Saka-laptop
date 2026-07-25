@@ -5,6 +5,7 @@
 // Cache strategy: no-store (admin bisa edit real-time)
 
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { db } from "@/lib/prisma";
 import { requireAuth } from "@/lib/auth-server";
 import {
@@ -146,6 +147,9 @@ export async function PUT(request: NextRequest) {
       update: data,
       create: data,
     });
+
+    // Invalidate parent landing page ISR cache
+    revalidatePath("/jual-laptop-bekas-jakarta");
 
     return NextResponse.json({
       message: "Landing page content updated",

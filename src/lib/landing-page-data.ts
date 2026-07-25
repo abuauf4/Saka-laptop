@@ -6,6 +6,7 @@
 // Fallback ke DEFAULT_LP_CONTENT kalau DB belum di-seed.
 
 import { db } from "@/lib/prisma";
+import { cache } from "react";
 
 // ─── Types ───
 export interface ValuePillar {
@@ -232,9 +233,9 @@ function parseJsonField<T>(raw: string | null | undefined, fallback: T): T {
 }
 
 // ─── Fetch Landing Page Content (server-side, direct Prisma) ───
-// Selalu return data dengan fallback ke DEFAULT_LP_CONTENT.
-// Cache: no-store (admin bisa edit real-time).
-export async function fetchLandingPageContent(): Promise<LandingPageData> {
+// Wrapped in React.cache() to deduplicate when called by both
+// generateMetadata() and Page component in the same render pass.
+export const fetchLandingPageContent = cache(async function fetchLandingPageContent(): Promise<LandingPageData> {
   try {
     const content = await db.landingPageContent.findUnique({
       where: { id: "default" },
@@ -280,4 +281,4 @@ export async function fetchLandingPageContent(): Promise<LandingPageData> {
     console.error("[landing-page-data] fetch error, using defaults:", error);
     return DEFAULT_LP_CONTENT;
   }
-}
+});

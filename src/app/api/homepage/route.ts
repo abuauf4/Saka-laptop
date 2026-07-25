@@ -6,6 +6,7 @@
 // Karena content editable dari admin, gak boleh di-cache di edge.
 
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { db } from "@/core/lib/db";
 import { requireAuth } from "@/core/lib/auth";
 
@@ -192,6 +193,9 @@ export async function PUT(request: NextRequest) {
       update: data,
       create: data,
     });
+
+    // Invalidate homepage ISR cache
+    revalidatePath("/");
 
     return NextResponse.json({
       message: "Homepage content updated",

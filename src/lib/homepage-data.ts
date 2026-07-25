@@ -7,6 +7,7 @@
 // rendering, konflik dengan ISR revalidate=300 di homepage.
 
 import { db as dbLegacy } from "@/lib/prisma";
+import { cache } from "react";
 
 // ─── Types ───
 export interface HomepageData {
@@ -65,10 +66,9 @@ function parseJson<T>(raw: string | null | undefined, fallback: T): T {
 }
 
 // ─── Fetch Homepage Content (server-side, direct Prisma query) ───
-// Direct DB query dengan fallback ke empty values.
-// Pattern ini cocok untuk ISR (revalidate=300) karena gak pakai headers()
-// atau no-store fetch yang memaksa dynamic rendering.
-export async function fetchHomepageContent(): Promise<HomepageData> {
+// Wrapped in React.cache() to deduplicate when called by both
+// generateMetadata() and Page component in the same render pass.
+export const fetchHomepageContent = cache(async function fetchHomepageContent(): Promise<HomepageData> {
   try {
     const content = await dbLegacy.homepageContent.findUnique({
       where: { id: "default" },
@@ -113,10 +113,10 @@ export async function fetchHomepageContent(): Promise<HomepageData> {
     closingTitle: "",
     closingSubtitle: "",
   };
-}
+});
 
 // ─── Fetch Lokasi (server-side) ───
-export async function fetchLokasi(): Promise<LokasiData> {
+export const fetchLokasi = cache(async function fetchLokasi(): Promise<LokasiData> {
   try {
     const lokasi = await dbLegacy.lokasi.findUnique({
       where: { id: "default" },
@@ -154,10 +154,10 @@ export async function fetchLokasi(): Promise<LokasiData> {
     lat: 0,
     lng: 0,
   };
-}
+});
 
 // ─── Fetch Logo (server-side) ───
-export async function fetchLogo(): Promise<LogoData> {
+export const fetchLogo = cache(async function fetchLogo(): Promise<LogoData> {
   try {
     const logo = await dbLegacy.storeLogo.findUnique({
       where: { id: "default" },
@@ -167,10 +167,10 @@ export async function fetchLogo(): Promise<LogoData> {
     console.error("fetchLogo error:", error);
     return { logoData: "" };
   }
-}
+});
 
 // ─── Fetch Testimoni (server-side) ───
-export async function fetchTestimoni(): Promise<TestimoniData[]> {
+export const fetchTestimoni = cache(async function fetchTestimoni(): Promise<TestimoniData[]> {
   try {
     // Note: Testimoni model has no `createdAt` field, so we don't orderBy it.
     // Sort in-memory by rating desc (highest rating first) for a nicer display.
@@ -190,4 +190,4 @@ export async function fetchTestimoni(): Promise<TestimoniData[]> {
     console.error("fetchTestimoni error:", error);
     return [];
   }
-}
+});
