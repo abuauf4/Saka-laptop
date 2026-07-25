@@ -51,11 +51,11 @@ export interface TestimoniData {
 
 // ─── Homepage Content (migrated from HomepageContent DB singleton) ───
 export const HOMEPAGE_CONTENT: HomepageData = {
-  heroEyebrow: "Pusat Inspeksi & Trade-in Laptop Bekas",
-  heroTitle: "Jual Laptop Bekas Tanpa Ribet.",
+  heroEyebrow: "Laptop Lamamu Masih Bernilai",
+  heroTitle: "Jual Laptop Bekasmu Tanpa Ribet.",
   heroSubtitle:
-    "Kirim foto dan spesifikasi laptop melalui WhatsApp. Tim kami akan membantu proses pengecekan dan penawaran.",
-  heroImage: "/assets/homepage/hero-laptop-inspeksi.webp",
+    "Kirim foto dan spesifikasi laptop melalui WhatsApp. Tim kami akan membantu analisa dan berikan penawaran.",
+  heroImage: "/Hero.webp",
 
   trustStats: [
     {
@@ -133,17 +133,17 @@ export const HOMEPAGE_CONTENT: HomepageData = {
     {
       src: "/assets/homepage/toko-qc-detail.jpg",
       alt: "Pengecekan komponen dengan multimeter",
-      label: "QC Detail",
+      label: "Tertata Rapih",
     },
     {
       src: "/assets/homepage/toko-tes-fungsi.jpg",
       alt: "Tes layar dan keyboard",
-      label: "Tes Fungsi",
+      label: "",
     },
     {
       src: "/assets/homepage/toko-meja-kerja.jpg",
       alt: "Meja kerja teknisi dengan tools lengkap",
-      label: "Meja Kerja",
+      label: "",
     },
   ],
 
@@ -152,6 +152,9 @@ export const HOMEPAGE_CONTENT: HomepageData = {
     { label: "Laptop Gaming", emoji: "\uD83C\uDFAE" },
     { label: "MacBook", emoji: "\uD83C\uDF4E" },
     { label: "Workstation", emoji: "\uD83D\uDDA5\uFE0F" },
+    { label: "Komputer", emoji: "\uD83D\uDDA5\uFE0F" },
+    { label: "Monitor", emoji: "\uD83D\uDDFA\uFE0F" },
+    { label: "Aset IT Kantor", emoji: "\uD83D\uDDE3\uFE0F" },
   ],
 
   faqs: [
@@ -197,26 +200,25 @@ export const HOMEPAGE_CONTENT: HomepageData = {
     },
   ],
 
-  closingTitle: "Laptop Lama Masih Bernilai.",
+  closingTitle: "Laptop Lamamu Masih Bernilai.",
   closingSubtitle:
     "Chat kami sekarang via WhatsApp. Gratis, tanpa komitmen.",
 };
 
 // ─── Lokasi / Store Info (migrated from Lokasi DB singleton) ───
 export const LOKASI: LokasiData = {
-  namaToko: "Saka Laptop",
-  tagline: "Toko Laptop Terpercaya",
+  namaToko: "Jakarta Laptops",
+  tagline: "Pusat Inspeksi & Trade-in Laptop Bekas",
   foto: "/assets/homepage/logo.svg",
   alamat:
-    "Jl. Raya Kebayoran Lama No. 12, Kel. Kebayoran Lama, Kec. Kebayoran Lama, Jakarta Selatan 12210",
-  telepon: "0881010302510",
-  whatsapp: "62881010302510",
+    "Jl. Salam 3, RT.10/RW.3, Kb. Jeruk, Kec. Kb. Jeruk, Kota Jakarta Barat, Daerah Khusus Ibukota Jakarta 11530",
+  telepon: "+6287816086261",
+  whatsapp: "6287816086261",
   jamWeekday: "Senin - Sabtu: 09.00 - 21.00 WIB",
   jamWeekend: "Minggu: 10.00 - 18.00 WIB",
-  mapsLink:
-    "https://maps.google.com/?q=Saka+Laptop+Jl.+Raya+Kebayoran+Lama+Jakarta+Selatan",
-  lat: -6.2445,
-  lng: 106.7813,
+  mapsLink: "https://maps.app.goo.gl/bENhSKVVmPKcfAeq9?g_st=ac",
+  lat: -6.202598,
+  lng: 106.779466,
 };
 
 // ─── Logo (migrated from StoreLogo DB singleton) ───
@@ -229,7 +231,7 @@ export const TESTIMONI: TestimoniData[] = [
     id: "t01",
     nama: "Rizky Pratama",
     role: "Gamer",
-    teks: "Beli ASUS ROG Strix G16 di Saka Laptop, kualitasnya top! Performance-nya juara buat main game berat. Pelayanannya juga ramah dan fast respon.",
+    teks: "Beli ASUS ROG Strix G16 di Jakarta Laptops, kualitasnya top! Performance-nya juara buat main game berat. Pelayanannya juga ramah dan fast respon.",
     rating: 5,
     laptop: "ASUS ROG Strix G16",
     avatar: "",
@@ -274,7 +276,7 @@ export const TESTIMONI: TestimoniData[] = [
     id: "t06",
     nama: "Rina Anggraini",
     role: "Freelancer",
-    teks: "Pengalaman belanja di Saka Laptop sangat menyenangkan. Admin-nya helpful, bantu rekomendasi laptop yang sesuai kebutuhan. LG Gram 17-nya mantap!",
+    teks: "Pengalaman belanja di Jakarta Laptops sangat menyenangkan. Admin-nya helpful, bantu rekomendasi laptop yang sesuai kebutuhan. LG Gram 17-nya mantap!",
     rating: 4,
     laptop: "LG Gram 17",
     avatar: "",
