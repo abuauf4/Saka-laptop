@@ -4,35 +4,26 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
-  PackageOpen,
-  ClipboardCheck,
-  Tag,
+  PackagePlus,
   Warehouse,
   DollarSign,
   TrendingUp,
   ArrowRight,
-  AlertCircle,
   ShoppingBag,
-  Award,
-  Package,
   BarChart3,
+  Laptop,
+  Tag,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { formatPrice } from "@/lib/format";
-import { useLokasi } from "@/lib/lokasi-store";
-import { useSubmissions, STATUS_LABELS } from "@/lib/submission-store";
+import { formatPrice, formatDateTime } from "@/lib/format";
 
 interface LaporanData {
   counts: {
     total: number;
-    RECEIVED: number;
-    QC_PROCESS: number;
-    OFFER_SENT: number;
-    ACCEPTED: number;
-    REJECTED: number;
-    INVENTORY: number;
-    SOLD: number;
+    barangMasuk: number;
+    barangAvailable: number;
+    barangSold: number;
   };
   inventory: {
     totalItems: number;
@@ -56,23 +47,34 @@ interface LaporanData {
   conversionRate: number;
 }
 
+interface BarangItem {
+  id: string;
+  kode: string;
+  merk: string;
+  tipe: string;
+  spesifikasi: string;
+  keterangan: string;
+  hargaBeli: number;
+  hargaJual: number | null;
+  status: string;
+  createdAt: string;
+}
+
 export default function AdminDashboard() {
-  const { lokasi } = useLokasi();
-  const { submissions, refresh } = useSubmissions();
   const [laporan, setLaporan] = useState<LaporanData | null>(null);
+  const [recentBarang, setRecentBarang] = useState<BarangItem[]>([]);
 
   useEffect(() => {
-    refresh();
     fetch("/api/laporan")
       .then((r) => r.json())
       .then(setLaporan)
       .catch(console.error);
-  }, [refresh]);
 
-  const recentSubmissions = submissions.slice(0, 5);
-  const needsAttention = submissions.filter(
-    (s) => s.status === "RECEIVED" || s.status === "QC_PROCESS" || s.status === "OFFER_SENT"
-  );
+    fetch("/api/barang?status=available", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((data) => setRecentBarang(data.slice(0, 5)))
+      .catch(console.error);
+  }, []);
 
   // Max revenue for bar chart scaling
   const maxRevenue = laporan?.sales?.last7Days?.length
@@ -85,7 +87,7 @@ export default function AdminDashboard() {
         <div className="page-container py-6">
           <h1 className="text-2xl font-bold">Dashboard</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Ringkasan operasional inspeksi & trade-in
+            Ringkasan operasional inventory & penjualan
           </p>
         </div>
       </div>
@@ -94,25 +96,11 @@ export default function AdminDashboard() {
         {/* ─── TOP STAT BAR (6 cards) ─── */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
           <StatCard
-            label="Pengajuan Baru"
-            value={laporan?.counts.RECEIVED ?? 0}
+            label="Barang Masuk"
+            value={laporan?.counts.barangMasuk ?? 0}
             color="text-sky-500"
-            icon={PackageOpen}
-            href="/admin/laptop-masuk"
-          />
-          <StatCard
-            label="Sedang QC"
-            value={laporan?.counts.QC_PROCESS ?? 0}
-            color="text-amber-500"
-            icon={ClipboardCheck}
-            href="/admin/qc"
-          />
-          <StatCard
-            label="Menunggu Response"
-            value={laporan?.counts.OFFER_SENT ?? 0}
-            color="text-violet-500"
-            icon={Tag}
-            href="/admin/penawaran"
+            icon={PackagePlus}
+            href="/admin/barang-masuk"
           />
           <StatCard
             label="In Stock"
@@ -122,11 +110,18 @@ export default function AdminDashboard() {
             href="/admin/inventory"
           />
           <StatCard
-            label="Disalurkan"
+            label="Terjual"
             value={laporan?.inventory.sold ?? 0}
             color="text-zinc-500"
             icon={ShoppingBag}
             href="/admin/inventory"
+          />
+          <StatCard
+            label="Total Modal"
+            value={formatPrice(laporan?.inventory.totalModal ?? 0).replace("Rp", "").trim()}
+            color="text-amber-500"
+            icon={Tag}
+            href="/admin/barang-masuk"
           />
           <StatCard
             label="Revenue"
@@ -137,33 +132,16 @@ export default function AdminDashboard() {
             }
             color="text-primary"
             icon={DollarSign}
-            href="/admin/laporan"
+            href="/admin/laporan-keuangan"
+          />
+          <StatCard
+            label="Profit"
+            value={formatPrice(laporan?.sales?.totalProfit ?? 0).replace("Rp", "").trim()}
+            color="text-emerald-500"
+            icon={TrendingUp}
+            href="/admin/laporan-keuangan"
           />
         </div>
-
-        {/* ─── NEEDS ATTENTION ─── */}
-        {needsAttention.length > 0 && (
-          <Card className="border-amber-500/30 bg-amber-500/5">
-            <CardContent className="p-4">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
-                <div className="flex-1">
-                  <p className="text-sm font-semibold text-amber-500">
-                    {needsAttention.length} pengajuan butuh tindakan
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    Cek halaman Laptop Masuk untuk proses lanjut
-                  </p>
-                </div>
-                <Link href="/admin/laptop-masuk">
-                  <Badge variant="outline" className="bg-amber-500/10 text-amber-500 border-amber-500/30 cursor-pointer">
-                    Lihat <ArrowRight className="h-3 w-3 ml-1" />
-                  </Badge>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         {/* ─── INVENTORY + LAPORAN PENJUALAN (2-col) ─── */}
         <div className="grid lg:grid-cols-2 gap-6">
@@ -178,7 +156,7 @@ export default function AdminDashboard() {
                   <div>
                     <h2 className="text-sm font-semibold">Inventory</h2>
                     <p className="text-[10px] text-muted-foreground">
-                      Stok laptop bekas yang siap disalurkan
+                      Stok barang yang siap dijual
                     </p>
                   </div>
                 </div>
@@ -192,12 +170,12 @@ export default function AdminDashboard() {
 
               <div className="grid grid-cols-3 gap-3 mb-4">
                 <InvStat
-                  label="In Stock"
+                  label="Available"
                   value={String(laporan?.inventory.inStock ?? 0)}
                   color="text-foreground"
                 />
                 <InvStat
-                  label="Disalurkan"
+                  label="Terjual"
                   value={String(laporan?.inventory.sold ?? 0)}
                   color="text-zinc-500"
                 />
@@ -237,12 +215,12 @@ export default function AdminDashboard() {
                   <div>
                     <h2 className="text-sm font-semibold">Laporan Penjualan</h2>
                     <p className="text-[10px] text-muted-foreground">
-                      Laptop disalurkan & revenue 7 hari terakhir
+                      Revenue & profit penjualan
                     </p>
                   </div>
                 </div>
                 <Link
-                  href="/admin/laporan"
+                  href="/admin/laporan-keuangan"
                   className="text-xs text-primary hover:underline"
                 >
                   Detail
@@ -259,10 +237,10 @@ export default function AdminDashboard() {
                 <SalesStat
                   label="Total Profit"
                   value={formatPrice(laporan?.sales?.totalProfit ?? 0).replace("Rp", "").trim()}
-                  color="text-foreground"
+                  color="text-emerald-500"
                 />
                 <SalesStat
-                  label="Unit Disalurkan"
+                  label="Unit Terjual"
                   value={String(laporan?.sales?.totalSold ?? 0)}
                   color="text-foreground"
                 />
@@ -324,62 +302,57 @@ export default function AdminDashboard() {
           </Card>
         </div>
 
-        {/* ─── RECENT SUBMISSIONS + SUMMARY (3-col) ─── */}
+        {/* ─── RECENT BARANG + SUMMARY (3-col) ─── */}
         <div className="grid lg:grid-cols-3 gap-6">
-          {/* Left: Recent submissions */}
+          {/* Left: Recent barang */}
           <div className="lg:col-span-2 space-y-3">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold">Pengajuan Terbaru</h2>
+              <h2 className="text-sm font-semibold">Barang Terbaru</h2>
               <Link
-                href="/admin/laptop-masuk"
+                href="/admin/barang-masuk"
                 className="text-xs text-primary hover:underline"
               >
                 Lihat semua
               </Link>
             </div>
-            {recentSubmissions.length === 0 ? (
+            {recentBarang.length === 0 ? (
               <Card className="border-dashed">
                 <CardContent className="py-8 text-center">
-                  <PackageOpen className="h-8 w-8 mx-auto text-muted-foreground/40 mb-2" />
+                  <Laptop className="h-8 w-8 mx-auto text-muted-foreground/40 mb-2" />
                   <p className="text-xs text-muted-foreground">
-                    Belum ada pengajuan
+                    Belum ada barang. Tambah lewat <Link href="/admin/barang-masuk" className="text-primary hover:underline">Barang Masuk</Link>
                   </p>
                 </CardContent>
               </Card>
             ) : (
-              recentSubmissions.map((s, i) => (
+              recentBarang.map((b, i) => (
                 <motion.div
-                  key={s.id}
+                  key={b.id}
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
                 >
-                  <Link href="/admin/laptop-masuk">
+                  <Link href="/admin/inventory">
                     <Card className="border-border/50 hover:border-primary/30 hover:shadow-soft-sm transition-all cursor-pointer">
                       <CardContent className="p-3">
                         <div className="flex items-center gap-3">
                           <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-0.5">
+                              <Badge variant="outline" className="text-[10px] font-mono">{b.kode}</Badge>
+                              <Badge variant="outline" className="text-[10px] bg-emerald-500/10 text-emerald-500 border-emerald-500/30">Available</Badge>
+                            </div>
                             <p className="text-sm font-semibold truncate">
-                              {s.namaLaptop}
+                              {b.merk} {b.tipe}
                             </p>
                             <p className="text-xs text-muted-foreground truncate">
-                              {s.customerName} · {s.brand} · {s.ram}
+                              {b.spesifikasi || b.keterangan || "-"}
                             </p>
                           </div>
-                          <Badge
-                            variant="outline"
-                            className={`text-[10px] shrink-0 ${
-                              s.status === "RECEIVED"
-                                ? "bg-sky-500/10 text-sky-500 border-sky-500/30"
-                                : s.status === "QC_PROCESS"
-                                  ? "bg-amber-500/10 text-amber-500 border-amber-500/30"
-                                  : s.status === "OFFER_SENT"
-                                    ? "bg-violet-500/10 text-violet-500 border-violet-500/30"
-                                    : "bg-muted text-muted-foreground"
-                            }`}
-                          >
-                            {STATUS_LABELS[s.status as keyof typeof STATUS_LABELS] || s.status}
-                          </Badge>
+                          <div className="text-right shrink-0">
+                            <p className="text-xs text-muted-foreground">Modal</p>
+                            <p className="text-sm font-bold text-amber-500">{formatPrice(b.hargaBeli)}</p>
+                            <p className="text-[10px] text-muted-foreground">{formatDateTime(b.createdAt)}</p>
+                          </div>
                         </div>
                       </CardContent>
                     </Card>
@@ -395,20 +368,20 @@ export default function AdminDashboard() {
             <Card className="border-border/50">
               <CardContent className="p-4 space-y-3">
                 <SummaryRow
-                  icon={PackageOpen}
-                  label="Total Pengajuan"
-                  value={String(laporan?.counts.total ?? 0)}
+                  icon={PackagePlus}
+                  label="Total Barang Masuk"
+                  value={String(laporan?.counts.barangMasuk ?? 0)}
                   color="text-primary"
                 />
                 <SummaryRow
                   icon={TrendingUp}
-                  label="Conversion Rate"
+                  label="Sell-through Rate"
                   value={`${laporan?.conversionRate ?? 0}%`}
                   color="text-foreground"
                 />
                 <SummaryRow
-                  icon={Award}
-                  label="Total Disalurkan"
+                  icon={ShoppingBag}
+                  label="Total Terjual"
                   value={String(laporan?.inventory.sold ?? 0)}
                   color="text-zinc-500"
                 />
@@ -422,7 +395,7 @@ export default function AdminDashboard() {
                   icon={TrendingUp}
                   label="Total Profit"
                   value={formatPrice(laporan?.sales?.totalProfit ?? 0).replace("Rp", "").trim()}
-                  color="text-foreground"
+                  color="text-emerald-500"
                 />
               </CardContent>
             </Card>
@@ -433,11 +406,10 @@ export default function AdminDashboard() {
                   Quick Actions
                 </p>
                 <div className="space-y-1.5">
-                  <QuickLink href="/admin/laptop-masuk" label="Laptop Masuk" />
-                  <QuickLink href="/admin/qc" label="QC Inspeksi" />
-                  <QuickLink href="/admin/penawaran" label="Penawaran" />
+                  <QuickLink href="/admin/barang-masuk" label="Barang Masuk" />
+                  <QuickLink href="/admin/kasir" label="Kasir (Jual)" />
                   <QuickLink href="/admin/inventory" label="Inventory" />
-                  <QuickLink href="/admin/laporan" label="Laporan" />
+                  <QuickLink href="/admin/laporan-keuangan" label="Laporan Keuangan" />
                 </div>
               </CardContent>
             </Card>

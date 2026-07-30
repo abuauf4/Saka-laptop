@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   DollarSign,
   TrendingUp,
+  Package,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -24,35 +25,29 @@ import {
 import { formatPrice, formatDateTime } from "@/lib/format";
 import { toast } from "sonner";
 
-interface InventoryItem {
+interface BarangItem {
   id: string;
-  nama: string;
-  brand: string;
-  kategori: string;
-  ram: string;
-  storage: string;
-  gpu: string;
-  processor: string;
-  tahun: number;
-  kondisi: string;
-  kelengkapan: string;
-  foto: string;
-  qcChecklist: string;
-  qcNotes: string;
+  kode: string;
+  merk: string;
+  tipe: string;
+  spesifikasi: string;
+  keterangan: string;
   hargaBeli: number;
-  hargaJual: number;
-  channel: string;
+  hargaJual: number | null;
   status: string;
-  purchaseId: string | null;
+  namaPembeli: string | null;
+  noWa: string | null;
+  domisili: string | null;
+  soldAt: string | null;
   createdAt: string;
   updatedAt: string;
 }
 
 export default function InventoryPage() {
-  const [items, setItems] = useState<InventoryItem[]>([]);
+  const [items, setItems] = useState<BarangItem[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [filter, setFilter] = useState("all");
-  const [selected, setSelected] = useState<InventoryItem | null>(null);
+  const [selected, setSelected] = useState<BarangItem | null>(null);
   const [newHargaJual, setNewHargaJual] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -81,21 +76,25 @@ export default function InventoryPage() {
   }, [items, filter]);
 
   const stats = useMemo(() => {
-    const inStock = items.filter((i) => i.status === "INVENTORY");
-    const sold = items.filter((i) => i.status === "SOLD");
+    const inStock = items.filter((i) => i.status === "available");
+    const sold = items.filter((i) => i.status === "sold");
     return {
       total: items.length,
       inStock: inStock.length,
       sold: sold.length,
       totalModal: inStock.reduce((s, i) => s + i.hargaBeli, 0),
-      totalDisalurkan: sold.reduce((s, i) => s + i.hargaJual, 0),
-      potensiProfit: inStock.reduce((s, i) => s + (i.hargaJual - i.hargaBeli), 0),
+      totalDisalurkan: sold.reduce((s, i) => s + (i.hargaJual || 0), 0),
+      potensiProfit: inStock.reduce(
+        (s, i) =>
+          s + ((i.hargaJual || Math.round(i.hargaBeli * 1.3)) - i.hargaBeli),
+        0
+      ),
     };
   }, [items]);
 
-  function openDetail(item: InventoryItem) {
+  function openDetail(item: BarangItem) {
     setSelected(item);
-    setNewHargaJual(String(item.hargaJual));
+    setNewHargaJual(String(item.hargaJual || Math.round(item.hargaBeli * 1.3)));
   }
 
   async function markAsSold() {
@@ -106,12 +105,12 @@ export default function InventoryPage() {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          status: "SOLD",
-          hargaJual: parseInt(newHargaJual) || selected.hargaJual,
+          status: "sold",
+          hargaJual: parseInt(newHargaJual) || selected.hargaJual || 0,
         }),
       });
       if (res.ok) {
-        toast.success("Item ditandai SOLD");
+        toast.success("Barang ditandai terjual!");
         loadItems();
         setSelected(null);
       } else {
@@ -137,7 +136,10 @@ export default function InventoryPage() {
       if (res.ok) {
         toast.success("Harga jual diupdate");
         loadItems();
-        setSelected({ ...selected, hargaJual: parseInt(newHargaJual) });
+        setSelected({
+          ...selected,
+          hargaJual: parseInt(newHargaJual),
+        });
       }
     } catch (err) {
       console.error(err);
@@ -147,8 +149,8 @@ export default function InventoryPage() {
     }
   }
 
-  async function handleDelete(item: InventoryItem) {
-    if (!confirm(`Hapus "${item.nama}" dari inventory?`)) return;
+  async function handleDelete(item: BarangItem) {
+    if (!confirm(`Hapus ${item.merk} ${item.tipe}?`)) return;
     setSaving(true);
     try {
       await fetch(`/api/inventory/${item.id}`, { method: "DELETE" });
@@ -182,7 +184,7 @@ export default function InventoryPage() {
                 Inventory
               </h1>
               <p className="text-sm text-muted-foreground mt-1">
-                Laptop yang sudah masuk inventory internal
+                Semua barang yang masuk ke gudang
               </p>
             </div>
             <Button variant="outline" size="sm" onClick={loadItems}>
@@ -199,16 +201,16 @@ export default function InventoryPage() {
             label="Total"
             value={String(stats.total)}
             color="text-primary"
-            icon={Warehouse}
+            icon={Package}
           />
           <StatCard
-            label="In Stock"
+            label="Available"
             value={String(stats.inStock)}
             color="text-foreground"
             icon={CheckCircle2}
           />
           <StatCard
-            label="Disalurkan"
+            label="Terjual"
             value={String(stats.sold)}
             color="text-zinc-400"
             icon={DollarSign}
@@ -231,8 +233,8 @@ export default function InventoryPage() {
         <div className="flex gap-1">
           {[
             { id: "all", label: "Semua" },
-            { id: "INVENTORY", label: "In Stock" },
-            { id: "SOLD", label: "Disalurkan" },
+            { id: "available", label: "Available" },
+            { id: "sold", label: "Terjual" },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -254,79 +256,100 @@ export default function InventoryPage() {
             <CardContent className="py-12 text-center">
               <Warehouse className="h-10 w-10 mx-auto text-muted-foreground/40 mb-3" />
               <p className="text-sm text-muted-foreground">
-                Inventory kosong
+                {filter === "all"
+                  ? "Inventory kosong"
+                  : `Tidak ada barang ${filter === "available" ? "available" : "terjual"}`}
               </p>
             </CardContent>
           </Card>
         ) : (
           <div className="grid gap-3">
-            {filtered.map((item, idx) => (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: Math.min(idx * 0.04, 0.3) }}
-              >
-                <Card
-                  className="border-border/50 hover:border-primary/30 hover:shadow-soft-sm transition-all cursor-pointer"
-                  onClick={() => openDetail(item)}
+            {filtered.map((item, idx) => {
+              const suggestedPrice = Math.round(item.hargaBeli * 1.3);
+              const displayJual = item.hargaJual || suggestedPrice;
+              const profit = displayJual - item.hargaBeli;
+              const isSold = item.status === "sold";
+
+              return (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: Math.min(idx * 0.04, 0.3) }}
                 >
-                  <CardContent className="p-4">
-                    <div className="flex items-start gap-3">
-                      <div className="h-14 w-14 shrink-0 rounded-xl overflow-hidden bg-muted/40 flex items-center justify-center">
-                        {item.foto ? (
-                          <img
-                            src={item.foto}
-                            alt={item.nama}
-                            className="h-full w-full object-cover"
-                          />
-                        ) : (
+                  <Card
+                    className={`border-border/50 hover:border-primary/30 hover:shadow-soft-sm transition-all cursor-pointer ${
+                      isSold ? "opacity-60" : ""
+                    }`}
+                    onClick={() => openDetail(item)}
+                  >
+                    <CardContent className="p-4">
+                      <div className="flex items-start gap-3">
+                        <div className="h-14 w-14 shrink-0 rounded-xl overflow-hidden bg-muted/40 flex items-center justify-center">
                           <Laptop className="h-5 w-5 text-muted-foreground/40" />
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <Badge
-                            variant="outline"
-                            className={`text-[10px] ${
-                              item.status === "INVENTORY"
-                                ? "bg-foreground/10 text-foreground border-foreground/30"
-                                : "bg-zinc-500/10 text-zinc-400 border-zinc-500/30"
-                            }`}
-                          >
-                            {item.status === "INVENTORY" ? "In Stock" : "Disalurkan"}
-                          </Badge>
-                          <span className="text-xs text-muted-foreground">
-                            {formatDateTime(item.createdAt)}
-                          </span>
                         </div>
-                        <h3 className="font-semibold truncate">{item.nama}</h3>
-                        <p className="text-xs text-muted-foreground mt-0.5 truncate">
-                          {item.brand} · {item.processor} · {item.ram}/{item.storage}
-                        </p>
-                        <div className="flex items-center gap-3 mt-1.5 text-xs">
-                          <span className="text-muted-foreground">
-                            Modal:{" "}
-                            <strong className="text-amber-500">
-                              {formatPrice(item.hargaBeli)}
-                            </strong>
-                          </span>
-                          <span className="text-muted-foreground">
-                            Jual:{" "}
-                            <strong className="text-foreground">
-                              {formatPrice(item.hargaJual)}
-                            </strong>
-                          </span>
-                          <Badge variant="outline" className="text-[9px]">
-                            +{formatPrice(item.hargaJual - item.hargaBeli).replace("Rp", "").trim()}
-                          </Badge>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Badge
+                              variant="outline"
+                              className="text-[10px] font-mono"
+                            >
+                              {item.kode}
+                            </Badge>
+                            <Badge
+                              variant="outline"
+                              className={`text-[10px] ${
+                                isSold
+                                  ? "bg-zinc-500/10 text-zinc-400 border-zinc-500/30"
+                                  : "bg-foreground/10 text-foreground border-foreground/30"
+                              }`}
+                            >
+                              {isSold ? "Terjual" : "Available"}
+                            </Badge>
+                            <span className="text-xs text-muted-foreground">
+                              {formatDateTime(item.createdAt)}
+                            </span>
+                          </div>
+                          <h3 className="font-semibold truncate">
+                            {item.merk} {item.tipe}
+                          </h3>
+                          {item.spesifikasi && (
+                            <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                              {item.spesifikasi}
+                            </p>
+                          )}
+                          {item.keterangan && (
+                            <p className="text-xs text-muted-foreground mt-0.5 truncate italic">
+                              {item.keterangan}
+                            </p>
+                          )}
+                          <div className="flex items-center gap-3 mt-1.5 text-xs">
+                            <span className="text-muted-foreground">
+                              Modal:{" "}
+                              <strong className="text-amber-500">
+                                {formatPrice(item.hargaBeli)}
+                              </strong>
+                            </span>
+                            <span className="text-muted-foreground">
+                              Jual:{" "}
+                              <strong className="text-foreground">
+                                {formatPrice(displayJual)}
+                              </strong>
+                            </span>
+                            <Badge
+                              variant="outline"
+                              className="text-[9px]"
+                            >
+                              +{formatPrice(profit).replace("Rp", "").trim()}
+                            </Badge>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
           </div>
         )}
       </div>
@@ -342,40 +365,57 @@ export default function InventoryPage() {
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2 pr-8">
                   <Warehouse className="h-5 w-5 text-primary" />
-                  Detail Inventory
+                  Detail Barang
                 </DialogTitle>
               </DialogHeader>
 
               <div className="space-y-4">
-                {selected.foto && (
-                  <div className="rounded-xl overflow-hidden border border-border/50">
-                    <img
-                      src={selected.foto}
-                      alt={selected.nama}
-                      className="w-full h-44 object-cover"
-                    />
-                  </div>
-                )}
-
                 <div className="grid grid-cols-2 gap-3 text-sm">
-                  <DetailItem label="Nama" value={selected.nama} className="col-span-2" />
-                  <DetailItem label="Brand" value={selected.brand} />
-                  <DetailItem label="Kondisi" value={selected.kondisi} />
-                  <DetailItem label="Processor" value={selected.processor} />
-                  <DetailItem label="Tahun" value={selected.tahun ? String(selected.tahun) : "-"} />
-                  <DetailItem label="RAM" value={selected.ram} />
-                  <DetailItem label="Storage" value={selected.storage} />
-                  <DetailItem label="Kelengkapan" value={selected.kelengkapan} className="col-span-2" />
+                  <DetailItem label="Kode" value={selected.kode} />
+                  <DetailItem
+                    label="Status"
+                    value={
+                      selected.status === "sold" ? "Terjual" : "Available"
+                    }
+                    className={
+                      selected.status === "sold"
+                        ? "text-zinc-400"
+                        : "text-emerald-500"
+                    }
+                  />
+                  <DetailItem label="Merk" value={selected.merk} className="col-span-2" />
+                  <DetailItem label="Tipe" value={selected.tipe} className="col-span-2" />
+                  <DetailItem
+                    label="Spesifikasi"
+                    value={selected.spesifikasi || "-"}
+                    className="col-span-2"
+                  />
+                  <DetailItem
+                    label="Keterangan"
+                    value={selected.keterangan || "-"}
+                    className="col-span-2"
+                  />
                 </div>
 
-                {selected.qcNotes && (
-                  <div>
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1">
-                      Catatan QC
+                {selected.status === "sold" && (
+                  <div className="space-y-2">
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                      Info Pembeli
                     </p>
-                    <p className="text-sm bg-muted/40 rounded-lg p-3">
-                      {selected.qcNotes}
-                    </p>
+                    <div className="rounded-lg bg-muted/40 p-3 text-sm space-y-1">
+                      {selected.namaPembeli && (
+                        <p>Pembeli: {selected.namaPembeli}</p>
+                      )}
+                      {selected.noWa && <p>WhatsApp: {selected.noWa}</p>}
+                      {selected.domisili && (
+                        <p>Domisili: {selected.domisili}</p>
+                      )}
+                      {selected.soldAt && (
+                        <p className="text-xs text-muted-foreground">
+                          Terjual: {formatDateTime(selected.soldAt)}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 )}
 
@@ -393,12 +433,15 @@ export default function InventoryPage() {
                       Harga Jual
                     </p>
                     <p className="text-lg font-bold text-foreground">
-                      {formatPrice(selected.hargaJual)}
+                      {formatPrice(
+                        selected.hargaJual ||
+                          Math.round(selected.hargaBeli * 1.3)
+                      )}
                     </p>
                   </div>
                 </div>
 
-                {selected.status === "INVENTORY" && (
+                {selected.status === "available" && (
                   <div className="space-y-2">
                     <div>
                       <label className="text-xs font-medium mb-1.5 block">
@@ -410,6 +453,14 @@ export default function InventoryPage() {
                         onChange={(e) => setNewHargaJual(e.target.value)}
                         className="h-11"
                       />
+                      {newHargaJual && (
+                        <p className="text-xs text-emerald-500 font-semibold mt-1">
+                          Profit: {" "}
+                          {formatPrice(
+                            parseInt(newHargaJual || "0") - selected.hargaBeli
+                          )}
+                        </p>
+                      )}
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                       <Button
@@ -425,7 +476,7 @@ export default function InventoryPage() {
                         className="bg-zinc-700 hover:bg-zinc-800"
                       >
                         <CheckCircle2 className="h-4 w-4 mr-1.5" />
-                        Tandai Disalurkan
+                        Tandai Terjual
                       </Button>
                     </div>
                   </div>
@@ -439,7 +490,7 @@ export default function InventoryPage() {
                     onClick={() => handleDelete(selected)}
                     className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
                   >
-                    <Trash2 className="h-4 w-4 mr-1" /> Hapus dari Inventory
+                    <Trash2 className="h-4 w-4 mr-1" /> Hapus Barang
                   </Button>
                 </div>
               </div>

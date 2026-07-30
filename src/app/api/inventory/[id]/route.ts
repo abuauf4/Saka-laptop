@@ -4,8 +4,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 /**
  * PATCH /api/inventory/[id]
- * Update an inventory item. Auth required.
- * Mainly used to mark item as SOLD.
+ * Update barang dari inventory page.
+ * - update hargaJual
+ * - update keterangan
+ * - mark as sold (status: "sold")
  */
 export async function PATCH(
   request: NextRequest,
@@ -15,27 +17,23 @@ export async function PATCH(
     await requireAuth();
     const { id } = await params;
     const body = await request.json();
-    const { status, hargaJual, channel, qcNotes } = body;
+    const { hargaJual, keterangan, status } = body;
 
     const updateData: Record<string, unknown> = {};
-    if (status) updateData.status = status;
     if (hargaJual !== undefined)
       updateData.hargaJual = parseInt(String(hargaJual)) || 0;
-    if (channel) updateData.channel = channel;
-    if (qcNotes !== undefined) updateData.qcNotes = qcNotes;
+    if (keterangan !== undefined) updateData.keterangan = keterangan;
 
-    const updated = await db.inventoryItem.update({
+    // Mark as sold
+    if (status === "sold") {
+      updateData.status = "sold";
+      updateData.soldAt = new Date();
+    }
+
+    const updated = await db.barang.update({
       where: { id },
       data: updateData,
     });
-
-    // If marking as SOLD, also update linked Submission to SOLD
-    if (status === "SOLD" && updated.purchaseId) {
-      await db.submission.update({
-        where: { id: updated.purchaseId },
-        data: { status: "SOLD" },
-      });
-    }
 
     return NextResponse.json(updated);
   } catch (error) {
@@ -60,7 +58,7 @@ export async function DELETE(
   try {
     await requireAuth();
     const { id } = await params;
-    await db.inventoryItem.delete({ where: { id } });
+    await db.barang.delete({ where: { id } });
     return NextResponse.json({ success: true });
   } catch (error) {
     if (error instanceof Error && error.message === "Unauthorized") {

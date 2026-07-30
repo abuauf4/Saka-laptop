@@ -4,8 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 /**
  * GET /api/inventory
- * List all inventory items (auth required).
- * Query: ?status=INVENTORY|SOLD
+ * List semua barang (dari tabel `barang`).
+ * Query: ?status=available|sold
  */
 export async function GET(request: NextRequest) {
   try {
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     const where: Record<string, unknown> = {};
     if (status) where.status = status;
 
-    const items = await db.inventoryItem.findMany({
+    const items = await db.barang.findMany({
       where,
       orderBy: { createdAt: "desc" },
     });
@@ -33,8 +33,3 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-
-/**
- * PATCH /api/inventory/[id] — handled in [id]/route.ts
- * Update inventory item status (INVENTORY → SOLD) or other fields.
- */
