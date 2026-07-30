@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { BarChart3, Loader2, TrendingUp, DollarSign, Package, ArrowDown, ArrowUp, Download } from "lucide-react";
-import { Card, CardContent } from "components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -53,7 +53,7 @@ function exportSoldCSV(items: SoldItem[]) {
       `"${i.kode}"`,
       `"${i.merk}"`,
       `"${i.tipe}"`,
-      `"${(i.spesifikasi || "").replace(/"/g, '"')}"`,
+      `"${(i.spesifikasi || "").replace(/"/g, '""')}"`,
       i.hargaBeli,
       i.hargaJual,
       i.profit,
