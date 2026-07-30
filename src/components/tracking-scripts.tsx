@@ -4,6 +4,9 @@
 
 import { db } from "@/core/lib/db";
 
+/** Google Ads Conversion ID — always loaded globally */
+const GOOGLE_ADS_CONVERSION_ID = "AW-18221664763";
+
 export async function TrackingScripts() {
   let settings: { googleAnalyticsId: string | null; metaPixelId: string | null; googleAdsId: string | null; gtmContainerId: string | null } | null = null;
 
@@ -17,6 +20,11 @@ export async function TrackingScripts() {
   const ga = settings?.googleAnalyticsId;
   const ads = settings?.googleAdsId;
   const pixel = settings?.metaPixelId;
+
+  // Determine if Google Tag for the conversion ID is already handled
+  const adsAlreadyLoaded = ads === GOOGLE_ADS_CONVERSION_ID;
+  const gtmHandlesIt = !!gtm;
+  const needsHardcodedAds = !gtmHandlesIt && !adsAlreadyLoaded;
 
   // If GTM is set, it handles everything — just inject GTM
   if (gtm) {
@@ -66,8 +74,8 @@ export async function TrackingScripts() {
         </>
       )}
 
-      {/* Google Ads */}
-      {ads && (
+      {/* Google Ads (from DB settings) */}
+      {ads && ads !== GOOGLE_ADS_CONVERSION_ID && (
         <>
           <script
             async
@@ -79,6 +87,24 @@ export async function TrackingScripts() {
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
               gtag('config', '${ads}');`,
+            }}
+          />
+        </>
+      )}
+
+      {/* Google Ads — hardcoded conversion tag (always present) */}
+      {needsHardcodedAds && (
+        <>
+          <script
+            async
+            src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_CONVERSION_ID}`}
+          />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${GOOGLE_ADS_CONVERSION_ID}');`,
             }}
           />
         </>
