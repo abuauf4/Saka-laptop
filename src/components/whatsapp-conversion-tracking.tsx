@@ -7,23 +7,40 @@
 // Konversi hanya dikirim untuk URL yang mengandung:
 //   wa.me | api.whatsapp.com | whatsapp://
 //
-// Fitur:
-//   - event_callback + fallback timeout (WA tetap terbuka jika tracking lambat)
-//   - Satu klik = satu conversion (debounce per element)
-//   - Tidak menghitung klik navigasi, telepon, atau tombol lain
+// Perilaku:
+//   - target="_blank" → tracking di background, link buka seperti biasa (tanpa delay)
+//   - same-tab (tanpa target) → tunggu event_callback / fallback, lalu navigasi
+//   - Temporary lock 2s per elemen mencegah double-fire dari satu klik
+//   - Lock auto-release → klik berikutnya setelah 2s tetap jadi conversion baru
 
 import { useEffect } from "react";
 
 const CONVERSION_SEND_TO = "AW-18221664763/H6mmCMD0itkcEPuT4vBD";
-const FALLBACK_TIMEOUT = 1000; // ms — buka WA walau tracking belum selesai
+const FALLBACK_TIMEOUT = 1000; // ms
+const DEBOUNCE_MS = 2000; // lock per elemen setelah klik
 
 /** Regex untuk detect URL WhatsApp */
 const WA_URL_PATTERN = /wa\.me|api\.whatsapp\.com|whatsapp:\/\//i;
 
-/** Track conversion via gtag, resolve setelah callback atau timeout */
-function trackConversion(): Promise<void> {
+/** Track conversion via gtag (fire-and-forget, tanpa blocking) */
+function fireConversion(): void {
+  try {
+    const w = window as Record<string, unknown>;
+    if (typeof w.gtag === "function") {
+      w.gtag("event", "conversion", {
+        send_to: CONVERSION_SEND_TO,
+        value: 1.0,
+        currency: "IDR",
+      });
+    }
+  } catch {
+    // tracking error, jangan block UX
+  }
+}
+
+/** Track conversion lalu resolve setelah callback atau fallback */
+function trackConversionThenNavigate(): Promise<void> {
   return new Promise((resolve) => {
-    // Fallback: pastikan resolve dipanggil walau gtag tidak ada / lama
     const timer = setTimeout(resolve, FALLBACK_TIMEOUT);
 
     try {
@@ -39,7 +56,6 @@ function trackConversion(): Promise<void> {
           },
         });
       } else {
-        // gtag belum tersedia, langsung resolve
         clearTimeout(timer);
         resolve();
       }
@@ -52,42 +68,43 @@ function trackConversion(): Promise<void> {
 
 export function WhatsAppConversionTracking() {
   useEffect(() => {
-    /** Set elemen yang sedang pending conversion (cegah duplikat) */
-    const pendingElements = new WeakSet<HTMLAnchorElement>();
+    /** Temporary lock per elemen: element → timestamp saat terakhir diklik */
+    const lockMap = new WeakMap<HTMLAnchorElement, number>();
 
     function handleClick(e: MouseEvent) {
       const target = e.target as HTMLElement;
-
-      // Cari anchor terdekat (karena klik bisa di <button> di dalam <a>)
       const anchor = target.closest("a");
       if (!anchor) return;
 
       const href = anchor.href || "";
-
-      // Hanya proses URL WhatsApp
       if (!WA_URL_PATTERN.test(href)) return;
 
-      // Cegah duplikat: jika elemen ini sedang pending, skip
-      if (pendingElements.has(anchor)) return;
-      pendingElements.add(anchor);
+      // Cek lock: jika elemen diklik < 2 detik lalu, skip
+      const now = Date.now();
+      const lastClick = lockMap.get(anchor) || 0;
+      if (now - lastClick < DEBOUNCE_MS) return;
 
-      // Cegah navigasi default sementara
-      e.preventDefault();
-      e.stopPropagation();
+      // Set lock
+      lockMap.set(anchor, now);
 
-      // Kirim conversion, lalu buka WA
-      trackConversion().finally(() => {
-        // Reset state supaya klik berikutnya dihitung
-        pendingElements.delete(anchor);
-        // Buka link WhatsApp
-        window.open(href, anchor.target || "_blank", "noopener,noreferrer");
-      });
+      const isBlank = anchor.target === "_blank";
+
+      if (isBlank) {
+        // target="_blank" → fire tracking tanpa block navigasi default
+        fireConversion();
+        // Biarkan browser handle navigasi secara native (e.preventDefault TIDAK dipanggil)
+      } else {
+        // Same-tab → tunggu tracking, lalu navigasi manual
+        e.preventDefault();
+        trackConversionThenNavigate().finally(() => {
+          window.location.href = href;
+        });
+      }
     }
 
-    document.addEventListener("click", handleClick, true); // capture phase
+    document.addEventListener("click", handleClick, true);
     return () => document.removeEventListener("click", handleClick, true);
   }, []);
 
-  // Component ini tidak merender apa-apa
   return null;
 }

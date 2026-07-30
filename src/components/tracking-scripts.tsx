@@ -1,6 +1,8 @@
 // ─── Jakarta Laptops — Tracking Scripts Injector (Server Component) ───
 // Fetches settings dari DB, inject appropriate tracking scripts ke <head>.
 // Supports: Google Tag Manager (priority), Google Analytics, Google Ads, Meta Pixel.
+//
+// gtag.js dimuat maksimal 1x. Semua config dikirim dalam 1 inline script.
 
 import { db } from "@/core/lib/db";
 
@@ -8,7 +10,12 @@ import { db } from "@/core/lib/db";
 const GOOGLE_ADS_CONVERSION_ID = "AW-18221664763";
 
 export async function TrackingScripts() {
-  let settings: { googleAnalyticsId: string | null; metaPixelId: string | null; googleAdsId: string | null; gtmContainerId: string | null } | null = null;
+  let settings: {
+    googleAnalyticsId: string | null;
+    metaPixelId: string | null;
+    googleAdsId: string | null;
+    gtmContainerId: string | null;
+  } | null = null;
 
   try {
     settings = await db.settings.findUnique({ where: { id: "default" } });
@@ -21,16 +28,10 @@ export async function TrackingScripts() {
   const ads = settings?.googleAdsId;
   const pixel = settings?.metaPixelId;
 
-  // Determine if Google Tag for the conversion ID is already handled
-  const adsAlreadyLoaded = ads === GOOGLE_ADS_CONVERSION_ID;
-  const gtmHandlesIt = !!gtm;
-  const needsHardcodedAds = !gtmHandlesIt && !adsAlreadyLoaded;
-
   // If GTM is set, it handles everything — just inject GTM
   if (gtm) {
     return (
       <>
-        {/* GTM Head */}
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -40,7 +41,6 @@ export async function TrackingScripts() {
             })(window,document,'script','dataLayer','${gtm}');`,
           }}
         />
-        {/* GTM Body (noscript) */}
         <noscript>
           <iframe
             src={`https://www.googletagmanager.com/ns.html?id=${gtm}`}
@@ -53,58 +53,32 @@ export async function TrackingScripts() {
     );
   }
 
-  // Otherwise, inject individual scripts
+  // ── Build deduplicated list of gtag IDs ──
+  const gtagIds: string[] = [];
+  if (ga && !gtagIds.includes(ga)) gtagIds.push(ga);
+  if (ads && !gtagIds.includes(ads)) gtagIds.push(ads);
+  if (!gtagIds.includes(GOOGLE_ADS_CONVERSION_ID))
+    gtagIds.push(GOOGLE_ADS_CONVERSION_ID);
+
+  // Load gtag.js once (dengan ID pertama), lalu config semua ID
+  const gtagConfigCalls = gtagIds
+    .map((id) => `gtag('config', '${id}');`)
+    .join("\n");
+
   return (
     <>
-      {/* Google Analytics */}
-      {ga && (
+      {gtagIds.length > 0 && (
         <>
           <script
             async
-            src={`https://www.googletagmanager.com/gtag/js?id=${ga}`}
+            src={`https://www.googletagmanager.com/gtag/js?id=${gtagIds[0]}`}
           />
           <script
             dangerouslySetInnerHTML={{
               __html: `window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${ga}');`,
-            }}
-          />
-        </>
-      )}
-
-      {/* Google Ads (from DB settings) */}
-      {ads && ads !== GOOGLE_ADS_CONVERSION_ID && (
-        <>
-          <script
-            async
-            src={`https://www.googletagmanager.com/gtag/js?id=${ads}`}
-          />
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${ads}');`,
-            }}
-          />
-        </>
-      )}
-
-      {/* Google Ads — hardcoded conversion tag (always present) */}
-      {needsHardcodedAds && (
-        <>
-          <script
-            async
-            src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_CONVERSION_ID}`}
-          />
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${GOOGLE_ADS_CONVERSION_ID}');`,
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+${gtagConfigCalls}`,
             }}
           />
         </>
@@ -115,15 +89,15 @@ export async function TrackingScripts() {
         <script
           dangerouslySetInnerHTML={{
             __html: `!function(f,b,e,v,n,t,s)
-            {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-            n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-            n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t,s)}(window, document,'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-            fbq('init', '${pixel}');
-            fbq('track', 'PageView');`,
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '${pixel}');
+fbq('track', 'PageView');`,
           }}
         />
       )}
