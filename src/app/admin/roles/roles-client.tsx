@@ -318,10 +318,10 @@ export function RolesClient() {
         </div>
       </div>
 
-      <div className="rounded-lg border border-white/5 overflow-hidden">
+      <div className="rounded-lg border border-border overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="border-white/5 hover:bg-transparent">
+            <TableRow className="border-border hover:bg-transparent">
               <TableHead className="w-[180px]">Category</TableHead>
               {PERMISSION_ACTIONS.map((action) => (
                 <TableHead key={action} className="w-[80px] text-center capitalize">
@@ -335,7 +335,7 @@ export function RolesClient() {
             {PERMISSION_CATEGORIES.map((cat) => {
               const catLabel = cat.label;
               return (
-                <TableRow key={cat.slug} className="border-white/5">
+                <TableRow key={cat.slug} className="border-border">
                   <TableCell className="font-medium text-sm">{catLabel}</TableCell>
                   {PERMISSION_ACTIONS.map((action) => (
                     <TableCell key={`${cat.slug}-${action}`} className="text-center">
@@ -394,7 +394,7 @@ export function RolesClient() {
           className="grid gap-4"
         >
           {roles.map((role) => (
-            <Card key={role.id} className="border-white/5 bg-white/[0.02]">
+            <Card key={role.id} className="border-border bg-card/50">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -409,7 +409,7 @@ export function RolesClient() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-xs border-white/10">
+                    <Badge variant="outline" className="text-xs">
                       <Users className="mr-1 h-3 w-3" />
                       {role.userCount} user{role.userCount !== 1 ? "s" : ""}
                     </Badge>
@@ -449,7 +449,7 @@ export function RolesClient() {
                       <Badge
                         key={perm.id}
                         variant="outline"
-                        className="text-[10px] px-1.5 py-0 border-white/10"
+                        className="text-[10px] px-1.5 py-0"
                       >
                         {perm.label}
                       </Badge>
@@ -464,7 +464,7 @@ export function RolesClient() {
 
       {/* Create Role Dialog */}
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-        <DialogContent className="border-white/10 bg-[#0D1117] max-w-2xl max-h-[85vh] overflow-y-auto">
+        <DialogContent className="border-border bg-card max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Create Role</DialogTitle>
             <DialogDescription>Define a new role with specific permissions</DialogDescription>
@@ -479,7 +479,7 @@ export function RolesClient() {
                     <FormItem>
                       <FormLabel>Role Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g. Content Manager" className="border-white/10 bg-white/5" {...field} />
+                        <Input placeholder="e.g. Content Manager" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -492,7 +492,7 @@ export function RolesClient() {
                     <FormItem>
                       <FormLabel>Description (optional)</FormLabel>
                       <FormControl>
-                        <Input placeholder="Brief description of this role" className="border-white/10 bg-white/5" {...field} />
+                        <Input placeholder="Brief description of this role" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -500,12 +500,12 @@ export function RolesClient() {
                 />
               </div>
 
-              <Separator className="bg-white/5" />
+              <Separator />
 
               <PermissionMatrix />
 
               <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setCreateOpen(false)} className="border-white/10">
+                <Button type="button" variant="outline" onClick={() => setCreateOpen(false)}>
                   Cancel
                 </Button>
                 <Button type="submit" disabled={submitting}>
@@ -520,7 +520,7 @@ export function RolesClient() {
 
       {/* Edit Role Dialog */}
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent className="border-white/10 bg-[#0D1117] max-w-2xl max-h-[85vh] overflow-y-auto">
+        <DialogContent className="border-border bg-card max-w-2xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit Role</DialogTitle>
             <DialogDescription>Update role details and permissions</DialogDescription>
@@ -535,7 +535,7 @@ export function RolesClient() {
                     <FormItem>
                       <FormLabel>Role Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g. Content Manager" className="border-white/10 bg-white/5" {...field} />
+                        <Input placeholder="e.g. Content Manager" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -548,7 +548,7 @@ export function RolesClient() {
                     <FormItem>
                       <FormLabel>Description (optional)</FormLabel>
                       <FormControl>
-                        <Input placeholder="Brief description of this role" className="border-white/10 bg-white/5" {...field} />
+                        <Input placeholder="Brief description of this role" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -556,12 +556,12 @@ export function RolesClient() {
                 />
               </div>
 
-              <Separator className="bg-white/5" />
+              <Separator />
 
               <PermissionMatrix />
 
               <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setEditOpen(false)} className="border-white/10">
+                <Button type="button" variant="outline" onClick={() => setEditOpen(false)}>
                   Cancel
                 </Button>
                 <Button type="submit" disabled={submitting}>
@@ -576,7 +576,7 @@ export function RolesClient() {
 
       {/* Delete Confirmation */}
       <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
-        <AlertDialogContent className="border-white/10 bg-[#0D1117]">
+        <AlertDialogContent className="border-border bg-card">
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Role</AlertDialogTitle>
             <AlertDialogDescription>
@@ -584,7 +584,7 @@ export function RolesClient() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="border-white/10">Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={onDeleteConfirm}
               disabled={submitting}

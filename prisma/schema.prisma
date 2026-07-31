@@ -494,22 +494,31 @@ model LandingPageContent {
 // BARANG (Operational Inventory + Kasir)
 // ═══════════════════════════════════════
 model Barang {
-  id           String    @id @default(cuid())
-  kode         String    @unique  // auto: BRG-XXXXXX
-  merk         String    // e.g. "ASUS"
-  tipe         String    // e.g. "ROG Strix G16"
-  spesifikasi  String    @default("")  // e.g. "i7, 16GB, 512GB SSD"
-  keterangan   String    @default("")  // condition notes
-  hargaBeli    Int       @default(0)   // modal
-  status       String    @default("available") // available, sold
+  id            String    @id @default(cuid())
+  kode          String    @unique  // auto: BRG-XXXXXX
+  merk          String    // e.g. "ASUS"
+  tipe          String    // e.g. "ROG Strix G16"
+  processor     String    @default("")
+  ram           String    @default("")
+  storage       String    @default("")
+  gpu           String    @default("")
+  layar         String    @default("")
+  tahun         Int       @default(0)
+  kondisi       String    @default("Bagus")
+  kelengkapan   String    @default("")
+  bateraiHealth String    @default("")
+  spesifikasi   String    @default("")  // auto-combined from structured fields
+  keterangan    String    @default("")  // condition notes
+  hargaBeli     Int       @default(0)   // modal
+  status        String    @default("available") // available, sold
   // When sold:
-  hargaJual    Int?      // selling price
-  namaPembeli  String?   // buyer name (optional)
-  noWa         String?   // buyer WhatsApp (optional)
-  domisili     String?   // buyer location (optional)
-  soldAt       DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  hargaJual     Int?      // selling price
+  namaPembeli   String?   // buyer name (optional)
+  noWa          String?   // buyer WhatsApp (optional)
+  domisili      String?   // buyer location (optional)
+  soldAt        DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
   @@index([status])
   @@index([createdAt])

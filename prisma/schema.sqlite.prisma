@@ -431,21 +431,30 @@ model HomepageContent {
 // BARANG (Operational Inventory + Kasir)
 // ═══════════════════════════════════════
 model Barang {
-  id           String    @id @default(cuid())
-  kode         String    @unique
-  merk         String
-  tipe         String
-  spesifikasi  String    @default("")
-  keterangan   String    @default("")
-  hargaBeli    Int       @default(0)
-  status       String    @default("available")
-  hargaJual    Int?
-  namaPembeli  String?
-  noWa         String?
-  domisili     String?
-  soldAt       DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id            String    @id @default(cuid())
+  kode          String    @unique
+  merk          String
+  tipe          String
+  processor     String    @default("")
+  ram           String    @default("")
+  storage       String    @default("")
+  gpu           String    @default("")
+  layar         String    @default("")
+  tahun         Int       @default(0)
+  kondisi       String    @default("Bagus")
+  kelengkapan   String    @default("")
+  bateraiHealth String    @default("")
+  spesifikasi   String    @default("")  // auto-combined from structured fields
+  keterangan    String    @default("")
+  hargaBeli     Int       @default(0)
+  status        String    @default("available")
+  hargaJual     Int?
+  namaPembeli   String?
+  noWa          String?
+  domisili      String?
+  soldAt        DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
   @@index([status])
   @@index([createdAt])

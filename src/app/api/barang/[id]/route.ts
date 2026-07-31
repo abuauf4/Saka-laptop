@@ -6,6 +6,18 @@ import { requireAuth } from "@/lib/auth-server";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+// Helper: build spesifikasi string from structured fields
+function buildSpesifikasi(data: Record<string, unknown>): string {
+  const parts: string[] = [];
+  if (data.processor) parts.push(String(data.processor));
+  if (data.ram) parts.push(String(data.ram));
+  if (data.storage) parts.push(String(data.storage));
+  if (data.gpu) parts.push(String(data.gpu));
+  if (data.layar) parts.push(String(data.layar));
+  if (data.tahun && Number(data.tahun) > 0) parts.push(String(data.tahun));
+  return parts.join(" | ");
+}
+
 // PUT — update barang
 export async function PUT(
   request: NextRequest,
@@ -15,14 +27,26 @@ export async function PUT(
     await requireAuth();
     const { id } = await params;
     const body = await request.json();
-    const { merk, tipe, spesifikasi, keterangan, hargaBeli } = body;
+    const { merk, tipe, processor, ram, storage, gpu, layar, tahun, kondisi, kelengkapan, bateraiHealth, keterangan, hargaBeli } = body;
+
+    // Rebuild spesifikasi from structured fields
+    const spesifikasi = buildSpesifikasi({ processor, ram, storage, gpu, layar, tahun });
 
     const updated = await db.barang.update({
       where: { id },
       data: {
         ...(merk !== undefined && { merk }),
         ...(tipe !== undefined && { tipe }),
-        ...(spesifikasi !== undefined && { spesifikasi }),
+        ...(processor !== undefined && { processor }),
+        ...(ram !== undefined && { ram }),
+        ...(storage !== undefined && { storage }),
+        ...(gpu !== undefined && { gpu }),
+        ...(layar !== undefined && { layar }),
+        ...(tahun !== undefined && { tahun: parseInt(String(tahun)) || 0 }),
+        ...(kondisi !== undefined && { kondisi }),
+        ...(kelengkapan !== undefined && { kelengkapan }),
+        ...(bateraiHealth !== undefined && { bateraiHealth }),
+        spesifikasi,
         ...(keterangan !== undefined && { keterangan }),
         ...(hargaBeli !== undefined && { hargaBeli: parseInt(String(hargaBeli)) || 0 }),
       },
