@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/lib/auth-store";
+import { useSidebar } from "@/components/ui/sidebar";
 import { useRouter } from "next/navigation";
 
 interface NavItem {
@@ -57,6 +58,7 @@ function IconComponent({ name, className }: { name: string; className?: string }
 export function AdminSidebar() {
   const pathname = usePathname();
   const { currentUser, hasPermission, logout } = useAuth();
+  const { isMobile, setOpenMobile } = useSidebar();
   const router = useRouter();
   const [navigation, setNavigation] = useState<NavigationData | null>(null);
 
@@ -146,6 +148,7 @@ export function AdminSidebar() {
                           asChild
                           isActive={isActive(item.href)}
                           tooltip={item.title}
+                          onClick={() => { if (isMobile) setOpenMobile(false); }}
                         >
                           <Link href={item.href}>
                             <IconComponent name={item.icon} />
