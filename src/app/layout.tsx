@@ -82,9 +82,12 @@ export const metadata: Metadata = {
     images: ["/og-image.png"],
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/icon", type: "image/png" },
+      { url: "/favicon.ico", sizes: "32x32" },
+    ],
     shortcut: "/favicon.png",
-    apple: "/apple-touch-icon.png",
+    apple: "/apple-icon",
   },
   alternates: {
     canonical: siteUrl,
