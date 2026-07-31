@@ -100,7 +100,7 @@ export default function BarangMasukPage() {
       <div className="page-container py-6 space-y-4">
         <div className="relative max-w-sm">
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input value={search} onChange={(e) => setSearch(e.target.value)}} placeholder="Cari kode, merk, tipe..." className="pl-9 h-10" />
+          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari kode, merk, tipe..." className="pl-9 h-10" />
         </div>
         {filtered.length === 0 ? (
           <Card className="border-dashed"><CardContent className="py-12 text-center"><PackagePlus className="h-10 w-10 mx-auto text-muted-foreground/40 mb-3" /><p className="text-sm text-muted-foreground">Belum ada barang</p></CardContent></Card>
