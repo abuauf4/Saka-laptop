@@ -4,12 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#10110f">
-    <title>@yield('title', $globalSettings?->seo_title ?: (($globalSettings?->site_name ?: 'Jakarta Laptops').' — Jual Laptop Bekas'))</title>
+    <title>@yield('title', $globalSettings?->seo_title ?: (($globalSettings?->site_name ?: 'Saka Laptop').' — Jual Laptop Bekas'))</title>
     <meta name="description" content="@yield('description', $globalSettings?->seo_description ?: 'Ajukan laptop bekas, dapatkan pengecekan yang jelas dan penawaran berdasarkan kondisi aktual perangkat.')">
     <link rel="canonical" href="{{ url()->current() }}">
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="{{ $globalSettings?->site_name ?: 'Jakarta Laptops' }}">
-    <meta property="og:title" content="@yield('og_title', trim($__env->yieldContent('title')) ?: ($globalSettings?->site_name ?: 'Jakarta Laptops'))">
+    <meta property="og:site_name" content="{{ $globalSettings?->site_name ?: 'Saka Laptop' }}">
+    <meta property="og:title" content="@yield('og_title', trim($__env->yieldContent('title')) ?: ($globalSettings?->site_name ?: 'Saka Laptop'))">
     <meta property="og:description" content="@yield('og_description', trim($__env->yieldContent('description')) ?: 'Jual laptop bekas dengan proses yang jelas dan praktis.')">
     <meta property="og:url" content="{{ url()->current() }}">
     <link rel="icon" href="{{ asset('assets/homepage/logo.jpg') }}">
@@ -20,8 +20,8 @@
 <header class="public-header">
     <div class="container public-nav">
         <a class="public-brand" href="{{ route('home') }}">
-            <img src="{{ asset('assets/homepage/logo.jpg') }}" alt="{{ $globalSettings?->site_name ?: 'Jakarta Laptops' }}">
-            <span>{{ $globalSettings?->site_name ?: 'Jakarta Laptops' }}</span>
+            <img src="{{ asset('assets/homepage/logo.jpg') }}" alt="{{ $globalSettings?->site_name ?: 'Saka Laptop' }}">
+            <span>{{ $globalSettings?->site_name ?: 'Saka Laptop' }}</span>
         </a>
 
         <nav class="desktop-nav" aria-label="Navigasi utama">
@@ -54,7 +54,7 @@
         <div>
             <div class="footer-brand">
                 <img src="{{ asset('assets/homepage/logo.jpg') }}" alt="">
-                <strong>{{ $globalSettings?->site_name ?: 'Jakarta Laptops' }}</strong>
+                <strong>{{ $globalSettings?->site_name ?: 'Saka Laptop' }}</strong>
             </div>
             <p>Laptop lamamu masih bernilai. Ajukan dari rumah, lanjutkan proses setelah detail perangkat kami review.</p>
         </div>
@@ -77,7 +77,7 @@
         </div>
     </div>
     <div class="container footer-bottom">
-        <span>© {{ date('Y') }} {{ $globalSettings?->site_name ?: 'Jakarta Laptops' }}</span>
+        <span>© {{ date('Y') }} {{ $globalSettings?->site_name ?: 'Saka Laptop' }}</span>
         <span>Website by Nauka Motion</span>
     </div>
 </footer>
