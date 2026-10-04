@@ -1,53 +1,48 @@
-# Deploy Saka Laptop ke Hostinger Single
+# Hostinger Auto-Deploy — Saka Laptop
 
-Paket production dibuat khusus shared hosting dan **tidak membutuhkan SSH atau Composer di Hostinger**.
-
-## Isi ZIP
-
-Setelah diextract pada folder domain, strukturnya harus seperti ini:
+Production flow:
 
 ```
-domains/jakartalaptops.com/
-├── public_html/
-│   ├── index.php
-│   ├── install.php
-│   ├── .htaccess
-│   └── assets/...
-├── saka-app/
-│   ├── app/
-│   ├── bootstrap/
-│   ├── config/
-│   ├── database/
-│   ├── resources/
-│   ├── routes/
-│   ├── storage/
-│   └── vendor/
-├── INSTALL-CODE.txt
-└── README-FIRST.txt
+laravel-v2
+  ↓ GitHub Actions: build + verify
+hostinger-prod
+  ↓ Hostinger Git auto-deployment
+public_html
 ```
 
-Laravel source berada di luar `public_html`, jadi file aplikasi dan `.env` tidak terekspos sebagai file publik.
+## Setup Hostinger satu kali
 
-## Langkah deploy dari HP
+1. hPanel → Website → Advanced → Git.
+2. Connect GitHub dan pilih repo `abuauf4/Saka-laptop`.
+3. Branch: `hostinger-prod`.
+4. Root directory / install path: `public_html`.
+5. Deploy.
+6. Aktifkan **Auto-deployment**.
 
-1. Di hPanel, buat database MySQL dan catat DB Host, nama database, username, dan password.
-2. Download artifact **saka-laptop-v2-hostinger** dari GitHub Actions.
-3. Upload ZIP ke folder domain, **bukan ke dalam public_html**, lalu Extract.
-4. Pastikan folder `public_html` dan `saka-app` sejajar.
-5. Buka `INSTALL-CODE.txt` di File Manager dan copy kodenya.
-6. Buka `https://jakartalaptops.com/install.php`.
-7. Isi Install Code, data MySQL, email admin, dan password admin.
-8. Klik **Install Saka Laptop**.
-9. Setelah sukses, buka `/admin/login`.
+Setelah itu setiap perubahan yang lolos build di `laravel-v2` akan memperbarui `hostinger-prod`. Hostinger menarik branch production itu otomatis.
 
-Installer membuat `.env`, APP_KEY, migration, dan admin secara otomatis. Setelah sukses, marker instalasi dibuat dan token installer dihapus sehingga installer tidak dapat dijalankan ulang.
+## Install pertama
 
-## Setelah install
+Sebelum membuka website:
 
-Tes:
-- homepage
-- form lead → muncul di `/admin/leads`
-- create + publish artikel
-- `/sitemap.xml`
-- `/robots.txt`
-- mobile layout
+1. Buat database MySQL di hPanel.
+2. Buka `https://jakartalaptops.com/install.php`.
+3. Masukkan Install Code, DB Host, database name, username, password DB, email admin, dan password admin.
+4. Klik **Install Saka Laptop**.
+5. Setelah sukses buka `/admin/login`.
+
+Konfigurasi runtime disimpan di folder `saka-runtime` di luar `public_html`, jadi auto-deploy Git tidak menghapus `.env`, session, cache, atau marker instalasi.
+
+## Keamanan
+
+- `.saka-app` berada di dalam deployment branch tetapi diblokir dari HTTP oleh root `.htaccess`.
+- Runtime `.env` berada di luar `public_html`.
+- Installer otomatis 404 setelah instalasi berhasil.
+- Password admin awal dihapus dari runtime `.env` setelah proses seeding.
+- Branch `hostinger-prod` adalah hasil build; jangan diedit manual.
+
+## Update harian
+
+Tidak perlu upload ZIP.
+
+Cukup update `laravel-v2` → GitHub Actions build → `hostinger-prod` berubah → Hostinger auto-deploy.
