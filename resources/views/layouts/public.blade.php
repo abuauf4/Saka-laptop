@@ -114,5 +114,21 @@
     </svg>
 </a>
 @endif
+
+<script>
+(function () {
+    const destination = 'AW-18221664763/H6mmCMDOitkcEPuT4vBD';
+
+    document.addEventListener('click', function (event) {
+        const link = event.target.closest('a[href*="wa.me/"], a[href*="api.whatsapp.com/"]');
+        if (!link || typeof window.gtag !== 'function') return;
+
+        window.gtag('event', 'conversion', {
+            'send_to': destination
+        });
+    });
+})();
+</script>
+
 </body>
 </html>
