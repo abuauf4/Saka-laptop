@@ -207,3 +207,22 @@ button,input,textarea,select{font:inherit}
   .article-cta>.container{display:grid}.inner-hero{padding:126px 0 62px}.inner-hero h1{font-size:42px}
   .content{padding:16px}.topline{display:block}.topline>.btn{margin-top:14px}.lead-stats{grid-template-columns:repeat(2,1fr)}.toolbar{grid-template-columns:1fr}.lead-card,.article-row{align-items:flex-start}.lead-meta,.article-actions{flex-direction:column;align-items:flex-end}.detail-list>div{grid-template-columns:1fr;gap:2px}.article-body{min-height:420px}
 }
+
+
+/* Brand polish */
+.brand-mark{display:grid;place-items:center;overflow:hidden;border-radius:50%;background:#090a09;flex:0 0 auto}
+.brand-mark-header{width:36px;height:36px}
+.brand-mark-footer{width:34px;height:34px}
+.public-brand .brand-mark img,.footer-brand .brand-mark img{width:100%;height:100%;max-width:none;object-fit:cover;border-radius:0;transform:scale(1.32)}
+.developer-credit{display:inline-flex;align-items:center;gap:9px;color:#7c7e77;transition:.2s ease}
+.developer-credit>span{white-space:nowrap}
+.developer-credit img{width:112px;height:38px;object-fit:contain;border-radius:7px;background:#050505;padding:5px 8px}
+.developer-credit:hover{color:#111;transform:translateY(-1px)}
+.wa-fab{width:56px;height:56px;right:20px;bottom:20px;font-size:0;transition:transform .2s ease,box-shadow .2s ease}
+.wa-fab:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 14px 34px rgba(0,0,0,.24)}
+.wa-fab svg{width:27px;height:27px;display:block}
+@media(max-width:680px){
+  .developer-credit{display:flex;align-items:center;justify-content:flex-start;gap:8px;width:max-content;max-width:100%}
+  .developer-credit img{width:104px;height:36px}
+  .wa-fab{right:18px;bottom:18px}
+}
