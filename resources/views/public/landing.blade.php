@@ -32,9 +32,9 @@ $landingCopy = [
         'desc'=>'Ajukan perangkat lama lebih dulu untuk mengetahui kondisinya sebelum melanjutkan opsi tukar tambah.',
     ],
 ];
-$copy = $landingCopy[$slug] ?? ['eyebrow'=>'Jakarta Laptops','title'=>$content->hero_title,'desc'=>$content->hero_subtitle];
+$copy = $landingCopy[$slug] ?? ['eyebrow'=>'Saka Laptop','title'=>$content->hero_title,'desc'=>$content->hero_subtitle];
 @endphp
-@section('title', $copy['title'].' — '.($settings->site_name ?: 'Jakarta Laptops'))
+@section('title', $copy['title'].' — '.($settings->site_name ?: 'Saka Laptop'))
 @section('description', $copy['desc'])
 
 @section('content')
