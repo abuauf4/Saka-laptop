@@ -9,6 +9,7 @@ on:
       - 'bootstrap/**'
       - 'config/**'
       - 'database/**'
+      - 'hostinger/**'
       - 'public/**'
       - 'resources/**'
       - 'routes/**'
@@ -35,14 +36,21 @@ jobs:
         run: |
           cp .env.example .env
           php artisan key:generate --force
-          find app bootstrap config database routes public -name '*.php' -print0 | xargs -0 -n1 php -l
+          find app bootstrap config database routes public hostinger -name '*.php' -print0 | xargs -0 -n1 php -l
           php artisan route:list --except-vendor
           rm -f .env
-      - name: Prepare package
+      - name: Prepare Hostinger structure
         run: |
-          rm -f .env
-          mkdir -p deploy
-          rsync -a --exclude deploy --exclude .git --exclude .github --exclude tests ./ deploy/
+          rm -rf deploy
+          mkdir -p deploy/saka-app deploy/public_html
+          rsync -a ./ deploy/saka-app/             --exclude deploy             --exclude .git             --exclude .github             --exclude tests             --exclude public             --exclude hostinger             --exclude .env
+          rsync -a public/ deploy/public_html/
+          cp hostinger/index.php deploy/public_html/index.php
+          cp hostinger/install.php deploy/public_html/install.php
+          INSTALL_CODE="$(openssl rand -hex 16)"
+          printf '%s' "$INSTALL_CODE" > deploy/saka-app/.install-token
+          printf 'SAKA LAPTOP HOSTINGER INSTALL CODE\n\n%s\n\nBuka https://domain-anda/install.php lalu masukkan kode ini.\n' "$INSTALL_CODE" > deploy/INSTALL-CODE.txt
+          printf 'Extract ZIP ini di folder domain Hostinger sehingga public_html dan saka-app sejajar.\nJangan pindahkan isi saka-app ke public_html.\nLalu buka /install.php.\n' > deploy/README-FIRST.txt
           cd deploy
           zip -qr ../saka-laptop-v2-hostinger.zip .
       - name: Upload package
