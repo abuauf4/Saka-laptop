@@ -293,3 +293,10 @@ button,input,textarea,select{font:inherit}
     padding:3px 4px;
   }
 }
+
+
+/* Prevent floating WhatsApp from covering footer credit */
+@media(max-width:680px){
+  .public-footer{padding-bottom:104px}
+  .footer-bottom{padding-bottom:4px}
+}
