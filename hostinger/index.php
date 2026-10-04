@@ -5,9 +5,15 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
-$basePath = dirname(__DIR__).'/saka-app';
+$basePath = __DIR__.'/.saka-app';
+$runtimePath = dirname(__DIR__).'/saka-runtime';
 
-if (file_exists($maintenance = $basePath.'/storage/framework/maintenance.php')) {
+if (! is_file($runtimePath.'/.installed')) {
+    header('Location: /install.php', true, 302);
+    exit;
+}
+
+if (file_exists($maintenance = $runtimePath.'/storage/framework/maintenance.php')) {
     require $maintenance;
 }
 
