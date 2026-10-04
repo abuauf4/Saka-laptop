@@ -1,27 +1,32 @@
-# Legacy → Laravel data migration plan
+# Legacy → Laravel migration plan
 
-The legacy app remains untouched on `main`. `laravel-v2` is developed independently.
+Legacy Next.js tetap aman di `main`. Branch `laravel-v2` hanya memindahkan data yang masih relevan.
 
-## Import order
+## Yang dipindahkan
 
-1. Settings / lokasi / branding / SEO → `settings`
-2. Homepage content → `homepage_contents`
-3. Testimonials → `testimonials`
-4. Articles → `articles`
-5. Users / roles → create new Laravel users; do **not** copy legacy JWT/session data
-6. Submissions → `submissions`
-7. Inventory / barang → `inventory_items`
-8. Kasir/sales → `transactions`
+1. Data identitas website yang dibutuhkan public pages
+2. Homepage content yang ingin dipertahankan
+3. Testimoni yang valid
+4. Artikel published/draft yang masih dipakai
+5. Lead/customer inquiry yang masih relevan bila perlu
 
-## Passwords
+## Yang tidak dipindahkan ke v2
 
-Existing bcrypt hashes can be migrated only after verifying compatibility. Admin access will initially be recreated with a new strong password from `ADMIN_PASSWORD`.
+- role/permission lama
+- inventory
+- QC
+- penawaran operasional
+- kasir/transaksi
+- laporan internal
+
+Admin dibuat ulang sebagai satu akun dengan password baru dari `ADMIN_PASSWORD`.
 
 ## Cutover
 
-- Freeze legacy writes.
-- Final export from PostgreSQL.
-- Import into MySQL.
-- Run reconciliation totals.
-- Smoke-test public pages and admin.
-- Point the domain to Hostinger only after verification.
+- Selesaikan tampilan public + form lead
+- Import artikel/konten
+- Smoke test lead masuk dan artikel publish
+- Upload paket Hostinger
+- Jalankan `/setup`
+- Verifikasi mobile/desktop + SEO
+- Baru arahkan domain ke hosting baru
