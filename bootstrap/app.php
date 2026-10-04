@@ -17,10 +17,19 @@ $app = Application::configure(basePath: dirname(__DIR__))
         //
     })->create();
 
-$sharedHostingPublic = dirname(dirname(__DIR__)).'/public_html';
+$appBase = dirname(__DIR__);
+$parent = dirname($appBase);
 
-if (is_dir($sharedHostingPublic)) {
-    $app->usePublicPath($sharedHostingPublic);
+if (basename($appBase) === '.saka-app' && basename($parent) === 'public_html') {
+    $runtime = dirname($parent).'/saka-runtime';
+    $app->usePublicPath($parent);
+    $app->useEnvironmentPath($runtime);
+    $app->useStoragePath($runtime.'/storage');
+} elseif (basename($appBase) === 'saka-app' && is_dir($parent.'/public_html')) {
+    $runtime = $parent.'/saka-runtime';
+    $app->usePublicPath($parent.'/public_html');
+    $app->useEnvironmentPath($runtime);
+    $app->useStoragePath($runtime.'/storage');
 }
 
 return $app;
