@@ -13,8 +13,8 @@
     <meta property="og:title" content="@yield('og_title', trim($__env->yieldContent('title')) ?: ($globalSettings?->site_name ?: 'Saka Laptop'))">
     <meta property="og:description" content="@yield('og_description', trim($__env->yieldContent('description')) ?: 'Jual laptop bekas dengan proses yang jelas dan praktis.')">
     <meta property="og:url" content="@yield('canonical', url()->current())">
-    <link rel="icon" href="{{ asset('assets/homepage/logo.jpg') }}">
-    <link rel="stylesheet" href="{{ asset('assets/v2/app.css') }}">
+    <link rel="icon" href="{{ asset('assets/branding/saka-mark.svg') }}">
+    <link rel="stylesheet" href="{{ asset('assets/v2/app.css') }}?v=20261004-1924">
     @stack('head')
 </head>
 <body>
@@ -22,7 +22,7 @@
     <div class="container public-nav">
         <a class="public-brand" href="{{ route('home') }}">
             <span class="brand-mark brand-mark-header">
-                <img src="{{ asset('assets/homepage/logo.jpg') }}" alt="{{ $globalSettings?->site_name ?: 'Saka Laptop' }}">
+                <img src="{{ asset('assets/branding/saka-mark.svg') }}" alt="{{ $globalSettings?->site_name ?: 'Saka Laptop' }}">
             </span>
             <span>{{ $globalSettings?->site_name ?: 'Saka Laptop' }}</span>
         </a>
@@ -57,7 +57,7 @@
         <div>
             <div class="footer-brand">
                 <span class="brand-mark brand-mark-footer">
-                    <img src="{{ asset('assets/homepage/logo.jpg') }}" alt="">
+                    <img src="{{ asset('assets/branding/saka-mark.svg') }}" alt="">
                 </span>
                 <strong>{{ $globalSettings?->site_name ?: 'Saka Laptop' }}</strong>
             </div>
@@ -83,9 +83,9 @@
     </div>
     <div class="container footer-bottom">
         <span>© {{ date('Y') }} {{ $globalSettings?->site_name ?: 'Saka Laptop' }}</span>
-        <a class="developer-credit" href="https://motion.nauka.id" target="_blank" rel="noopener">
+        <a class="developer-credit" href="https://motion.nauka.id" target="_blank" rel="noopener" aria-label="Designed and developed by Nauka Motion">
             <span>Designed &amp; developed by</span>
-            <img src="{{ asset('assets/branding/nauka-motion.webp') }}" alt="Nauka Motion">
+            <img src="{{ asset('assets/branding/nauka-motion.webp') }}" alt="Nauka Motion" loading="lazy">
         </a>
     </div>
 </footer>
