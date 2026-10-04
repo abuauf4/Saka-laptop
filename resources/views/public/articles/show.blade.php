@@ -12,7 +12,7 @@ $articleSchema = [
     'datePublished'=>optional($article->published_at)->toIso8601String(),
     'dateModified'=>$article->updated_at->toIso8601String(),
     'mainEntityOfPage'=>url()->current(),
-    'publisher'=>['@type'=>'Organization','name'=>$globalSettings?->site_name ?: 'Jakarta Laptops'],
+    'publisher'=>['@type'=>'Organization','name'=>$globalSettings?->site_name ?: 'Saka Laptop'],
 ];
 if($article->cover_path){$articleSchema['image']=[asset(ltrim($article->cover_path,'/'))];}
 @endphp
@@ -26,7 +26,7 @@ if($article->cover_path){$articleSchema['image']=[asset(ltrim($article->cover_pa
         <span class="section-kicker">Panduan</span>
         <h1>{{ $article->title }}</h1>
         @if($article->excerpt)<p>{{ $article->excerpt }}</p>@endif
-        <div class="article-byline">{{ optional($article->published_at)->format('d M Y') ?: $article->created_at->format('d M Y') }} · {{ $globalSettings?->site_name ?: 'Jakarta Laptops' }}</div>
+        <div class="article-byline">{{ optional($article->published_at)->format('d M Y') ?: $article->created_at->format('d M Y') }} · {{ $globalSettings?->site_name ?: 'Saka Laptop' }}</div>
     </header>
 
     @if($article->cover_path)
