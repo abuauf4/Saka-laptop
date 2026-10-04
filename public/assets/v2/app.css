@@ -226,3 +226,70 @@ button,input,textarea,select{font:inherit}
   .developer-credit img{width:104px;height:36px}
   .wa-fab{right:18px;bottom:18px}
 }
+
+
+/* Final mobile polish */
+.public-brand .brand-mark,
+.footer-brand .brand-mark{
+  background:transparent;
+  overflow:visible;
+  border-radius:0;
+}
+.public-brand .brand-mark img,
+.footer-brand .brand-mark img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  transform:none;
+  border-radius:0;
+}
+.brand-mark-header{width:40px;height:40px}
+.brand-mark-footer{width:36px;height:36px}
+
+.footer-bottom{
+  align-items:center;
+}
+.developer-credit{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  width:auto;
+  max-width:none;
+  font-size:11px;
+  line-height:1;
+  color:#7f817a;
+}
+.developer-credit>span{white-space:nowrap}
+.developer-credit img{
+  width:82px;
+  height:26px;
+  object-fit:contain;
+  background:#050505;
+  border-radius:4px;
+  padding:3px 5px;
+  flex:0 0 auto;
+}
+
+@media(max-width:680px){
+  .home-hero{min-height:100svh}
+  .hero-copy{padding-top:108px;padding-bottom:54px}
+  .footer-bottom{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px 18px;
+  }
+  .developer-credit{
+    display:inline-flex;
+    width:auto;
+    max-width:100%;
+    gap:6px;
+    font-size:10.5px;
+  }
+  .developer-credit img{
+    width:74px;
+    height:24px;
+    padding:3px 4px;
+  }
+}
