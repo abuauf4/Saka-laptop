@@ -1,44 +1,27 @@
-# Saka Laptop v2 — Laravel rebuild
+# Saka Laptop v2 — Laravel shared-hosting rebuild
 
-This branch is the shared-hosting rebuild of Saka Laptop.
+Branch ini adalah versi ringan Saka Laptop untuk Hostinger Single Web Hosting.
 
-- Legacy production code remains on `main`.
-- `laravel-v2` targets Hostinger Web Hosting using **Laravel 13 + PHP 8.3+ + MySQL**.
-- Public website is server-rendered with Blade.
-- Admin auth uses Laravel sessions.
-- RBAC is enforced on the server.
-- Images are stored as files, not base64 in MySQL.
-- Database changes use migrations only.
+## Scope yang dikunci
 
-## Current milestone
+Backend **bukan panel admin besar**. Hanya ada:
 
-Foundation is in place:
+- Login admin tunggal
+- **Leads** — lihat customer masuk, buka WhatsApp, ubah status, simpan catatan follow-up
+- **Artikel** — buat/edit draft, publish, SEO title/description, cover image
 
-- Laravel application bootstrap
-- MySQL schema
-- secure admin login
-- roles + permissions
-- settings single source of truth
-- public homepage SSR
-- article routes
-- SEO landing page route foundation
-- submissions / inventory / transaction schemas
-- Hostinger deployment documentation
+Tidak ada users/roles, dashboard operasional, inventory, QC, kasir, laporan, atau settings manager.
 
-See:
+Public website tetap server-rendered dengan Blade dan SEO landing pages tetap dipertahankan.
 
-- `docs/FEATURE-MAP.md`
-- `docs/HOSTINGER-DEPLOY.md`
-- `docs/MIGRATION-PLAN.md`
+## Stack
 
-## Local setup
+- Laravel 13
+- PHP 8.3+
+- MySQL
+- Blade
+- Build ZIP via GitHub Actions supaya Hostinger Single tidak perlu SSH/Composer
 
-```bash
-cp .env.example .env
-composer install
-php artisan key:generate
-php artisan migrate
-# Set ADMIN_PASSWORD in .env first
-php artisan db:seed
-php artisan serve
-```
+## Deploy
+
+Lihat `docs/HOSTINGER-DEPLOY.md`.
