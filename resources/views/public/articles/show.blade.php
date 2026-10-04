@@ -1,6 +1,11 @@
 @extends('layouts.public')
 @section('title', $article->meta_title ?: $article->title)
 @section('description', $article->meta_description ?: $article->excerpt)
+@section('canonical', route('articles.show', $article->slug))
+@section('og_type', 'article')
+@if($article->cover_path)
+@section('og_image', asset(ltrim($article->cover_path,'/')))
+@endif
 
 @push('head')
 @php
