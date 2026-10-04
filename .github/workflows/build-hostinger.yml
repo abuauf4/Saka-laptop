@@ -1,4 +1,4 @@
-name: Build Hostinger Package
+name: Publish Hostinger Production
 
 on:
   workflow_dispatch:
@@ -15,14 +15,23 @@ on:
       - 'routes/**'
       - 'storage/**'
       - 'composer.json'
+      - 'composer.lock'
       - 'artisan'
       - '.github/workflows/build-hostinger.yml'
 
+permissions:
+  contents: write
+
+concurrency:
+  group: hostinger-production
+  cancel-in-progress: true
+
 jobs:
-  package:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -30,32 +39,64 @@ jobs:
           extensions: mbstring, intl, pdo_mysql, bcmath, fileinfo, openssl
           tools: composer:v2
           coverage: none
+
       - name: Install production dependencies
         run: composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
-      - name: Verify application
+
+      - name: Verify Laravel source
         run: |
           cp .env.example .env
           php artisan key:generate --force
           find app bootstrap config database routes public hostinger -name '*.php' -print0 | xargs -0 -n1 php -l
           php artisan route:list --except-vendor
           rm -f .env
-      - name: Prepare Hostinger structure
+
+      - name: Build production tree
         run: |
-          rm -rf deploy
-          mkdir -p deploy/saka-app deploy/public_html
-          rsync -a ./ deploy/saka-app/             --exclude deploy             --exclude .git             --exclude .github             --exclude tests             --exclude public             --exclude hostinger             --exclude .env
-          rsync -a public/ deploy/public_html/
-          cp hostinger/index.php deploy/public_html/index.php
-          cp hostinger/install.php deploy/public_html/install.php
-          INSTALL_CODE="$(openssl rand -hex 16)"
-          printf '%s' "$INSTALL_CODE" > deploy/saka-app/.install-token
-          printf 'SAKA LAPTOP HOSTINGER INSTALL CODE\n\n%s\n\nBuka https://domain-anda/install.php lalu masukkan kode ini.\n' "$INSTALL_CODE" > deploy/INSTALL-CODE.txt
-          printf 'Extract ZIP ini di folder domain Hostinger sehingga public_html dan saka-app sejajar.\nJangan pindahkan isi saka-app ke public_html.\nLalu buka /install.php.\n' > deploy/README-FIRST.txt
-          cd deploy
-          zip -qr ../saka-laptop-v2-hostinger.zip .
-      - name: Upload package
+          rm -rf hostinger-prod-tree
+          mkdir -p hostinger-prod-tree/.saka-app
+
+          rsync -a public/ hostinger-prod-tree/
+          cp hostinger/index.php hostinger-prod-tree/index.php
+          cp hostinger/install.php hostinger-prod-tree/install.php
+          cp hostinger/production.htaccess hostinger-prod-tree/.htaccess
+
+          cp -a app bootstrap config database resources routes storage vendor hostinger-prod-tree/.saka-app/
+          cp artisan composer.json composer.lock hostinger-prod-tree/.saka-app/
+
+          rm -f hostinger-prod-tree/.saka-app/.env
+          rm -rf hostinger-prod-tree/.saka-app/.git hostinger-prod-tree/.saka-app/.github
+
+      - name: Verify production tree
+        run: |
+          php -l hostinger-prod-tree/index.php
+          php -l hostinger-prod-tree/install.php
+          test -f hostinger-prod-tree/.saka-app/vendor/autoload.php
+          test -f hostinger-prod-tree/.saka-app/artisan
+          test -f hostinger-prod-tree/.htaccess
+
+      - name: Create fallback ZIP
+        run: |
+          cd hostinger-prod-tree
+          zip -qr ../saka-laptop-hostinger-prod.zip .
+
+      - name: Upload fallback ZIP
         uses: actions/upload-artifact@v4
         with:
-          name: saka-laptop-v2-hostinger
-          path: saka-laptop-v2-hostinger.zip
+          name: saka-laptop-hostinger-prod
+          path: saka-laptop-hostinger-prod.zip
           retention-days: 14
+
+      - name: Publish hostinger-prod branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd hostinger-prod-tree
+          git init
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b hostinger-prod
+          git add -f -A
+          git commit -m "deploy: ${GITHUB_SHA}"
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push --force origin hostinger-prod
