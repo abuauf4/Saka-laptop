@@ -14,7 +14,7 @@
     <meta property="og:description" content="@yield('og_description', trim($__env->yieldContent('description')) ?: 'Jual laptop bekas dengan proses yang jelas dan praktis.')">
     <meta property="og:url" content="@yield('canonical', url()->current())">
     <link rel="icon" href="{{ asset('assets/branding/saka-mark.svg') }}">
-    <link rel="stylesheet" href="{{ asset('assets/v2/app.css') }}?v=20261004-1924">
+    <link rel="stylesheet" href="{{ asset('assets/v2/app.css') }}?v=20261004-1945">
     @stack('head')
 </head>
 <body>
