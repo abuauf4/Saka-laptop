@@ -4,6 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#10110f">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18221664763"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'AW-18221664763');
+    </script>
     <title>@yield('title', $globalSettings?->seo_title ?: (($globalSettings?->site_name ?: 'Saka Laptop').' — Jual Laptop Bekas'))</title>
     <meta name="description" content="@yield('description', $globalSettings?->seo_description ?: 'Ajukan laptop bekas, dapatkan pengecekan yang jelas dan penawaran berdasarkan kondisi aktual perangkat.')">
     <meta name="robots" content="index,follow,max-image-preview:large">
