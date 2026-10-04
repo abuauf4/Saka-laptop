@@ -6,22 +6,13 @@
     <meta name="theme-color" content="#10110f">
     <title>@yield('title', $globalSettings?->seo_title ?: (($globalSettings?->site_name ?: 'Saka Laptop').' — Jual Laptop Bekas'))</title>
     <meta name="description" content="@yield('description', $globalSettings?->seo_description ?: 'Ajukan laptop bekas, dapatkan pengecekan yang jelas dan penawaran berdasarkan kondisi aktual perangkat.')">
-    <meta name="robots" content="@yield('robots', 'index,follow,max-image-preview:large')">
+    <meta name="robots" content="index,follow,max-image-preview:large">
     <link rel="canonical" href="@yield('canonical', url()->current())">
     <meta property="og:type" content="@yield('og_type', 'website')">
     <meta property="og:site_name" content="{{ $globalSettings?->site_name ?: 'Saka Laptop' }}">
     <meta property="og:title" content="@yield('og_title', trim($__env->yieldContent('title')) ?: ($globalSettings?->site_name ?: 'Saka Laptop'))">
     <meta property="og:description" content="@yield('og_description', trim($__env->yieldContent('description')) ?: 'Jual laptop bekas dengan proses yang jelas dan praktis.')">
     <meta property="og:url" content="@yield('canonical', url()->current())">
-    @hasSection('og_image')
-    <meta property="og:image" content="@yield('og_image')">
-    @endif
-    <meta name="twitter:card" content="@hasSection('og_image')summary_large_image@else summary@endif">
-    <meta name="twitter:title" content="@yield('og_title', trim($__env->yieldContent('title')) ?: ($globalSettings?->site_name ?: 'Saka Laptop'))">
-    <meta name="twitter:description" content="@yield('og_description', trim($__env->yieldContent('description')) ?: 'Jual laptop bekas dengan proses yang jelas dan praktis.')">
-    @hasSection('og_image')
-    <meta name="twitter:image" content="@yield('og_image')">
-    @endif
     <link rel="icon" href="{{ asset('assets/homepage/logo.jpg') }}">
     <link rel="stylesheet" href="{{ asset('assets/v2/app.css') }}">
     @stack('head')
