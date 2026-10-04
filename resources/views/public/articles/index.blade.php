@@ -1,5 +1,5 @@
 @extends('layouts.public')
-@section('title', 'Artikel & Tips — '.($globalSettings?->site_name ?: 'Jakarta Laptops'))
+@section('title', 'Artikel & Tips — '.($globalSettings?->site_name ?: 'Saka Laptop'))
 @section('description', 'Tips jual laptop bekas, perawatan perangkat, dan panduan sebelum melepas laptop lama.')
 
 @section('content')
@@ -19,7 +19,7 @@
                 @if($article->cover_path)
                     <img src="{{ asset(ltrim($article->cover_path,'/')) }}" alt="{{ $article->title }}" loading="lazy">
                 @else
-                    <div class="article-cover-fallback">JL</div>
+                    <div class="article-cover-fallback">SL</div>
                 @endif
                 <div class="public-article-copy">
                     <span>{{ optional($article->published_at)->format('d M Y') ?: 'Artikel' }}</span>
