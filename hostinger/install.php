@@ -73,8 +73,10 @@ $values = [
     'db_database' => '',
     'db_username' => '',
     'db_password' => '',
-    'admin_email' => 'admin@saka-laptop.id',
-    'admin_password' => '',
+    'owner_email' => '',
+    'owner_password' => '',
+    'developer_email' => '',
+    'developer_password' => '',
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -90,19 +92,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = 'Install Code salah.';
     }
 
-    foreach (['db_host','db_port','db_database','db_username','admin_email','admin_password'] as $required) {
+    foreach (['db_host','db_port','db_database','db_username','owner_email','owner_password','developer_email','developer_password'] as $required) {
         if ($values[$required] === '') {
             $errors[] = 'Semua field wajib harus diisi.';
             break;
         }
     }
 
-    if (! filter_var($values['admin_email'], FILTER_VALIDATE_EMAIL)) {
-        $errors[] = 'Email admin tidak valid.';
+    if (! filter_var($values['owner_email'], FILTER_VALIDATE_EMAIL)) {
+        $errors[] = 'Email owner tidak valid.';
     }
 
-    if (strlen($values['admin_password']) < 10) {
-        $errors[] = 'Password admin minimal 10 karakter.';
+    if (! filter_var($values['developer_email'], FILTER_VALIDATE_EMAIL)) {
+        $errors[] = 'Email developer tidak valid.';
+    }
+
+    if ($values['owner_email'] === $values['developer_email']) {
+        $errors[] = 'Email owner dan developer harus berbeda.';
+    }
+
+    if (strlen($values['owner_password']) < 10) {
+        $errors[] = 'Password owner minimal 10 karakter.';
+    }
+
+    if (strlen($values['developer_password']) < 10) {
+        $errors[] = 'Password developer minimal 10 karakter.';
     }
 
     if (! $errors) {
@@ -151,8 +165,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'LOG_CHANNEL=single',
                 'LOG_LEVEL=warning',
                 '',
-                'ADMIN_EMAIL='.envQuote(strtolower($values['admin_email'])),
-                'ADMIN_PASSWORD='.envQuote($values['admin_password']),
+                'OWNER_EMAIL='.envQuote(strtolower($values['owner_email'])),
+                'OWNER_PASSWORD='.envQuote($values['owner_password']),
+                'DEVELOPER_EMAIL='.envQuote(strtolower($values['developer_email'])),
+                'DEVELOPER_PASSWORD='.envQuote($values['developer_password']),
                 '',
             ]);
 
@@ -170,7 +186,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
             Illuminate\Support\Facades\Artisan::call('optimize:clear');
 
-            $sanitizedEnv = preg_replace('/^ADMIN_PASSWORD=.*$/m', 'ADMIN_PASSWORD=', (string) file_get_contents($envPath));
+            $sanitizedEnv = (string) file_get_contents($envPath);
+            $sanitizedEnv = preg_replace('/^OWNER_PASSWORD=.*$/m', 'OWNER_PASSWORD=', $sanitizedEnv);
+            $sanitizedEnv = preg_replace('/^DEVELOPER_PASSWORD=.*$/m', 'DEVELOPER_PASSWORD=', $sanitizedEnv);
             file_put_contents($envPath, $sanitizedEnv, LOCK_EX);
             file_put_contents($marker, date(DATE_ATOM), LOCK_EX);
 
@@ -200,12 +218,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php if ($success): ?>
     <div class="ok">
         <strong>Instalasi selesai.</strong>
-        <p>Database, akun admin, dan konfigurasi aplikasi sudah siap. Deploy berikutnya dari GitHub tidak akan menghapus konfigurasi ini.</p>
+        <p>Database, akun owner, akun developer, dan konfigurasi aplikasi sudah siap. Deploy berikutnya dari GitHub tidak akan menghapus konfigurasi ini.</p>
         <p><a href="/admin/login">Buka login admin →</a></p>
     </div>
 <?php else: ?>
     <h1>Setup sekali, setelah itu auto-deploy.</h1>
-    <p class="sub">Isi database MySQL dan akun admin. Setelah instalasi pertama, update berikutnya cukup lewat commit GitHub.</p>
+    <p class="sub">Isi database MySQL, akun owner milik klien, dan akun developer untuk maintenance. Setelah instalasi pertama, update berikutnya cukup lewat commit GitHub.</p>
 
     <?php foreach ($errors as $error): ?>
         <div class="error"><?= h($error) ?></div>
@@ -224,8 +242,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="field"><label>Nama Database</label><input name="db_database" value="<?= h($values['db_database']) ?>" required></div>
             <div class="field"><label>Username Database</label><input name="db_username" value="<?= h($values['db_username']) ?>" required></div>
             <div class="field full"><label>Password Database</label><input type="password" name="db_password" value="" required></div>
-            <div class="field"><label>Email Admin</label><input type="email" name="admin_email" value="<?= h($values['admin_email']) ?>" required></div>
-            <div class="field"><label>Password Admin</label><input type="password" name="admin_password" value="" minlength="10" required></div>
+            <div class="field"><label>Owner Email</label><input type="email" name="owner_email" value="<?= h($values['owner_email']) ?>" required></div>
+            <div class="field"><label>Owner Password</label><input type="password" name="owner_password" value="" minlength="10" required></div>
+            <div class="field"><label>Developer Email</label><input type="email" name="developer_email" value="<?= h($values['developer_email']) ?>" required></div>
+            <div class="field"><label>Developer Password</label><input type="password" name="developer_password" value="" minlength="10" required></div>
         </div>
         <button class="btn" type="submit">Install Saka Laptop</button>
     </form>
