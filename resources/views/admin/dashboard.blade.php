@@ -1,0 +1,3 @@
+@extends('layouts.admin')
+@section('title','Dashboard')
+@section('content')<div class="topline"><div><h1 style="margin:0">Dashboard</h1><p class="muted">Fondasi Laravel v2 aktif.</p></div></div><div class="metrics"><div class="metric"><span class="muted">Pengajuan</span><strong>{{ number_format($submissionCount) }}</strong></div><div class="metric"><span class="muted">Stok tersedia</span><strong>{{ number_format($inventoryCount) }}</strong></div><div class="metric"><span class="muted">Terjual</span><strong>{{ number_format($soldCount) }}</strong></div><div class="metric"><span class="muted">Omzet</span><strong>Rp{{ number_format($revenue,0,',','.') }}</strong></div></div>@endsection
