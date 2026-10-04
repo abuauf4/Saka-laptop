@@ -20,7 +20,9 @@ foreach ([
     'jual-laptop-kantor-bekas',
     'tukar-tambah-laptop',
 ] as $slug) {
-    Route::get('/'.$slug, [PublicSiteController::class, 'landing'])->name('landing.'.$slug);
+    Route::get('/'.$slug, [PublicSiteController::class, 'landing'])
+        ->defaults('slug', $slug)
+        ->name('landing.'.$slug);
 }
 
 Route::middleware('guest')->group(function (): void {
