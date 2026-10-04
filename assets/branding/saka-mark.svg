@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Saka Laptop">
+  <circle cx="50" cy="50" r="48" fill="#050505"/>
+  <rect x="27" y="28" width="46" height="32" rx="4.5" fill="none" stroke="#fff" stroke-width="5"/>
+  <path d="M21 67h58c0 5-4 9-9 9H30c-5 0-9-4-9-9Z" fill="#fff"/>
+  <path d="M37 67h26" stroke="#050505" stroke-width="3" stroke-linecap="round"/>
+</svg>

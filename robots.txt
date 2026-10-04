@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /install.php
+
+Sitemap: https://jakartalaptops.com/sitemap.xml
