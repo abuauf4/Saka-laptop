@@ -32,10 +32,9 @@ Route::post('/leads', [LeadCaptureController::class, 'store'])
     ->name('leads.store');
 
 
-Route::middleware('guest')->group(function (): void {
-    Route::get('/admin/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/admin/login', [AuthController::class, 'login'])->middleware('throttle:6,1');
-});
+Route::get('/admin/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/admin/login', [AuthController::class, 'login'])
+    ->middleware(['guest', 'throttle:6,1']);
 
 Route::post('/admin/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
