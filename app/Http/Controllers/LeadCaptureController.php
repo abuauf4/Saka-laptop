@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Lead;
 use App\Models\Setting;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class LeadCaptureController extends Controller
 {
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse|View
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:120'],
@@ -60,8 +61,10 @@ class LeadCaptureController extends Controller
             'Mohon dibantu review dan penawarannya. Terima kasih.',
         ])->filter(fn ($line) => $line !== null)->implode("\n");
 
-        return redirect()->away(
-            'https://wa.me/'.$businessWhatsapp.'?text='.rawurlencode($message)
-        );
+        $whatsappUrl = 'https://wa.me/'.$businessWhatsapp.'?text='.rawurlencode($message);
+
+        return view('public.lead-complete', [
+            'whatsappUrl' => $whatsappUrl,
+        ]);
     }
 }
