@@ -7,6 +7,7 @@ use App\Models\Article;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -59,10 +60,7 @@ class ArticleController extends Controller
 
     public function destroy(Article $article): RedirectResponse
     {
-        if ($article->cover_path) {
-            File::delete(public_path($article->cover_path));
-        }
-
+        $this->deleteCover($article->cover_path);
         $article->delete();
 
         return redirect()->route('admin.articles.index')
@@ -109,17 +107,32 @@ class ArticleController extends Controller
             return;
         }
 
-        $dir = public_path('uploads/articles');
-        File::ensureDirectoryExists($dir);
-
-        if ($article->cover_path) {
-            File::delete(public_path($article->cover_path));
-        }
+        $this->deleteCover($article->cover_path);
 
         $file = $request->file('cover');
         $name = $article->slug.'-'.Str::random(8).'.'.$file->extension();
-        $file->move($dir, $name);
 
-        $article->update(['cover_path' => '/uploads/articles/'.$name]);
+        Storage::disk('public')->putFileAs('articles', $file, $name);
+
+        $article->update([
+            'cover_path' => '/media/articles/'.$name,
+        ]);
+    }
+
+    private function deleteCover(?string $coverPath): void
+    {
+        if (! $coverPath) {
+            return;
+        }
+
+        if (str_starts_with($coverPath, '/media/articles/')) {
+            Storage::disk('public')->delete('articles/'.basename($coverPath));
+            return;
+        }
+
+        // Compatibility for covers uploaded before persistent runtime storage.
+        if (str_starts_with($coverPath, '/uploads/articles/')) {
+            File::delete(public_path(ltrim($coverPath, '/')));
+        }
     }
 }
