@@ -21,7 +21,7 @@ jobs:
   package:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -31,6 +31,13 @@ jobs:
           coverage: none
       - name: Install production dependencies
         run: composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
+      - name: Verify application
+        run: |
+          cp .env.example .env
+          php artisan key:generate --force
+          find app bootstrap config database routes public -name '*.php' -print0 | xargs -0 -n1 php -l
+          php artisan route:list --except-vendor
+          rm -f .env
       - name: Prepare package
         run: |
           rm -f .env
