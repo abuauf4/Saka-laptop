@@ -3,18 +3,16 @@ declare(strict_types=1);
 
 session_start();
 
-$basePath = dirname(__DIR__).'/saka-app';
-$marker = $basePath.'/storage/app/.installed';
-$tokenFile = $basePath.'/.install-token';
+const INSTALL_CODE_HASH = 'c9ba0812379eb87b083c884c60cde677b0790e268989c321bdea7a2923a68108';
+
+$basePath = __DIR__.'/.saka-app';
+$runtimePath = dirname(__DIR__).'/saka-runtime';
+$envPath = $runtimePath.'/.env';
+$marker = $runtimePath.'/.installed';
 
 if (is_file($marker)) {
     http_response_code(404);
     exit('Not found');
-}
-
-if (! is_file($tokenFile)) {
-    http_response_code(503);
-    exit('Installer belum siap. Upload paket Hostinger lengkap terlebih dahulu.');
 }
 
 if (empty($_SESSION['install_csrf'])) {
@@ -38,10 +36,31 @@ function appUrl(): string
     $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
         || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
 
-    $scheme = $https ? 'https' : 'http';
-    $host = $_SERVER['HTTP_HOST'] ?? 'jakartalaptops.com';
+    return ($https ? 'https' : 'http').'://'.($_SERVER['HTTP_HOST'] ?? 'jakartalaptops.com');
+}
 
-    return $scheme.'://'.$host;
+function ensureRuntimeDirectories(string $runtimePath): void
+{
+    $directories = [
+        $runtimePath,
+        $runtimePath.'/storage',
+        $runtimePath.'/storage/app',
+        $runtimePath.'/storage/app/private',
+        $runtimePath.'/storage/app/public',
+        $runtimePath.'/storage/framework',
+        $runtimePath.'/storage/framework/cache',
+        $runtimePath.'/storage/framework/cache/data',
+        $runtimePath.'/storage/framework/sessions',
+        $runtimePath.'/storage/framework/testing',
+        $runtimePath.'/storage/framework/views',
+        $runtimePath.'/storage/logs',
+    ];
+
+    foreach ($directories as $directory) {
+        if (! is_dir($directory) && ! mkdir($directory, 0755, true) && ! is_dir($directory)) {
+            throw new RuntimeException('Tidak bisa membuat runtime directory.');
+        }
+    }
 }
 
 $errors = [];
@@ -67,8 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = 'Sesi installer tidak valid. Muat ulang halaman lalu coba lagi.';
     }
 
-    $expectedCode = trim((string) file_get_contents($tokenFile));
-    if ($expectedCode === '' || ! hash_equals($expectedCode, $values['install_code'])) {
+    if (! hash_equals(INSTALL_CODE_HASH, hash('sha256', $values['install_code']))) {
         $errors[] = 'Install Code salah.';
     }
 
@@ -102,6 +120,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (! $errors) {
         try {
+            ensureRuntimeDirectories($runtimePath);
+
             $appKey = 'base64:'.base64_encode(random_bytes(32));
             $env = implode(PHP_EOL, [
                 'APP_NAME='.envQuote('Saka Laptop'),
@@ -136,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 '',
             ]);
 
-            if (file_put_contents($basePath.'/.env', $env, LOCK_EX) === false) {
+            if (file_put_contents($envPath, $env, LOCK_EX) === false) {
                 throw new RuntimeException('Tidak bisa menulis file .env');
             }
 
@@ -150,12 +170,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
             Illuminate\Support\Facades\Artisan::call('optimize:clear');
 
-            if (! is_dir(dirname($marker))) {
-                mkdir(dirname($marker), 0755, true);
-            }
-
+            $sanitizedEnv = preg_replace('/^ADMIN_PASSWORD=.*$/m', 'ADMIN_PASSWORD=', (string) file_get_contents($envPath));
+            file_put_contents($envPath, $sanitizedEnv, LOCK_EX);
             file_put_contents($marker, date(DATE_ATOM), LOCK_EX);
-            @unlink($tokenFile);
 
             $success = true;
             session_regenerate_id(true);
@@ -183,12 +200,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php if ($success): ?>
     <div class="ok">
         <strong>Instalasi selesai.</strong>
-        <p>Database, akun admin, dan konfigurasi aplikasi sudah siap. Installer otomatis dinonaktifkan.</p>
+        <p>Database, akun admin, dan konfigurasi aplikasi sudah siap. Deploy berikutnya dari GitHub tidak akan menghapus konfigurasi ini.</p>
         <p><a href="/admin/login">Buka login admin →</a></p>
     </div>
 <?php else: ?>
-    <h1>Setup sekali, langsung jalan.</h1>
-    <p class="sub">Isi data MySQL dari hPanel dan buat password admin. Tidak perlu edit file atau menjalankan command.</p>
+    <h1>Setup sekali, setelah itu auto-deploy.</h1>
+    <p class="sub">Isi database MySQL dan akun admin. Setelah instalasi pertama, update berikutnya cukup lewat commit GitHub.</p>
 
     <?php foreach ($errors as $error): ?>
         <div class="error"><?= h($error) ?></div>
@@ -198,8 +215,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="hidden" name="_token" value="<?= h($_SESSION['install_csrf']) ?>">
         <div class="field full">
             <label>Install Code</label>
-            <input name="install_code" value="<?= h($values['install_code']) ?>" required>
-            <div class="note">Lihat file INSTALL-CODE.txt di folder hasil extract.</div>
+            <input type="password" name="install_code" value="" required>
+            <div class="note">Kode instalasi diberikan saat setup deployment.</div>
         </div>
         <div class="grid">
             <div class="field"><label>DB Host</label><input name="db_host" value="<?= h($values['db_host']) ?>" required></div>
