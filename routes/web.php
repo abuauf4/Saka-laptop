@@ -6,7 +6,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LeadCaptureController;
 use App\Http\Controllers\PublicSiteController;
 use App\Http\Controllers\SeoController;
-use App\Http\Controllers\SetupController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PublicSiteController::class, 'home'])->name('home');
@@ -32,10 +31,6 @@ Route::post('/leads', [LeadCaptureController::class, 'store'])
     ->middleware('throttle:10,1')
     ->name('leads.store');
 
-Route::get('/setup', [SetupController::class, 'show'])->name('setup.show');
-Route::post('/setup', [SetupController::class, 'run'])
-    ->middleware('throttle:3,1')
-    ->name('setup.run');
 
 Route::middleware('guest')->group(function (): void {
     Route::get('/admin/login', [AuthController::class, 'showLogin'])->name('login');
