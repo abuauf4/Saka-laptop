@@ -1,0 +1,46 @@
+name: Build Hostinger Package
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [laravel-v2]
+    paths:
+      - 'app/**'
+      - 'bootstrap/**'
+      - 'config/**'
+      - 'database/**'
+      - 'public/**'
+      - 'resources/**'
+      - 'routes/**'
+      - 'storage/**'
+      - 'composer.json'
+      - 'artisan'
+      - '.github/workflows/build-hostinger.yml'
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, intl, pdo_mysql, bcmath, fileinfo, openssl
+          tools: composer:v2
+          coverage: none
+      - name: Install production dependencies
+        run: composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
+      - name: Prepare package
+        run: |
+          rm -f .env
+          mkdir -p deploy
+          rsync -a --exclude deploy --exclude .git --exclude .github --exclude tests ./ deploy/
+          cd deploy
+          zip -qr ../saka-laptop-v2-hostinger.zip .
+      - name: Upload package
+        uses: actions/upload-artifact@v4
+        with:
+          name: saka-laptop-v2-hostinger
+          path: saka-laptop-v2-hostinger.zip
+          retention-days: 14
