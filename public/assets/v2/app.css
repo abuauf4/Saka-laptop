@@ -300,3 +300,17 @@ button,input,textarea,select{font:inherit}
   .public-footer{padding-bottom:104px}
   .footer-bottom{padding-bottom:4px}
 }
+
+
+/* Final footer/FAB separation */
+@media(max-width:680px){
+  .public-footer{padding-bottom:42px}
+  .footer-bottom{
+    padding-bottom:0;
+    min-height:34px;
+  }
+  .wa-fab{
+    bottom:92px;
+    right:18px;
+  }
+}
