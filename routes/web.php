@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PublicSiteController;
+use App\Http\Controllers\SetupController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PublicSiteController::class, 'home'])->name('home');
@@ -24,6 +25,11 @@ foreach ([
         ->defaults('slug', $slug)
         ->name('landing.'.$slug);
 }
+
+Route::get('/setup', [SetupController::class, 'show'])->name('setup.show');
+Route::post('/setup', [SetupController::class, 'run'])
+    ->middleware('throttle:3,1')
+    ->name('setup.run');
 
 Route::middleware('guest')->group(function (): void {
     Route::get('/admin/login', [AuthController::class, 'showLogin'])->name('login');
