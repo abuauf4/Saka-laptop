@@ -2,29 +2,29 @@
 
 Target runtime: PHP 8.3+ / MySQL / Laravel 13.
 
-## hPanel prerequisites
+Single Web Hosting does not provide SSH/Composer, so this project does **not** depend on running Composer or Artisan from Hostinger.
 
-1. Create a MySQL database and user.
-2. Set PHP to 8.3 or newer.
-3. Deploy the `laravel-v2` branch with Git or upload the project.
-4. The web document root must point to the project's `public/` directory.
-5. Copy `.env.example` to `.env` and fill production values.
-6. Set a strong `ADMIN_PASSWORD` before seeding.
+## Deployment model
 
-## First deployment commands
+1. GitHub Actions builds a production ZIP with the full `vendor/` directory.
+2. Upload/extract the ZIP into the website directory from hPanel File Manager, or use Git deployment for source updates.
+3. Create a MySQL database in hPanel.
+4. Create `.env` from `.env.example` and fill:
+   - `APP_KEY`
+   - `APP_SETUP_KEY`
+   - MySQL credentials
+   - `ADMIN_PASSWORD`
+5. Point the website document root to the project's `public/` directory.
+6. Open `/setup`, enter `APP_SETUP_KEY`, and run the one-time installer.
+7. After success, `storage/app/.installed` is created and the setup page returns 404.
 
-```bash
-composer install --no-dev --optimize-autoloader
-php artisan key:generate --force
-php artisan migrate --force
-php artisan db:seed --force
-php artisan storage:link
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-```
+## Build artifact
 
-If SSH is unavailable, use Hostinger's Laravel deployment/Auto Installer workflow first, then replace application source with this branch and configure `.env` in hPanel.
+Workflow: `.github/workflows/build-hostinger.yml`
+
+Artifact name: `saka-laptop-v2-hostinger`
+
+The package contains production Composer dependencies, so Hostinger does not need Composer or SSH.
 
 ## Storage
 
@@ -35,5 +35,7 @@ Customer/product photos live under `storage/app/public`; MySQL stores file paths
 - `APP_DEBUG=false`
 - HTTPS only
 - `SESSION_SECURE_COOKIE=true`
-- Never commit `.env`
-- Remove any temporary migration/import endpoints after use
+- use a random `APP_SETUP_KEY`
+- use a strong `ADMIN_PASSWORD`
+- never commit `.env`
+- one-time setup self-disables after successful migration/seeding
