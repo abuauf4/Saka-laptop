@@ -15,7 +15,7 @@
         <h3>Data customer</h3>
         <dl class="detail-list">
             <div><dt>Nama</dt><dd>{{ $lead->name }}</dd></div>
-            <div><dt>WhatsApp</dt><dd>{{ $lead->whatsapp }}</dd></div>
+            <div><dt>WhatsApp</dt><dd>+{{ $lead->whatsappNumber() }}</dd></div>
             <div><dt>Perangkat</dt><dd>{{ $lead->device_name }}</dd></div>
             <div><dt>Brand</dt><dd>{{ $lead->brand ?: '—' }}</dd></div>
             <div><dt>Spesifikasi</dt><dd>{!! nl2br(e($lead->specifications ?: '—')) !!}</dd></div>
