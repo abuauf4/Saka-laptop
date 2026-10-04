@@ -13,6 +13,15 @@
     <meta property="og:title" content="@yield('og_title', trim($__env->yieldContent('title')) ?: ($globalSettings?->site_name ?: 'Saka Laptop'))">
     <meta property="og:description" content="@yield('og_description', trim($__env->yieldContent('description')) ?: 'Jual laptop bekas dengan proses yang jelas dan praktis.')">
     <meta property="og:url" content="@yield('canonical', url()->current())">
+    @php
+        $resolvedOgImage = trim($__env->yieldContent('og_image')) ?: asset('Hero.webp');
+    @endphp
+    <meta property="og:image" content="{{ $resolvedOgImage }}">
+    <meta property="og:image:alt" content="@yield('og_image_alt', $globalSettings?->site_name ?: 'Saka Laptop')">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@yield('og_title', trim($__env->yieldContent('title')) ?: ($globalSettings?->site_name ?: 'Saka Laptop'))">
+    <meta name="twitter:description" content="@yield('og_description', trim($__env->yieldContent('description')) ?: 'Jual laptop bekas dengan proses yang jelas dan praktis.')">
+    <meta name="twitter:image" content="{{ $resolvedOgImage }}">
     <link rel="icon" href="{{ asset('assets/branding/saka-mark.svg') }}">
     <link rel="stylesheet" href="{{ asset('assets/v2/app.css') }}?v=20261004-1945">
     @stack('head')
