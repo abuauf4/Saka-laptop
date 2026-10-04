@@ -12,6 +12,7 @@ Route::get('/', [PublicSiteController::class, 'home'])->name('home');
 Route::get('/tentang', [PublicSiteController::class, 'about'])->name('about');
 Route::get('/artikel', [PublicSiteController::class, 'articles'])->name('articles.index');
 Route::get('/artikel/{slug}', [PublicSiteController::class, 'article'])->name('articles.show');
+Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
 
 foreach ([
     'jual-laptop-bekas-jakarta',
