@@ -1,3 +1,0 @@
-@extends('layouts.admin')
-@section('title','Users')
-@section('content')<div class="topline"><h1>Users</h1>@if(auth()->user()?->canPermission('users.create'))<a class="btn btn-dark" href="{{ route('admin.users.create') }}">Tambah User</a>@endif</div><table class="table"><thead><tr><th>Nama</th><th>Email</th><th>Role</th><th>Status</th><th></th></tr></thead><tbody>@foreach($users as $user)<tr><td>{{ $user->name }}</td><td>{{ $user->email }}</td><td>{{ $user->roles->pluck('name')->join(', ') }}</td><td>{{ $user->status }}</td><td>@if(auth()->user()?->canPermission('users.update'))<a href="{{ route('admin.users.edit',$user) }}">Edit</a>@endif</td></tr>@endforeach</tbody></table><div style="margin-top:20px">{{ $users->links() }}</div>@endsection
