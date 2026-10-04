@@ -14,6 +14,11 @@ Route::get('/tentang', [PublicSiteController::class, 'about'])->name('about');
 Route::get('/artikel', [PublicSiteController::class, 'articles'])->name('articles.index');
 Route::get('/artikel/{slug}', [PublicSiteController::class, 'article'])->name('articles.show');
 Route::get('/sitemap.xml', [SeoController::class, 'sitemap'])->name('sitemap');
+Route::get('/cara-menjual-laptop-bekas-dengan-aman-di-jakarta', fn () => redirect('/artikel/cara-menjual-laptop-bekas-dengan-aman-di-jakarta', 301));
+Route::get('/faktor-yang-menentukan-harga-laptop-bekas', fn () => redirect('/artikel/faktor-yang-menentukan-harga-laptop-bekas', 301));
+Route::get('/checklist-sebelum-menjual-laptop-bekas', fn () => redirect('/artikel/checklist-sebelum-menjual-laptop-bekas', 301));
+Route::get('/cara-menjual-macbook-bekas-sebelum-upgrade', fn () => redirect('/artikel/cara-menjual-macbook-bekas-sebelum-upgrade', 301));
+Route::get('/jual-laptop-atau-tukar-tambah', fn () => redirect('/artikel/jual-laptop-atau-tukar-tambah', 301));
 Route::get('/media/articles/{filename}', [MediaController::class, 'articleCover'])
     ->where('filename', '[A-Za-z0-9._-]+')
     ->name('media.article-cover');
