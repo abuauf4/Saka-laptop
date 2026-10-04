@@ -1,6 +1,7 @@
 @extends('layouts.public')
 @section('title', 'Artikel & Tips — '.($globalSettings?->site_name ?: 'Saka Laptop'))
 @section('description', 'Tips jual laptop bekas, perawatan perangkat, dan panduan sebelum melepas laptop lama.')
+@section('canonical', request()->integer('page', 1) > 1 ? route('articles.index').'?page='.request()->integer('page') : route('articles.index'))
 
 @section('content')
 <section class="inner-hero article-hero">
