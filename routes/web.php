@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\LeadController as AdminLeadController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LeadCaptureController;
 use App\Http\Controllers\PublicSiteController;
+use App\Http\Controllers\SeoController;
 use App\Http\Controllers\SetupController;
 use Illuminate\Support\Facades\Route;
 
