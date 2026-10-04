@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\SettingsController;
-use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
+use App\Http\Controllers\Admin\LeadController as AdminLeadController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LeadCaptureController;
 use App\Http\Controllers\PublicSiteController;
 use App\Http\Controllers\SetupController;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +26,10 @@ foreach ([
         ->name('landing.'.$slug);
 }
 
+Route::post('/leads', [LeadCaptureController::class, 'store'])
+    ->middleware('throttle:10,1')
+    ->name('leads.store');
+
 Route::get('/setup', [SetupController::class, 'show'])->name('setup.show');
 Route::post('/setup', [SetupController::class, 'run'])
     ->middleware('throttle:3,1')
@@ -39,16 +43,10 @@ Route::middleware('guest')->group(function (): void {
 Route::post('/admin/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 Route::prefix('admin')->middleware('auth')->name('admin.')->group(function (): void {
-    Route::get('/', DashboardController::class)->name('dashboard');
+    Route::redirect('/', '/admin/leads');
+    Route::get('/leads', [AdminLeadController::class, 'index'])->name('leads.index');
+    Route::get('/leads/{lead}', [AdminLeadController::class, 'show'])->name('leads.show');
+    Route::patch('/leads/{lead}', [AdminLeadController::class, 'update'])->name('leads.update');
 
-    Route::get('/settings', [SettingsController::class, 'edit'])
-        ->middleware('permission:settings.view')
-        ->name('settings.edit');
-    Route::put('/settings', [SettingsController::class, 'update'])
-        ->middleware('permission:settings.update')
-        ->name('settings.update');
-
-    Route::resource('users', UserController::class)
-        ->except(['show'])
-        ->middleware('permission:users.view');
+    Route::resource('articles', AdminArticleController::class)->except(['show']);
 });
